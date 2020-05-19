@@ -7,6 +7,11 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.LatLng;
+
 public class MainActivity extends AppCompatActivity {
 
     Button btn_notification;
@@ -14,11 +19,21 @@ public class MainActivity extends AppCompatActivity {
     Button btn_addobject;
     Button btn_completedroutes;
     Button btn_leaderboards;
+    private GoogleMap map;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.main_map_fragment);
+        mapFragment.getMapAsync(new OnMapReadyCallback() {
+            @Override
+            public void onMapReady(GoogleMap googleMap) {
+                    map = googleMap;
+                //LatLng latlng = new LatLng(28.1,  68.1);
+            }
+        });
+
 
         btn_addobject = findViewById(R.id.main_addObjects);
         btn_addobject.setOnClickListener(new View.OnClickListener() {
