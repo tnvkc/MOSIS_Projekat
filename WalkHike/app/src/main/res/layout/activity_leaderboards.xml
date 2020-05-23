@@ -1,32 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".LeaderboardsActivity"
-    android:orientation="vertical">
+    tools:context=".LeaderboardsActivity">
 
     <Button
+        android:id="@+id/button_activity"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Activity"
-        android:id="@+id/button_activity"/>
+        />
 
     <Button
+        android:id="@+id/button_distance"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Distance"
-        android:id="@+id/button_distance"/>
+        android:layout_toLeftOf="@id/button_activity"/>
 
-    <include layout="@layout/leaderboards"/>
-<!-->
+    <!-->
+    <include />
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/framelayout_leaderboards"
         /><-->
-<!-->
+    <!-->
     <com.google.android.material.tabs.TabLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -39,4 +40,14 @@
         android:id="@+id/viewpager_leaderboards"/>
 <-->
 
-</LinearLayout>
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/bottom_navigation_menu"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:itemBackground="@color/colorPrimary"
+        app:itemIconTint="@drawable/selector"
+        app:itemTextColor="@drawable/selector"
+        app:menu="@menu/navigation_menu"
+        android:layout_alignParentBottom="true"/>
+
+</RelativeLayout>
