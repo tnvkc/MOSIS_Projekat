@@ -117,10 +117,10 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
-        map = googleMap;
+        //map = googleMap;
 
 
-//if you need to diable rotation
+        //if you need to diable rotation
         //googleMap.getUiSettings().setRotateGesturesEnabled(false);
         //if you need to disable zooming
         //googleMap.getUiSettings().setZoomGesturesEnabled(false);
@@ -197,6 +197,15 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
 
     @Override
     public void onLocationChanged(Location location) {
-
+    //Toast.makeText(MapWithPlayServiceLocationActivity.this, "Lat : "+location.getLatitude()+" Lng "+location.getLongitude(), Toast.LENGTH_SHORT).show();
+        if(map!=null){
+            LatLng latLng=new LatLng(location.getLatitude(),location.getLongitude());
+            map.addMarker(new MarkerOptions().position(latLng).title("Current Location"));
+            map.moveCamera(CameraUpdateFactory.newLatLng(latLng));
+            map.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng,10f));
+        }
     }
+
+
+
 }
