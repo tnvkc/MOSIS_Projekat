@@ -4,4 +4,30 @@
     <string name="title_home">Home</string>
     <string name="title_dashboard">Dashboard</string>
     <string name="title_notifications">Notifications</string>
+
+    <string-array name="new_profile_image_options">
+        <item>Camera</item>
+        <item>Gallery</item>
+    </string-array>
+
+    <string-array name="settings_options">
+        <item>Sound</item>
+        <item>Notifications</item>
+        <item>Location Sharing</item>
+        <item>Dark Theme</item>
+        <item>Unit</item>
+    </string-array>
+
+    <string-array name="profile_options">
+        <item>Edit profile</item>
+        <item>Settings</item>
+        <item>Help</item>
+        <item>Log out</item>
+    </string-array>
+
+    <string-array name="new_profile_image_options_images">
+        <item>ic_photo_camera_black_24dp</item>
+        <item>ic_image_black_24dp</item>
+    </string-array>
+
 </resources>
