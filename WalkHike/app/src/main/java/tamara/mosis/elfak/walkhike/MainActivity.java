@@ -1,7 +1,10 @@
 package tamara.mosis.elfak.walkhike;
 
 import androidx.annotation.NonNull;
+<<<<<<< HEAD
 import androidx.annotation.Nullable;
+=======
+>>>>>>> origin/dev_b
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 
@@ -11,6 +14,7 @@ import android.app.Service;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.content.pm.PackageManager;
@@ -32,28 +36,27 @@ import com.google.android.gms.maps.model.LatLng;
 
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import com.google.android.material.bottomnavigation.BottomNavigationView;
+
 public class MainActivity extends AppCompatActivity implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener, OnMapReadyCallback {
 
-
-
-    Button btn_notification;
     private static final int PERMISSION_CODE = 1;
     Location location;
     LocationManager locationManager;
-    Button btn_friendslist;
-    Button btn_addobject;
-    Button btn_completedroutes;
-    Button btn_leaderboards;
     private GoogleMap map;
     boolean isGpsProvider;
     boolean isNetworkProvider;
     GoogleApiClient googleApiClient;
+
+    BottomNavigationView bottom_navigation_menu;
+>>>>>>> origin/dev_b
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+<<<<<<< HEAD
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
                 && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, PERMISSION_CODE);
@@ -65,53 +68,42 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
         getDeviceLocation();
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.main_map_fragment);
         mapFragment.getMapAsync(this);
-
-
-        btn_addobject = findViewById(R.id.main_addObjects);
-        btn_addobject.setOnClickListener(new View.OnClickListener() {
+=======
+        bottom_navigation_menu = findViewById(R.id.bottom_navigation_menu);
+        bottom_navigation_menu.setSelectedItemId(R.id.map);
+        bottom_navigation_menu.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(getApplicationContext(), AddNewObjectActivity.class);
-                startActivity(intent);
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                switch (item.getItemId()) {
+                    case R.id.notifications: {
+                        Intent intent=new Intent(getApplicationContext(), NotificationsActivity.class);
+                        startActivity(intent);
+                        overridePendingTransition(0, 0);
+                        return true;
+                    }
+                    case R.id.friends: {
+                        Intent intent=new Intent(getApplicationContext(), FriendslistActivity.class);
+                        startActivity(intent);
+                        overridePendingTransition(0, 0);
+                        return true;
+                    }
+                    case R.id.completed_routes: {
+                        Intent intent=new Intent(getApplicationContext(), CompletedRoutesActivity.class);
+                        startActivity(intent);
+                        overridePendingTransition(0, 0);
+                        return true;
+                    }
+                    case R.id.leaderboard: {
+                        Intent intent=new Intent(getApplicationContext(), LeaderboardsActivity.class);
+                        startActivity(intent);
+                        overridePendingTransition(0, 0);
+                        return true;
+                    }
+                }
+                return false;
             }
         });
-
-        btn_friendslist = findViewById(R.id.main_friends);
-        btn_friendslist.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(getApplicationContext(), FriendslistActivity.class);
-                startActivity(intent);
-            }
-        });
-
-        btn_notification = findViewById(R.id.main_notifications);
-        btn_notification.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(getApplicationContext(), NotificationsActivity.class);
-                startActivity(intent);
-            }
-        });
-
-        btn_completedroutes = findViewById(R.id.main_completedroutes);
-        btn_completedroutes.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(getApplicationContext(), CompletedRoutesActivity.class);
-                startActivity(intent);
-            }
-        });
-
-        btn_leaderboards = findViewById(R.id.main_leaderboards);
-        btn_leaderboards.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(getApplicationContext(), LeaderboardsActivity.class);
-                startActivity(intent);
-            }
-        });
-
+>>>>>>> origin/dev_b
     }
 
 
