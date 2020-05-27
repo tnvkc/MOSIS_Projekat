@@ -15,14 +15,15 @@
         <activity android:name=".EditProfileActivity" />
 
         <activity android:name=".AddFriendActivity" />
-        <activity android:name=".FriendProfileActivity" />
-        <activity android:name=".HelpActivity" >
+        <activity android:name=".FriendProfileActivity" >
         <intent-filter>
             <action android:name="android.intent.action.MAIN" />
 
             <category android:name="android.intent.category.LAUNCHER" />
         </intent-filter>
     </activity>
+        <activity android:name=".HelpActivity" />
+
 
     <activity android:name=".NewPasswordActivity" />
 
