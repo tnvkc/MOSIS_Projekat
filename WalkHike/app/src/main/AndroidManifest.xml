@@ -12,7 +12,10 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-<<<<<<< HEAD
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyC20SAi61o5fJQ1cTHMLh8MEOCWfwRZ_YI"></meta-data>
+
         <activity android:name=".SettingsActivity">
 
         </activity>
@@ -44,11 +47,8 @@
 
         </activity>
         <activity android:name=".FriendslistActivity" />
-        <meta-data
-            android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyC20SAi61o5fJQ1cTHMLh8MEOCWfwRZ_YI"></meta-data>
 
-        <activity android:name=".FriendslistActivity"></activity>
+
         <activity android:name=".AddNewObjectActivity" />
         <activity android:name=".CompletedRoutesActivity" />
         <activity android:name=".LeaderboardsActivity" />
