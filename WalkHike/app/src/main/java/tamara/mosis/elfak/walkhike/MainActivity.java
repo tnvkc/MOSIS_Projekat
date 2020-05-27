@@ -3,6 +3,7 @@ package tamara.mosis.elfak.walkhike;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
 
 import android.Manifest;
@@ -11,6 +12,7 @@ import android.app.Service;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -18,6 +20,7 @@ import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationManager;
 import android.widget.Toast;
+
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -34,6 +37,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 public class MainActivity extends AppCompatActivity implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener, OnMapReadyCallback {
 
@@ -46,6 +50,9 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
     GoogleApiClient googleApiClient;
 
     BottomNavigationView bottom_navigation_menu;
+    FloatingActionButton addNewFloating;
+    Toolbar toolbar;
+    MenuItem profileItem;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,6 +70,21 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
         getDeviceLocation();
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.main_map_fragment);
         mapFragment.getMapAsync(this);
+
+
+        toolbar = (Toolbar)findViewById(R.id.main_toolbar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setTitle(R.string.app_name);
+
+        addNewFloating = (FloatingActionButton) findViewById(R.id.main_addnewObject);
+        addNewFloating.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent=new Intent(getApplicationContext(), AddNewObjectActivity.class);
+                startActivity(intent);
+            }
+        });
+
 
         bottom_navigation_menu = findViewById(R.id.bottom_navigation_menu);
         bottom_navigation_menu.setSelectedItemId(R.id.map);
@@ -101,6 +123,26 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
 
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.main_menu_profile, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+
+        if(item.getItemId() == R.id.main_menu_probe_item)
+        {
+            Intent intent=new Intent(getApplicationContext(), Probe.class);
+            startActivity(intent);
+        }
+        else if(item.getItemId() == R.id.main_menu_profile_item) {
+            Intent intent=new Intent(getApplicationContext(), ProfileActivity.class);
+            startActivity(intent);
+        }
+        return super.onOptionsItemSelected(item);
+    }
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
@@ -164,9 +206,9 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
             if(map!=null){
                 LatLng latLng=new LatLng(location.getLatitude(),location.getLongitude());
                 map.addMarker(new MarkerOptions().position(latLng).title("Current Location"));
-                map.moveCamera(CameraUpdateFactory.newLatLng(latLng));
-                map.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng,10f));
-                Toast.makeText(this, "Usao u latlong", Toast.LENGTH_SHORT );
+               map.moveCamera(CameraUpdateFactory.newLatLng(latLng));
+               map.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng,10f));
+                //Toast.makeText(this, "Usao u latlong", Toast.LENGTH_SHORT );
             }
         }
         //startLocationUpdates();

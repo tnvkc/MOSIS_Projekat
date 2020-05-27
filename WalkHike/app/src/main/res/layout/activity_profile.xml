@@ -5,6 +5,14 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".ProfileActivity">
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/profile_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:minHeight="?attr/actionBarSize"
+        android:background="@color/colorPrimary">
+
+    </androidx.appcompat.widget.Toolbar>
 
     <ImageView
         android:id="@+id/imageView6"
