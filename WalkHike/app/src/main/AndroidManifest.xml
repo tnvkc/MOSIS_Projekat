@@ -13,28 +13,38 @@
 
         </activity>
         <activity android:name=".EditProfileActivity" />
+
         <activity android:name=".AddFriendActivity" />
         <activity android:name=".FriendProfileActivity" />
-        <activity android:name=".HelpActivity" />
-        <activity android:name=".NewPasswordActivity" />
+        <activity android:name=".HelpActivity" >
+        <intent-filter>
+            <action android:name="android.intent.action.MAIN" />
+
+            <category android:name="android.intent.category.LAUNCHER" />
+        </intent-filter>
+    </activity>
+
+    <activity android:name=".NewPasswordActivity" />
+
         <activity android:name=".RecoveryCodeActivity" />
+
         <activity android:name=".NewProfilePictureActivity" >
 
         </activity>
 
         <activity android:name=".SignUpActivity" />
-        <activity android:name=".LoginActivity" />
+
+
+        <activity android:name=".LoginActivity" >
+
+        </activity>
         <activity android:name=".FriendslistActivity" />
         <activity android:name=".AddNewObjectActivity" />
         <activity android:name=".CompletedRoutesActivity" />
         <activity android:name=".LeaderboardsActivity" />
         <activity android:name=".NotificationsActivity" />
         <activity android:name=".ProfileActivity" >
-        <intent-filter>
-            <action android:name="android.intent.action.MAIN" />
 
-            <category android:name="android.intent.category.LAUNCHER" />
-        </intent-filter>
         </activity>
 
         <activity android:name=".MainActivity">

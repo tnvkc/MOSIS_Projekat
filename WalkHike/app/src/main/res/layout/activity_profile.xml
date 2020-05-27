@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -8,11 +8,13 @@
 
     <ImageView
         android:id="@+id/imageView6"
-        android:layout_width="86dp"
-        android:layout_height="87dp"
-        android:layout_marginStart="32dp"
-        android:layout_marginLeft="32dp"
-        android:layout_marginTop="72dp"
+        android:layout_width="171dp"
+        android:layout_height="164dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="32dp"
+        android:layout_marginBottom="5dp"
+        android:layout_alignParentTop="true"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/girl_1" />
@@ -21,8 +23,11 @@
         android:id="@+id/textView23"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
         android:text="Bio"
+        android:textStyle="bold"
+        android:layout_below="@id/imageView6"
+        android:layout_marginTop="2dp"
+        android:layout_marginLeft="32dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.156"
         app:layout_constraintStart_toStartOf="parent"
@@ -30,9 +35,10 @@
 
     <TextView
         android:id="@+id/textView24"
-        android:layout_width="wrap_content"
+        android:layout_width="38dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
+        android:layout_below="@id/textView23"
+        android:layout_marginLeft="32dp"
         android:text="TextView"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.173"
@@ -41,12 +47,18 @@
 
     <ListView
         android:id="@+id/listview_profile_options"
-        android:layout_width="300dp"
-        android:layout_height="287dp"
-        android:layout_marginTop="36dp"
+        android:layout_width="320dp"
+        android:layout_height="261dp"
         android:divider="@null"
         android:dividerHeight="0dp"
         android:scrollbars="none"
+        android:layout_below="@id/textView24"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="5dp"
+        android:layout_centerHorizontal="true"
+        android:layout_alignParentBottom="true"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.549"
@@ -55,13 +67,15 @@
         app:layout_constraintVertical_bias="0.0" />
 
     <LinearLayout
-        android:layout_width="104dp"
-        android:layout_height="132dp"
-        android:orientation="vertical"
-        app:layout_constraintBottom_toTopOf="@+id/listview_profile_options"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/imageView6"
-        app:layout_constraintTop_toTopOf="parent">
+        android:id="@+id/llabout"
+        android:layout_width="136dp"
+        android:layout_height="144dp"
+        android:layout_toRightOf="@id/imageView6"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="50dp"
+        android:layout_alignParentTop="true"
+        android:orientation="vertical">
 
         <TextView
             android:id="@+id/textView25"
@@ -115,4 +129,4 @@
             tools:layout_editor_absoluteX="246dp"
             tools:layout_editor_absoluteY="217dp" />
     </LinearLayout>
-</androidx.constraintlayout.widget.ConstraintLayout>
+</RelativeLayout>

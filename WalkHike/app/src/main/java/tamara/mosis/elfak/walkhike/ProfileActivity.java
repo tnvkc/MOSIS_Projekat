@@ -1,10 +1,12 @@
 package tamara.mosis.elfak.walkhike;
 
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Context;
 import android.os.Bundle;
 import android.widget.ListView;
+import android.widget.TextView;
 
 public class ProfileActivity extends AppCompatActivity {
 
@@ -16,6 +18,9 @@ public class ProfileActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
 
+        //getSupportActionBar().setTitle("Profile");
+
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
         list=(ListView) findViewById(R.id.listview_profile_options);
         Context context=getApplicationContext();
         CustomListView adapter=new CustomListView(this,context.getResources().getStringArray(R.array.profile_options),
