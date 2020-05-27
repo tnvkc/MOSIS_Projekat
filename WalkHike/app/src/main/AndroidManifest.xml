@@ -2,6 +2,9 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="tamara.mosis.elfak.walkhike">
 
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"></uses-permission>
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -9,6 +12,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+<<<<<<< HEAD
         <activity android:name=".SettingsActivity">
 
         </activity>
@@ -40,6 +44,11 @@
 
         </activity>
         <activity android:name=".FriendslistActivity" />
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyC20SAi61o5fJQ1cTHMLh8MEOCWfwRZ_YI"></meta-data>
+
+        <activity android:name=".FriendslistActivity"></activity>
         <activity android:name=".AddNewObjectActivity" />
         <activity android:name=".CompletedRoutesActivity" />
         <activity android:name=".LeaderboardsActivity" />
