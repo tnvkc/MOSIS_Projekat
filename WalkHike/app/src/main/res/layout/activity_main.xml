@@ -6,7 +6,6 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
-<<<<<<< HEAD
     <fragment
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -17,7 +16,6 @@
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottom_navigation_menu"
         android:layout_width="match_parent"
->>>>>>> origin/dev_b
         android:layout_height="wrap_content"
         app:itemBackground="@color/colorPrimary"
         app:itemIconTint="@drawable/selector"

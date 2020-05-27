@@ -4,7 +4,7 @@
     <string name="title_home">Home</string>
     <string name="title_dashboard">Dashboard</string>
     <string name="title_notifications">Notifications</string>
-<<<<<<< HEAD
+
     <string name="insert_profile_picture"><u>Insert profile picture</u></string>
     <string name="log_in_link"><u>Already have an account? Log in</u></string>
     <string name="or_sign_up"><u>or Sign up</u></string>
@@ -34,7 +34,6 @@
         <item>ic_photo_camera_black_24dp</item>
         <item>ic_image_black_24dp</item>
     </string-array>
-=======
 
     <string name="hello_blank_fragment">Hello blank fragment</string>
 
@@ -43,6 +42,5 @@
     <string name="map">Map</string>
     <string name="completed">Completed</string>
     <string name="leaderboard">Leaderboard</string>
->>>>>>> origin/dev_b
 
 </resources>

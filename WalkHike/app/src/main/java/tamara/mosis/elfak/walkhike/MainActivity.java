@@ -1,10 +1,7 @@
 package tamara.mosis.elfak.walkhike;
 
 import androidx.annotation.NonNull;
-<<<<<<< HEAD
 import androidx.annotation.Nullable;
-=======
->>>>>>> origin/dev_b
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 
@@ -49,14 +46,12 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
     GoogleApiClient googleApiClient;
 
     BottomNavigationView bottom_navigation_menu;
->>>>>>> origin/dev_b
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-<<<<<<< HEAD
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
                 && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, PERMISSION_CODE);
@@ -68,7 +63,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
         getDeviceLocation();
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.main_map_fragment);
         mapFragment.getMapAsync(this);
-=======
+
         bottom_navigation_menu = findViewById(R.id.bottom_navigation_menu);
         bottom_navigation_menu.setSelectedItemId(R.id.map);
         bottom_navigation_menu.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -103,7 +98,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
                 return false;
             }
         });
->>>>>>> origin/dev_b
+
     }
 
 
