@@ -1,19 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical">
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <com.google.android.material.tabs.TabLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:tabGravity="fill"
         app:tabMode="fixed"
-        android:id="@+id/tablayout_leaderboards"/>
+        android:id="@+id/tablayout_leaderboards_distance"/>
     <androidx.viewpager.widget.ViewPager
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/viewpager_leaderboards"/>
+        android:id="@+id/viewpager_leaderboards_distance"
+        android:layout_below="@id/tablayout_leaderboards_distance"/>
 
-</LinearLayout>
+</RelativeLayout>

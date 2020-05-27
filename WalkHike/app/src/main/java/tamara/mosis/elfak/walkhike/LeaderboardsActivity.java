@@ -12,17 +12,16 @@ import android.view.MenuItem;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.tabs.TabLayout;
 
-import tamara.mosis.elfak.walkhike.Fragments.Leaderboards_AllTime;
-import tamara.mosis.elfak.walkhike.Fragments.Leaderboards_Monthly;
-import tamara.mosis.elfak.walkhike.Fragments.Leaderboards_ViewPagerAdapter;
-import tamara.mosis.elfak.walkhike.Fragments.Leaderboards_Weekly;
+import tamara.mosis.elfak.walkhike.Fragments.Leaderboards_Activity;
+import tamara.mosis.elfak.walkhike.Fragments.Leaderboards_Activity_Distance_ViewPagerAdapter;
+import tamara.mosis.elfak.walkhike.Fragments.Leaderboards_Distance;
 
 public class LeaderboardsActivity extends AppCompatActivity {
 
     BottomNavigationView bottom_navigation_menu;
 
-    private TabLayout leaderboards_tablayout;
-    private ViewPager leaderboards_viewpager;
+    private TabLayout leaderboards_tablayout_activity_distance;
+    private ViewPager leaderboards_viewpager_activity_distance;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,17 +63,16 @@ public class LeaderboardsActivity extends AppCompatActivity {
             }
         });
 
-        /*
-        leaderboards_tablayout = (TabLayout) findViewById(R.id.tablayout_leaderboards);
-        leaderboards_viewpager = (ViewPager) findViewById(R.id.viewpager_leaderboards);
-        Leaderboards_ViewPagerAdapter adapter = new Leaderboards_ViewPagerAdapter(getSupportFragmentManager(), FragmentPagerAdapter.BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT);
-        adapter.AddFragment(new Leaderboards_Weekly(), "Weekly");
-        adapter.AddFragment(new Leaderboards_Monthly(), "Monthly");
-        adapter.AddFragment(new Leaderboards_AllTime(), "All time");
 
-        leaderboards_viewpager.setAdapter(adapter);
-        leaderboards_tablayout.setupWithViewPager(leaderboards_viewpager);
-         */
+        //activity/distance tab-ovi:
 
+        leaderboards_tablayout_activity_distance = (TabLayout) findViewById(R.id.tablayout_activity_distance);
+        leaderboards_viewpager_activity_distance = (ViewPager) findViewById(R.id.viewpager_acivity_distance);
+        Leaderboards_Activity_Distance_ViewPagerAdapter viewPagerAdapter = new Leaderboards_Activity_Distance_ViewPagerAdapter(getSupportFragmentManager(), FragmentPagerAdapter.BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT);
+        viewPagerAdapter.AddFragment(new Leaderboards_Activity(), "Activity");
+        viewPagerAdapter.AddFragment(new Leaderboards_Distance(), "Distance");
+
+        leaderboards_viewpager_activity_distance.setAdapter(viewPagerAdapter);
+        leaderboards_tablayout_activity_distance.setupWithViewPager(leaderboards_viewpager_activity_distance);
     }
 }
