@@ -7,6 +7,8 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+
 public class MainActivity extends AppCompatActivity {
 
     Button btn_notification;
@@ -15,10 +17,22 @@ public class MainActivity extends AppCompatActivity {
     Button btn_completedroutes;
     Button btn_leaderboards;
 
+    FloatingActionButton probeBTN;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        probeBTN = findViewById(R.id.main_probeBtn);
+        probeBTN.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                Intent intent=new Intent(getApplicationContext(), Probe.class);
+                startActivity(intent);
+            }
+        });
 
         btn_addobject = findViewById(R.id.main_addObjects);
         btn_addobject.setOnClickListener(new View.OnClickListener() {
@@ -28,6 +42,8 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+
+
 
         btn_friendslist = findViewById(R.id.main_friends);
         btn_friendslist.setOnClickListener(new View.OnClickListener() {
