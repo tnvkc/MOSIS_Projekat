@@ -2,6 +2,7 @@ package tamara.mosis.elfak.walkhike;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatDelegate;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -20,6 +21,10 @@ public class NotificationsActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if (AppCompatDelegate.getDefaultNightMode() == AppCompatDelegate.MODE_NIGHT_YES)
+            setTheme(R.style.AppThemeDark);
+        else
+            setTheme(R.style.AppThemeLight);
         setContentView(R.layout.activity_notifications);
 
         notification_list = findViewById(R.id.notification_list);

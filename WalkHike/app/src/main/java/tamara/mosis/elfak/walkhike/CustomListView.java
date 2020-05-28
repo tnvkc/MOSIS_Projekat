@@ -38,11 +38,16 @@ public class CustomListView extends ArrayAdapter<String> {
         if(vw==null)
         {
             LayoutInflater layoutInflater = context.getLayoutInflater();
-            if(switchOrNot)
-                vw = layoutInflater.inflate(R.layout.list_member_switch, null, true);
-            else
-                vw = layoutInflater.inflate(R.layout.list_member, null, true);
 
+            if(images==null)//for AddFriendActivity
+                vw = layoutInflater.inflate(R.layout.list_member_add_user, null, true);
+            else
+            {
+                if (switchOrNot)
+                    vw = layoutInflater.inflate(R.layout.list_member_switch, null, true);
+                else
+                    vw = layoutInflater.inflate(R.layout.list_member, null, true);
+            }
             vh=new ViewHolder(vw);
             vw.setTag(vh);
         }
@@ -50,7 +55,8 @@ public class CustomListView extends ArrayAdapter<String> {
         {
             vh=(ViewHolder)vw.getTag();
         }
-        vh.iw.setImageResource(images[pos]);
+        if(images!=null)
+            vh.iw.setImageResource(images[pos]);
         vh.tw.setText(names[pos]);
 
         return vw;
