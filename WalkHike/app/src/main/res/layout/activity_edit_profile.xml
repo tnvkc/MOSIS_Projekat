@@ -5,14 +5,24 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".EditProfileActivity">
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/edit_profile_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:background="@color/colorPrimary"
+        android:minHeight="?attr/actionBarSize"
+        android:layout_alignParentTop="true"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:layout_editor_absoluteX="0dp">
+    </androidx.appcompat.widget.Toolbar>
 
     <ImageView
         android:id="@+id/imageView11"
         android:layout_width="187dp"
         android:layout_height="175dp"
         android:layout_centerHorizontal="true"
-        android:layout_alignParentTop="true"
         android:layout_marginTop="30dp"
+        android:layout_below="@+id/edit_profile_toolbar"
         app:srcCompat="@drawable/girl_1" />
 
     <EditText
@@ -35,7 +45,7 @@
         android:inputType="textPersonName"
         android:layout_centerHorizontal="true"
         android:text="name"
-         android:layout_below="@+id/imageView11" />
+        android:layout_below="@+id/imageView11" />
 
     <ImageView
         android:id="@+id/imageView12"
@@ -67,6 +77,6 @@
         android:layout_alignParentBottom="true"
         android:layout_below="@+id/editText11"
         android:layout_centerHorizontal="true"
-     />
+        />
 
 </RelativeLayout>

@@ -27,7 +27,7 @@ public class CustomListView extends ArrayAdapter<String> {
         this.context=context;
         this.names=itemName;
         this.images=imageid;
-        switchOrNot=switchornot;
+        this.switchOrNot=switchornot;
     }
     @NonNull
     @Override
@@ -38,9 +38,9 @@ public class CustomListView extends ArrayAdapter<String> {
         if(vw==null)
         {
             LayoutInflater layoutInflater = context.getLayoutInflater();
-           /* if(switchOrNot)
-              vw = layoutInflater.inflate(R.layout.list_member_switch, null, true);
-            else*/
+            if(switchOrNot)
+                vw = layoutInflater.inflate(R.layout.list_member_switch, null, true);
+            else
                 vw = layoutInflater.inflate(R.layout.list_member, null, true);
 
             vh=new ViewHolder(vw);

@@ -20,10 +20,11 @@ public class ProfileActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
 
-        //getSupportActionBar().setTitle("Profile");
         toolbar = (Toolbar) findViewById(R.id.profile_toolbar);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayShowTitleEnabled(false);
+        getSupportActionBar().setTitle("Profile");
+
+        getSupportActionBar().setDisplayShowTitleEnabled(true);
         list=(ListView) findViewById(R.id.listview_profile_options);
         Context context=getApplicationContext();
         CustomListView adapter=new CustomListView(this,context.getResources().getStringArray(R.array.profile_options),

@@ -1,6 +1,7 @@
 package tamara.mosis.elfak.walkhike;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -12,8 +13,14 @@ public class SettingsActivity extends AppCompatActivity {
     ListView list;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        Toolbar toolbar;
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
+
+        toolbar = (Toolbar) findViewById(R.id.settings_toolbar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setTitle("Settings");
 
         list=(ListView) findViewById(R.id.list_settings);
         Context context=getApplicationContext();

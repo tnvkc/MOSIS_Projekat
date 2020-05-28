@@ -1,6 +1,7 @@
 package tamara.mosis.elfak.walkhike;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -12,13 +13,19 @@ public class NewProfilePictureActivity extends AppCompatActivity {
     ListView list;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        Toolbar toolbar;
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_profile_picture);
+
+        toolbar = (Toolbar) findViewById(R.id.new_profile_picture_toolbar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setTitle("Insert profile picture");
 
         list=(ListView) findViewById(android.R.id.list);
         Context context=getApplicationContext();
         CustomListView adapter=new CustomListView(this,context.getResources().getStringArray(R.array.new_profile_image_options),
-                                                            imgid,false);
+                imgid,false);
         list.setAdapter(adapter);
 
     }

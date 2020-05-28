@@ -5,7 +5,15 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".NewProfilePictureActivity">
-
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/new_profile_picture_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:background="@color/colorPrimary"
+        android:layout_alignParentTop="true"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:layout_editor_absoluteX="0dp">
+    </androidx.appcompat.widget.Toolbar>
 
     <TextView
         android:id="@+id/textView43"
@@ -15,10 +23,9 @@
         android:layout_marginLeft="30dp"
         android:layout_marginBottom="5dp"
         android:text="Choose from:"
-        android:textSize="24dp"
-        android:layout_alignParentTop="true"
-        app:layout_constraintHorizontal_bias="0.176"
-         />
+        android:textSize="22dp"
+        android:layout_below="@id/new_profile_picture_toolbar"
+        />
 
     <Button
         android:id="@+id/button9"
@@ -28,7 +35,7 @@
         android:layout_marginTop="0dp"
         android:layout_centerHorizontal="true"
         android:layout_below="@id/imageView17"
-       />
+        />
 
     <ListView
         android:id="@android:id/list"
@@ -37,7 +44,7 @@
         android:scrollbars="none"
         android:layout_marginBottom="5dp"
         android:layout_below="@id/textView43"
-         />
+        />
 
     <ImageView
         android:id="@+id/imageView17"

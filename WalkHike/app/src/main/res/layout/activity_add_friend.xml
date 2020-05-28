@@ -6,6 +6,17 @@
     android:layout_height="match_parent"
     tools:context=".AddFriendActivity">
 
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/add_friend_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:background="@color/colorPrimary"
+        android:minHeight="?attr/actionBarSize"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:layout_editor_absoluteX="0dp">
+
+    </androidx.appcompat.widget.Toolbar>
+
     <Switch
         android:id="@+id/switch5"
         android:layout_width="wrap_content"

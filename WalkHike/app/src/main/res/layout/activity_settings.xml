@@ -5,7 +5,16 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".SettingsActivity">
-
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/settings_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:background="@color/colorPrimary"
+        android:minHeight="?attr/actionBarSize"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_alignParentTop="true"
+        tools:layout_editor_absoluteX="0dp">
+    </androidx.appcompat.widget.Toolbar>
     <Button
         android:id="@+id/button3"
         android:layout_width="wrap_content"
@@ -38,7 +47,7 @@
         android:layout_marginTop="60dp"
         android:scrollbars="none"
         android:layout_centerHorizontal="true"
-        android:layout_alignParentTop="true"
+        android:layout_below="@id/settings_toolbar"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
