@@ -13,6 +13,7 @@ import com.google.firebase.database.ValueEventListener;
 import java.sql.DatabaseMetaData;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 public class WalkHikeData {
 
@@ -30,10 +31,31 @@ public class WalkHikeData {
         db.child(FIREBASE_CHILD).addListenerForSingleValueEvent(parentEventListener);
     }
 
+    private static class SingletonHolder {
+        public static final WalkHikeData instance = new WalkHikeData();
+    }
+
+    public static WalkHikeData getInstance() {
+        return SingletonHolder.instance;
+    }
+
+    public ArrayList<Position> getMyPlaces() {
+        return positions;
+    }
+
+    ListUpdatedEventListener updateListener;
+    public void setEventListener(ListUpdatedEventListener listener) {
+        updateListener = listener;
+    }
+    public interface ListUpdatedEventListener {
+        void onListUpdated();
+    }
+
     ValueEventListener parentEventListener = new ValueEventListener() {
         @Override
         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-
+            if (updateListener != null)
+                updateListener.onListUpdated();
         }
 
         @Override
@@ -45,7 +67,16 @@ public class WalkHikeData {
     ChildEventListener childEventListener = new ChildEventListener() {
         @Override
         public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+            String myPlaceKey = dataSnapshot.getKey();
 
+            if (!PositionsMapping.containsKey(myPlaceKey)) {
+                Position myPlace = dataSnapshot.getValue(Position.class);
+                myPlace.key = myPlaceKey;
+                positions.add(myPlace);
+                PositionsMapping.put(myPlaceKey, positions.size() - 1);
+                if (updateListener != null)
+                    updateListener.onListUpdated();
+            }
         }
 
         @Override
