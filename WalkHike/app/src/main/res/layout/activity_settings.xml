@@ -4,16 +4,18 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="?attr/bgColor"
     tools:context=".SettingsActivity">
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/settings_toolbar"
         android:layout_width="match_parent"
         android:layout_height="56dp"
-        android:background="@color/colorPrimary"
+        android:background="?attr/toolbarColor"
         android:minHeight="?attr/actionBarSize"
         app:layout_constraintTop_toTopOf="parent"
         android:layout_alignParentTop="true"
-        tools:layout_editor_absoluteX="0dp">
+        tools:layout_editor_absoluteX="0dp"
+        >
     </androidx.appcompat.widget.Toolbar>
     <Button
         android:id="@+id/button3"
@@ -50,6 +52,16 @@
         android:layout_below="@id/settings_toolbar"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent">
+
+    </ListView>
+
+    <Button
+        android:id="@+id/switch_theme"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/button3"
+        android:layout_marginTop="0dp"
+        android:text="switch theme" />
 
 </RelativeLayout>

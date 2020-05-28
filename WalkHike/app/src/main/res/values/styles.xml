@@ -1,11 +1,25 @@
 <resources>
 
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
+    <style name="AppThemeLight" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- Customize your theme here. -->
-        <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-        <item name="colorAccent">@color/colorAccent</item>
+        <!--<item name="colorPrimary">#aaaaaa</item>
+        <item name="colorPrimaryDark">#bbbbbb</item>
+        <item name="colorAccent">@color/colorAccent</item>-->
+        <item name="textColor">#FFFFFF</item>
+        <item name="metaTextColor">#606060</item>
+        <item name="bgColor">#ffffff</item>
+        <item name="toolbarColor">#4CAF50</item>
+    </style>
+    <style name="AppThemeDark" parent="ThemeOverlay.AppCompat.Dark">
+        <!-- Customize your theme here. -->
+        <!-- <item name="colorPrimary">@color/colorAccent</item>
+       <item name="colorPrimaryDark">@color/colorPrimary</item>
+       <item name="colorAccent">@color/colorAccent</item>-->
+        <item name="textColor">#ffffff</item>
+        <item name="metaTextColor">#aeaeae</item>
+        <item name="bgColor">#000000</item>
+        <item name="toolbarColor">#163217</item>
     </style>
 
 </resources>

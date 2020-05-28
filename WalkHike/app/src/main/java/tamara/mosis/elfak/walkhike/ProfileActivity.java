@@ -2,6 +2,7 @@ package tamara.mosis.elfak.walkhike;
 
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatDelegate;
 import androidx.appcompat.widget.Toolbar;
 
 import android.content.Context;
@@ -22,6 +23,10 @@ public class ProfileActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if (AppCompatDelegate.getDefaultNightMode() == AppCompatDelegate.MODE_NIGHT_YES)
+            setTheme(R.style.AppThemeDark);
+        else
+            setTheme(R.style.AppThemeLight);
         setContentView(R.layout.activity_profile);
 
         toolbar = (Toolbar) findViewById(R.id.profile_toolbar);
