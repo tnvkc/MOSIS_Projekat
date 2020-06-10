@@ -1,4 +1,5 @@
 apply plugin: 'com.android.application'
+apply plugin: 'com.google.ar.sceneform.plugin'
 
 android {
     compileSdkVersion 29
@@ -6,12 +7,19 @@ android {
 
     defaultConfig {
         applicationId "tamara.mosis.elfak.walkhike"
-        minSdkVersion 16
+        // Sceneform requires minSdkVersion >= 24.
+        minSdkVersion 24
         targetSdkVersion 29
         versionCode 1
         versionName "1.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+
+        compileOptions {
+            sourceCompatibility JavaVersion.VERSION_1_8
+            targetCompatibility JavaVersion.VERSION_1_8
+        }
+
     }
 
     buildTypes {
@@ -39,4 +47,24 @@ dependencies {
     androidTestImplementation 'androidx.test.ext:junit:1.1.1'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
 
+    implementation 'com.google.ar:core:1.15.0'
+    implementation 'com.google.ar.sceneform.ux:sceneform-ux:1.15.0'
+
 }
+
+apply plugin: 'com.google.ar.sceneform.plugin'
+
+sceneform.asset('sampledata/trophy.obj',
+        'default',
+        'sampledata/trophy.sfa',
+        'src/main/res/raw/trophy')
+
+sceneform.asset('sampledata/marker.obj',
+        'default',
+        'sampledata/marker.sfa',
+        'src/main/res/raw/marker')
+
+sceneform.asset('sampledata/emoji_love.obj',
+        'default',
+        'sampledata/emoji_love.sfa',
+        'src/main/res/raw/emoji_love')

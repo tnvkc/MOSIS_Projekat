@@ -47,6 +47,20 @@
         android:layout_marginRight="45dp"
         android:layout_marginBottom="45dp"
         android:clickable="true"
-        app:srcCompat="@drawable/ic_add_object" />
+        android:src="@drawable/ic_add_object" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/main_showArObject"
+        android:layout_above="@+id/main_addnewObject"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginEnd="45dp"
+        android:layout_marginRight="45dp"
+        android:layout_marginBottom="45dp"
+        android:clickable="true"
+        android:src="@drawable/ic_trophy"
+        />
 
 </RelativeLayout>
