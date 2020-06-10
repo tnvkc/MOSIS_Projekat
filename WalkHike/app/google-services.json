@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "410901111501",
+    "firebase_url": "https://walkhike.firebaseio.com",
+    "project_id": "walkhike",
+    "storage_bucket": "walkhike.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:410901111501:android:5f4a003ccb08b2cbdc7f84",
+        "android_client_info": {
+          "package_name": "tamara.mosis.elfak.walkhike"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "410901111501-kcqtofdnti4fj3uo4levrl6vvag3pu70.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDFLB8zMJe1merJCVvNP5tUpy2iXN94Iek"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "410901111501-kcqtofdnti4fj3uo4levrl6vvag3pu70.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
