@@ -26,7 +26,7 @@
         />
 
     <EditText
-        android:id="@+id/editText2"
+        android:id="@+id/login_edit_pass"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="5dp"
@@ -34,7 +34,7 @@
         android:inputType="textPersonName"
         android:text="Password"
         android:layout_centerHorizontal="true"
-        android:layout_below="@id/editText"
+        android:layout_below="@id/login_edit_email"
         />
 
     <TextView
@@ -51,7 +51,7 @@
         />
 
     <EditText
-        android:id="@+id/editText"
+        android:id="@+id/login_edit_email"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="50dp"
@@ -64,12 +64,12 @@
         />
 
     <Button
-        android:id="@+id/button"
+        android:id="@+id/login_button_login"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="30dp"
         android:text="Log in"
-        android:layout_below="@+id/editText2"
+        android:layout_below="@+id/login_edit_pass"
         android:layout_centerHorizontal="true"
 
         />
@@ -81,7 +81,7 @@
         android:layout_marginTop="68dp"
         android:layout_marginBottom="5dp"
         android:text="@string/or_sign_up"
-        android:layout_below="@+id/button"
+        android:layout_below="@+id/login_button_login"
         android:layout_centerHorizontal="true"
         android:layout_alignParentBottom="true"
         />

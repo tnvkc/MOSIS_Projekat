@@ -28,7 +28,7 @@ public class SignUpActivity extends AppCompatActivity {
     EditText txtPassword;
     private ProgressDialog progress;
     private FirebaseAuth firebaseAuth;
-
+    private boolean successfull = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,19 +76,39 @@ public class SignUpActivity extends AppCompatActivity {
         progress.setMessage("registering...");
         progress.show();
 
+
         firebaseAuth.createUserWithEmailAndPassword(email, pass).addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
                     if(task.isSuccessful())
                     {
                         Toast.makeText(getApplicationContext(), "Signed in! " + txtEmail.getText() +  txtPassword.getText(), Toast.LENGTH_SHORT).show();
+                        successfull = true;
                     }
                     else
                     {
                         Toast.makeText(getApplicationContext(), "Could not register! ", Toast.LENGTH_SHORT).show();
                     }
-                    progress.dismiss();
+
             }
         });
+        if(successfull) {
+            firebaseAuth.signInWithEmailAndPassword(email, pass).addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                @Override
+                public void onComplete(@NonNull Task<AuthResult> task) {
+                    if(task.isSuccessful())
+                    {
+                        Toast.makeText(getApplicationContext(), "loged in! " + txtEmail.getText() +  txtPassword.getText(), Toast.LENGTH_SHORT).show();
+                        Intent intent=new Intent(getApplicationContext(), ProfileActivity.class);
+                        startActivity(intent);
+                    }
+                    else
+                    {
+                        Toast.makeText(getApplicationContext(), "Could not login! ", Toast.LENGTH_SHORT).show();
+                    }
+                    progress.dismiss();
+                }
+            });
+        }
     }
 }

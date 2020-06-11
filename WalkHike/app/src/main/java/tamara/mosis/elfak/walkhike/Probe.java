@@ -14,6 +14,8 @@ public class Probe extends AppCompatActivity {
 
 
     Button signupB;
+    Button loginB;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,5 +37,14 @@ public class Probe extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+        loginB = (Button) findViewById(R.id.proba_login);
+        loginB.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent=new Intent(getApplicationContext(), LoginActivity.class);
+                startActivity(intent);
+            }
+        });
+
     }
 }
