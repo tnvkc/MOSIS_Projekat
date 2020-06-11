@@ -5,14 +5,20 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.appcompat.widget.Toolbar;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 public class ProfileActivity extends AppCompatActivity {
 
@@ -20,6 +26,14 @@ public class ProfileActivity extends AppCompatActivity {
             R.drawable.ic_logout__black_24dp};
     ListView list;
     Toolbar toolbar;
+
+
+    Button Logout;
+
+    private ProgressDialog progress;
+    private FirebaseAuth firebaseAuth;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -28,6 +42,11 @@ public class ProfileActivity extends AppCompatActivity {
         else
             setTheme(R.style.AppThemeLight);
         setContentView(R.layout.activity_profile);
+
+        firebaseAuth = FirebaseAuth.getInstance();
+        final FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
+
+
 
         toolbar = (Toolbar) findViewById(R.id.profile_toolbar);
         setSupportActionBar(toolbar);
@@ -60,7 +79,18 @@ public class ProfileActivity extends AppCompatActivity {
                     case 3:
                         //intent=new Intent(getApplicationContext(), EditProfileActivity.class);
                         // startActivity(intent);
-                        Toast.makeText(getApplicationContext(), "LOGED OUT", Toast.LENGTH_SHORT).show();
+                        firebaseAuth.signOut();
+                        if(firebaseUser != null)
+                        {
+                            intent=new Intent(getApplicationContext(), LoginActivity.class);
+                            startActivity(intent);
+                            Toast.makeText(getApplicationContext(), "LOGED OUT", Toast.LENGTH_SHORT).show();
+                        }
+                        else
+                        {
+                            Toast.makeText(getApplicationContext(), "could not log out", Toast.LENGTH_SHORT).show();
+                        }
+
                         break;
                     default:
                 }
