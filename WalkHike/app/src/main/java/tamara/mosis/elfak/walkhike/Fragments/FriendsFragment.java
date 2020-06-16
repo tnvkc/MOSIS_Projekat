@@ -48,10 +48,10 @@ public class FriendsFragment extends Fragment {
         firebaseFirestore=firebaseFirestore.getInstance();
         usersListView=view.findViewById(R.id.friends_list_rv) ;
         usersList=new ArrayList<>();
-        usersRecyclerAdapter=new UsersRecyclerAdapter(container.getContext(),usersList);
+        usersRecyclerAdapter=new UsersRecyclerAdapter(getContext(),usersList);
 
         usersListView.setHasFixedSize(true);
-        usersListView.setLayoutManager(new LinearLayoutManager(container.getContext()));
+        usersListView.setLayoutManager(new LinearLayoutManager(getContext()));
         usersListView.setAdapter(usersRecyclerAdapter);
         return view;
     }
@@ -60,7 +60,7 @@ public class FriendsFragment extends Fragment {
     public void onStart()
     {
         super.onStart();
-        firebaseFirestore.collection("Users").addSnapshotListener(getActivity(),new EventListener<QuerySnapshot>() {
+        firebaseFirestore.collection("Users").addSnapshotListener(new EventListener<QuerySnapshot>() {
             @Override
             public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
                 for(DocumentChange doc:queryDocumentSnapshots.getDocumentChanges())

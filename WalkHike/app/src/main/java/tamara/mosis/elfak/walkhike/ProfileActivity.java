@@ -50,6 +50,7 @@ public class ProfileActivity extends AppCompatActivity {
         textViewName=findViewById(R.id.textViewName);
         firebaseAuth = FirebaseAuth.getInstance();//i yt
         firestore=FirebaseFirestore.getInstance();//yt
+        //Donsfl2GlXYkLvPvrhsWSAZAzvg2
         userID=firebaseAuth.getCurrentUser().getUid();//yt
         firestore.collection("Users").document(userID).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
             @Override

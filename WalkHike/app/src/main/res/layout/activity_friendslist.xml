@@ -32,26 +32,22 @@
         android:layout_height="40dp"
         android:layout_below="@id/friends_list_toolbar"
         android:layout_marginTop="5dp"
-        >
-
-    </SearchView>
-
+        />
 
     <fragment
         android:id="@+id/fragment_friends"
         android:name="tamara.mosis.elfak.walkhike.Fragments.FriendsFragment"
         android:layout_width="match_parent"
-        android:layout_height="580dp"
+        android:layout_height="wrap_content"
         android:layout_below="@id/search_bar"
-        android:layout_centerHorizontal="true">
+        android:layout_above="@id/bottom_navigation_menu"
+        android:layout_centerHorizontal="true"/>
 
-    </fragment>
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottom_navigation_menu"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:layout_below="@id/fragment_friends"
         app:itemBackground="@color/colorPrimary"
         app:itemIconTint="@drawable/selector"
         app:itemTextColor="@drawable/selector"

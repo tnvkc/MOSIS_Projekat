@@ -73,7 +73,7 @@ public class CustomListView extends ArrayAdapter<String> {
 
         ViewHolder(View v)
         {
-            tw=(TextView) v.findViewById(R.id.textViewPhotoInput);
+            tw=(TextView) v.findViewById(R.id.textViewUsername);
             iw=(ImageView) v.findViewById(R.id.imageViewPhotoInput);
 
         }
