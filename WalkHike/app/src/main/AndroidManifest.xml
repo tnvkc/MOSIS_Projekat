@@ -13,35 +13,37 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppThemeLight">
-        <activity android:name=".Probe"></activity>
+        <activity android:name=".SendActivity"></activity>
+        <activity android:name=".FriendRequestsActivity" />
+        <activity android:name=".Probe" />
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyC20SAi61o5fJQ1cTHMLh8MEOCWfwRZ_YI" />
 
-        <activity android:name=".SettingsActivity"></activity>
+        <activity android:name=".SettingsActivity" />
         <activity android:name=".EditProfileActivity" />
         <activity android:name=".AddFriendActivity" />
-        <activity android:name=".FriendProfileActivity"></activity>
+        <activity android:name=".FriendProfileActivity" />
         <activity android:name=".HelpActivity" />
         <activity android:name=".NewPasswordActivity" />
         <activity android:name=".RecoveryCodeActivity" />
-        <activity android:name=".NewProfilePictureActivity"></activity>
-        <activity android:name=".SignUpActivity" />
-        <activity android:name=".LoginActivity"></activity>
-        <activity android:name=".FriendslistActivity" />
-        <activity android:name=".AddNewObjectActivity" />
-        <activity android:name=".CompletedRoutesActivity" />
-        <activity android:name=".LeaderboardsActivity" />
-        <activity android:name=".NotificationsActivity" />
-        <activity android:name=".ProfileActivity"></activity>
-        <activity android:name=".MainActivity">
+        <activity android:name=".NewProfilePictureActivity" />
+        <activity android:name=".SignUpActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".LoginActivity" />
+        <activity android:name=".FriendslistActivity" />
+        <activity android:name=".AddNewObjectActivity" />
+        <activity android:name=".CompletedRoutesActivity" />
+        <activity android:name=".LeaderboardsActivity" />
+        <activity android:name=".NotificationsActivity" />
+        <activity android:name=".ProfileActivity" />
+        <activity android:name=".MainActivity"></activity>
     </application>
 
 </manifest>

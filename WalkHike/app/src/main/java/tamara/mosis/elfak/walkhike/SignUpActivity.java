@@ -16,9 +16,15 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.FirebaseFirestore;
+
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class SignUpActivity extends AppCompatActivity {
 
@@ -26,8 +32,12 @@ public class SignUpActivity extends AppCompatActivity {
     EditText txtUsername;
     EditText txtEmail;
     EditText txtPassword;
+    TextView orLogIn;
+
     private ProgressDialog progress;
     private FirebaseAuth firebaseAuth;
+    private FirebaseFirestore firestore;
+    //private FirebaseStorage.getInstance().get.. --za slike
     private boolean successfull = false;
 
     @Override
@@ -40,11 +50,13 @@ public class SignUpActivity extends AppCompatActivity {
         setContentView(R.layout.activity_sign_up);
 
        firebaseAuth = FirebaseAuth.getInstance();
+       firestore=FirebaseFirestore.getInstance();
 
        progress = new ProgressDialog(this);
 
         txtPassword = (EditText)   findViewById(R.id.signup_password);
         txtEmail = (EditText)   findViewById(R.id.signup_email);
+        txtUsername=(EditText) findViewById(R.id.signup_username);
 
         Signin = (Button) findViewById(R.id.signup_button_done);
         Signin.setOnClickListener(new View.OnClickListener() {
@@ -54,12 +66,23 @@ public class SignUpActivity extends AppCompatActivity {
                 registerUser();
             }
         });
+
+        orLogIn = (TextView) findViewById(R.id.textViewLogin);
+        orLogIn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent loginIntent=new Intent(SignUpActivity.this,LoginActivity.class);
+                startActivity(loginIntent);
+                finish();
+            }
+        });
     }
 
     private void registerUser()
     {
         String email = txtEmail.getText().toString();
         String pass = txtPassword.getText().toString();
+        final String name=txtUsername.getText().toString();
 
         if(TextUtils.isEmpty(email))
         {
@@ -83,7 +106,20 @@ public class SignUpActivity extends AppCompatActivity {
                     if(task.isSuccessful())
                     {
                         Toast.makeText(getApplicationContext(), "Signed in! " + txtEmail.getText() +  txtPassword.getText(), Toast.LENGTH_SHORT).show();
-                        successfull = true;
+                        String user_id=firebaseAuth.getCurrentUser().getUid();
+                        Map<String,Object> userMap=new HashMap<>();
+                        userMap.put("name",name);
+
+                        firestore.collection("Users").document(user_id).set(userMap).addOnSuccessListener(new OnSuccessListener<Void>() {
+                            @Override
+                            public void onSuccess(Void aVoid) {
+                                progress.dismiss();
+                                Toast.makeText(getApplicationContext(), "created account! " + txtEmail.getText() +  txtPassword.getText(), Toast.LENGTH_SHORT).show();
+                                Intent intent=new Intent(getApplicationContext(), MainActivity.class);
+                                startActivity(intent);
+                                finish();
+                            }
+                        });
                     }
                     else
                     {
@@ -92,23 +128,6 @@ public class SignUpActivity extends AppCompatActivity {
 
             }
         });
-        if(successfull) {
-            firebaseAuth.signInWithEmailAndPassword(email, pass).addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-                @Override
-                public void onComplete(@NonNull Task<AuthResult> task) {
-                    if(task.isSuccessful())
-                    {
-                        Toast.makeText(getApplicationContext(), "loged in! " + txtEmail.getText() +  txtPassword.getText(), Toast.LENGTH_SHORT).show();
-                        Intent intent=new Intent(getApplicationContext(), ProfileActivity.class);
-                        startActivity(intent);
-                    }
-                    else
-                    {
-                        Toast.makeText(getApplicationContext(), "Could not login! ", Toast.LENGTH_SHORT).show();
-                    }
-                    progress.dismiss();
-                }
-            });
-        }
+
     }
 }

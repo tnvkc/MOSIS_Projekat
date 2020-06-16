@@ -17,8 +17,11 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 public class ProfileActivity extends AppCompatActivity {
 
@@ -26,13 +29,14 @@ public class ProfileActivity extends AppCompatActivity {
             R.drawable.ic_logout__black_24dp};
     ListView list;
     Toolbar toolbar;
-
+    TextView textViewName;
 
     Button Logout;
 
     private ProgressDialog progress;
     private FirebaseAuth firebaseAuth;
-
+    private FirebaseFirestore firestore;//yt
+    private String userID;//yt
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,10 +47,20 @@ public class ProfileActivity extends AppCompatActivity {
             setTheme(R.style.AppThemeLight);
         setContentView(R.layout.activity_profile);
 
-        firebaseAuth = FirebaseAuth.getInstance();
+        textViewName=findViewById(R.id.textViewName);
+        firebaseAuth = FirebaseAuth.getInstance();//i yt
+        firestore=FirebaseFirestore.getInstance();//yt
+        userID=firebaseAuth.getCurrentUser().getUid();//yt
+        firestore.collection("Users").document(userID).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+            @Override
+              public void onSuccess(DocumentSnapshot documentSnapshot) {
+                    String username=documentSnapshot.getString("name");
+                    textViewName.setText(username);
+              }
+           }
+        );
+
         final FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
-
-
 
         toolbar = (Toolbar) findViewById(R.id.profile_toolbar);
         setSupportActionBar(toolbar);
@@ -56,7 +70,7 @@ public class ProfileActivity extends AppCompatActivity {
         list = (ListView) findViewById(R.id.listview_profile_options);
         Context context = getApplicationContext();
         CustomListView adapter = new CustomListView(this, context.getResources().getStringArray(R.array.profile_options),
-                imgid, false);
+                imgid, "profileOptions");
         list.setAdapter(adapter);
 
         list.setOnItemClickListener(new AdapterView.OnItemClickListener() {

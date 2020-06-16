@@ -33,7 +33,7 @@ public class AddFriendActivity extends AppCompatActivity {
         list=(ListView) findViewById(R.id.add_friend_listview);
         Context context=getApplicationContext();
         CustomListView adapter=new CustomListView(this,friends,
-                null,false);
+                null,"addUser");
         list.setAdapter(adapter);
     }
 }

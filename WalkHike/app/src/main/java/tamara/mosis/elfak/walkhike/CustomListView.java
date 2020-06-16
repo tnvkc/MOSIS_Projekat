@@ -19,15 +19,15 @@ public class CustomListView extends ArrayAdapter<String> {
     private Activity context;
     private String[] names;
     private Integer[] images;
-    private boolean switchOrNot;
+    private String type;
 
-    public CustomListView(Activity context, String[] itemName, Integer[] imageid,boolean switchornot)
+    public CustomListView(Activity context, String[] itemName, Integer[] imageid,String type)
     {
         super(context, R.layout.list_member,itemName);
         this.context=context;
         this.names=itemName;
         this.images=imageid;
-        this.switchOrNot=switchornot;
+        this.type=type;
     }
     @NonNull
     @Override
@@ -39,15 +39,20 @@ public class CustomListView extends ArrayAdapter<String> {
         {
             LayoutInflater layoutInflater = context.getLayoutInflater();
 
-            if(images==null)//for AddFriendActivity
-                vw = layoutInflater.inflate(R.layout.list_member_add_user, null, true);
-            else
-            {
-                if (switchOrNot)
+            switch(type) {
+                case "addUser":
+                    vw = layoutInflater.inflate(R.layout.list_member_add_user, null, true);
+                    break;
+                case "acceptDecline":
+                    vw = layoutInflater.inflate(R.layout.list_member_accept_decline, null, true);
+                    break;
+                case "settings":
                     vw = layoutInflater.inflate(R.layout.list_member_switch, null, true);
-                else
+                    break;
+                default:
                     vw = layoutInflater.inflate(R.layout.list_member, null, true);
             }
+
             vh=new ViewHolder(vw);
             vw.setTag(vh);
         }

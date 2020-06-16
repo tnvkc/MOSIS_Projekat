@@ -11,7 +11,7 @@
         android:layout_height="55dp">
 
         <TextView
-            android:id="@+id/textViewPhotoInput"
+            android:id="@+id/textViewUsername"
             android:layout_width="166dp"
             android:layout_height="24dp"
             android:text="TextView"

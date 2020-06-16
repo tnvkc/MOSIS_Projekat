@@ -39,9 +39,12 @@ import com.google.android.gms.maps.model.MarkerOptions;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 public class MainActivity extends AppCompatActivity implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener, OnMapReadyCallback {
 
+    private FirebaseAuth mfirebaseAuth;
     private static final int PERMISSION_CODE = 1;
     Location location;
     LocationManager locationManager;
@@ -56,6 +59,19 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
     MenuItem profileItem;
 
     @Override
+    protected void onStart()
+    {
+        super.onStart();
+        FirebaseUser currentUser=mfirebaseAuth.getCurrentUser();
+        if(currentUser==null)
+        {
+            Intent loginIntent=new Intent(MainActivity.this,LoginActivity.class);
+            startActivity(loginIntent);
+            finish();
+        }
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (AppCompatDelegate.getDefaultNightMode() == AppCompatDelegate.MODE_NIGHT_YES)
@@ -65,6 +81,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
 
         setContentView(R.layout.activity_main);
 
+        mfirebaseAuth=FirebaseAuth.getInstance();
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
                 && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, PERMISSION_CODE);

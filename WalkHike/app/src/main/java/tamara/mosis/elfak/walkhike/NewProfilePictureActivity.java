@@ -30,7 +30,7 @@ public class NewProfilePictureActivity extends AppCompatActivity {
         list=(ListView) findViewById(android.R.id.list);
         Context context=getApplicationContext();
         CustomListView adapter=new CustomListView(this,context.getResources().getStringArray(R.array.new_profile_image_options),
-                imgid,false);
+                imgid,"newProfilePicture");
         list.setAdapter(adapter);
 
     }

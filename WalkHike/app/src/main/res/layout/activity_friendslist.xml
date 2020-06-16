@@ -6,19 +6,59 @@
     android:layout_height="match_parent"
     tools:context=".FriendslistActivity">
 
-    <TextView
-        android:id="@+id/textView4"
-        android:layout_width="260dp"
-        android:layout_height="241dp"
-        android:text="friendlist activity" />
+   <!-- <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/floatingActionButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:clickable="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="80dp"
+        android:layout_marginRight="20dp"
+        app:srcCompat="@drawable/ic_add_object" />-->
 
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/friends_list_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:layout_alignParentTop="true"
+        android:background="?attr/toolbarColor"
+        android:minHeight="?attr/actionBarSize">
+
+    </androidx.appcompat.widget.Toolbar>
+    <SearchView
+        android:id="@+id/search_bar"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_below="@id/friends_list_toolbar"
+        android:layout_marginTop="5dp"
+        >
+
+    </SearchView>
+
+
+    <fragment
+        android:id="@+id/fragment_friends"
+        android:name="tamara.mosis.elfak.walkhike.Fragments.FriendsFragment"
+        android:layout_width="match_parent"
+        android:layout_height="580dp"
+        android:layout_below="@id/search_bar"
+        android:layout_centerHorizontal="true">
+
+    </fragment>
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottom_navigation_menu"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
+        android:layout_below="@id/fragment_friends"
         app:itemBackground="@color/colorPrimary"
         app:itemIconTint="@drawable/selector"
         app:itemTextColor="@drawable/selector"
-        app:menu="@menu/navigation_menu" />
+        app:menu="@menu/navigation_menu" >
+
+    </com.google.android.material.bottomnavigation.BottomNavigationView>
+
+
+
 </RelativeLayout>
