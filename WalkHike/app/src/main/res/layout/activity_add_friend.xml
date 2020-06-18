@@ -27,15 +27,6 @@
         android:textSize="22dp"
         android:layout_below="@+id/add_friend_toolbar" />
 
-    <ListView
-        android:id="@+id/add_friend_listview"
-        android:layout_width="314dp"
-        android:layout_height="334dp"
-        android:layout_marginTop="30dp"
-        android:layout_centerHorizontal="true"
-        android:layout_below="@+id/searchView"
-        />
-
     <SearchView
         android:id="@+id/searchView"
         android:layout_width="316dp"
@@ -44,4 +35,15 @@
         android:layout_marginLeft="30dp"
         android:layout_below="@+id/textView34"
         />
+
+    <fragment
+        android:id="@+id/fragment"
+        android:name="tamara.mosis.elfak.walkhike.Fragments.OtherUsersFragment"
+        android:layout_width="340dp"
+        android:layout_height="511dp"
+        android:layout_centerHorizontal="true"
+        android:layout_alignParentBottom="true"
+        android:layout_below="@+id/searchView"
+        android:layout_marginTop="22dp"
+        android:layout_marginBottom="10dp"/>
 </RelativeLayout>

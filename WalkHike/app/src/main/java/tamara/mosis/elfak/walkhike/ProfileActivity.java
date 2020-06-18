@@ -21,7 +21,12 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.gson.internal.$Gson$Preconditions;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class ProfileActivity extends AppCompatActivity {
 
@@ -71,7 +76,7 @@ public class ProfileActivity extends AppCompatActivity {
         list = (ListView) findViewById(R.id.listview_profile_options);
         Context context = getApplicationContext();
         CustomListView adapter = new CustomListView(this, context.getResources().getStringArray(R.array.profile_options),
-                imgid, "profileOptions");
+                imgid, false,false);
         list.setAdapter(adapter);
 
         list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -94,17 +99,25 @@ public class ProfileActivity extends AppCompatActivity {
                     case 3:
                         //intent=new Intent(getApplicationContext(), EditProfileActivity.class);
                         // startActivity(intent);
-                        firebaseAuth.signOut();
-                        if(firebaseUser != null)
+                        Map<String,Object> tokenMapRemove=new HashMap<>();
+                        tokenMapRemove.put("token_id", FieldValue.delete());
+                        firestore.collection("Users").document(userID).update(tokenMapRemove).addOnSuccessListener(new OnSuccessListener<Void>() {
+                            @Override
+                            public void onSuccess(Void aVoid) {
+                                firebaseAuth.signOut();
+                                Intent intent=new Intent(getApplicationContext(), LoginActivity.class);
+                                startActivity(intent);
+                            }
+                        });
+                        /*if(firebaseUser != null)
                         {
-                            intent=new Intent(getApplicationContext(), LoginActivity.class);
-                            startActivity(intent);
-                            Toast.makeText(getApplicationContext(), "LOGED OUT", Toast.LENGTH_SHORT).show();
+
+                            Toast.makeText(getApplicationContext(), "LOGGED OUT", Toast.LENGTH_SHORT).show();
                         }
                         else
                         {
                             Toast.makeText(getApplicationContext(), "could not log out", Toast.LENGTH_SHORT).show();
-                        }
+                        }*/
 
                         break;
                     default:

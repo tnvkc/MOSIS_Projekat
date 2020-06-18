@@ -1,33 +1,37 @@
+
 package tamara.mosis.elfak.walkhike;
 
-import android.app.Activity;
-import android.content.Context;
-import android.content.Intent;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
-import android.widget.ImageView;
-import android.widget.TextView;
+        import android.app.Activity;
+        import android.content.Context;
+        import android.content.Intent;
+        import android.view.LayoutInflater;
+        import android.view.View;
+        import android.view.ViewGroup;
+        import android.widget.ArrayAdapter;
+        import android.widget.ImageView;
+        import android.widget.TextView;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.recyclerview.widget.RecyclerView;
+        import androidx.annotation.NonNull;
+        import androidx.annotation.Nullable;
+        import androidx.recyclerview.widget.RecyclerView;
 
 public class CustomListView extends ArrayAdapter<String> {
 
     private Activity context;
     private String[] names;
     private Integer[] images;
-    private String type;
+    private boolean switchOrNot;
+    private boolean acceptdecline;
 
-    public CustomListView(Activity context, String[] itemName, Integer[] imageid,String type)
+
+    public CustomListView(Activity context, String[] itemName, Integer[] imageid,boolean switchornot,boolean acceptdecline)
     {
         super(context, R.layout.list_member,itemName);
         this.context=context;
         this.names=itemName;
         this.images=imageid;
-        this.type=type;
+        this.switchOrNot=switchornot;
+        this.acceptdecline=acceptdecline;
     }
     @NonNull
     @Override
@@ -39,19 +43,14 @@ public class CustomListView extends ArrayAdapter<String> {
         {
             LayoutInflater layoutInflater = context.getLayoutInflater();
 
-            switch(type) {
-                case "addUser":
+                if (images == null)//for AddFriendActivity
                     vw = layoutInflater.inflate(R.layout.list_member_add_user, null, true);
-                    break;
-                case "acceptDecline":
-                    vw = layoutInflater.inflate(R.layout.list_member_accept_decline, null, true);
-                    break;
-                case "settings":
-                    vw = layoutInflater.inflate(R.layout.list_member_switch, null, true);
-                    break;
-                default:
-                    vw = layoutInflater.inflate(R.layout.list_member, null, true);
-            }
+                else {
+                    if (switchOrNot)
+                        vw = layoutInflater.inflate(R.layout.list_member_switch, null, true);
+                    else
+                        vw = layoutInflater.inflate(R.layout.list_member, null, true);
+                }
 
             vh=new ViewHolder(vw);
             vw.setTag(vh);
@@ -73,7 +72,7 @@ public class CustomListView extends ArrayAdapter<String> {
 
         ViewHolder(View v)
         {
-            tw=(TextView) v.findViewById(R.id.textViewUsername);
+            tw=(TextView) v.findViewById(R.id.textViewPhotoInput);
             iw=(ImageView) v.findViewById(R.id.imageViewPhotoInput);
 
         }

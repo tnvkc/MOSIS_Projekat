@@ -98,6 +98,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
         toolbar = (Toolbar)findViewById(R.id.main_toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle(R.string.app_name);
+        getSupportActionBar().setDisplayShowTitleEnabled(true);
 
         addNewFloating = (FloatingActionButton) findViewById(R.id.main_addnewObject);
         addNewFloating.setOnClickListener(new View.OnClickListener() {
@@ -150,7 +151,9 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.main_menu_profile, menu);
         return super.onCreateOptionsMenu(menu);
+        //return false;
     }
+
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
@@ -161,7 +164,9 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
             startActivity(intent);
         }
         else if(item.getItemId() == R.id.main_menu_profile_item) {
+
             Intent intent=new Intent(getApplicationContext(), ProfileActivity.class);
+            //intent.putExtra("username",);
             startActivity(intent);
         }
         return super.onOptionsItemSelected(item);

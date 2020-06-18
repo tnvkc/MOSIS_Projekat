@@ -4,7 +4,7 @@
     <string name="title_home">Home</string>
     <string name="title_dashboard">Dashboard</string>
     <string name="title_notifications">Notifications</string>
-
+    <string name="default_notification_channel_id">WNH_1</string>
     <string name="insert_profile_picture"><u>Insert profile picture</u></string>
     <string name="log_in_link"><u>Already have an account? Log in</u></string>
     <string name="or_sign_up"><u>or Sign up</u></string>

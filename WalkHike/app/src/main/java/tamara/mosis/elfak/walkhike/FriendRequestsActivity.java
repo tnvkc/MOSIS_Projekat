@@ -27,10 +27,6 @@ public class FriendRequestsActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle("Friend requests");
 
-        list=(ListView) findViewById(R.id.list_friend_requests);
-        Context context=getApplicationContext();
-        CustomListView adapter=new CustomListView(this,friendRequests,
-                null,"acceptDecline");
-        list.setAdapter(adapter);
+
     }
 }

@@ -4,15 +4,19 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
+import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ListView;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentChange;
@@ -26,8 +30,26 @@ import java.util.List;
 
 public class FriendslistActivity extends AppCompatActivity {
 
+    Toolbar toolbar;
     BottomNavigationView bottom_navigation_menu;
+    FloatingActionButton buttonAddFriend;
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.go_to_friend_requests_menu, menu);
+        return super.onCreateOptionsMenu(menu);
+        //return false;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+
+
+            Intent intent=new Intent(getApplicationContext(), FriendRequestsActivity.class);
+            startActivity(intent);
+
+        return super.onOptionsItemSelected(item);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,6 +59,20 @@ public class FriendslistActivity extends AppCompatActivity {
         else
             setTheme(R.style.AppThemeLight);
         setContentView(R.layout.activity_friendslist);
+
+        toolbar = (Toolbar)findViewById(R.id.friends_list_toolbar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setTitle("Friends");
+        getSupportActionBar().setDisplayShowTitleEnabled(true);
+
+        buttonAddFriend=findViewById(R.id.floating_ab_add_friend);
+        buttonAddFriend.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {//treba addfriendactivity da se pozove,proba samo
+                Intent intent=new Intent(getApplicationContext(), FriendRequestsActivity.class);
+                startActivity(intent);
+            }
+        });
 
         bottom_navigation_menu = findViewById(R.id.bottom_navigation_menu);
         bottom_navigation_menu.setSelectedItemId(R.id.friends);

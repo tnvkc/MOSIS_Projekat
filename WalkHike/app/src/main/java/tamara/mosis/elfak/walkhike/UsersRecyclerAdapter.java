@@ -32,18 +32,22 @@ public class UsersRecyclerAdapter extends RecyclerView.Adapter<UsersRecyclerAdap
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        holder.username_view.setText(usersList.get(position).getName());
+        final String username=usersList.get(position).getName();
+        holder.username_view.setText(username);
         final String user_id=usersList.get(position).userId;
-        holder.vie.setOnClickListener(new View.OnClickListener()
+
+       /* holder.vie.setOnClickListener(new View.OnClickListener()
         {
             @Override
             public  void onClick(View view)
             {
                 Intent sendIntent=new Intent(context,SendActivity.class);
                 sendIntent.putExtra("user_id",user_id);
+                sendIntent.putExtra("username",username);
+
                 context.startActivity(sendIntent);
             }
-        });
+        });*/
     }
 
     @Override

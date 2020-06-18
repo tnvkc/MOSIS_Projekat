@@ -42,7 +42,7 @@ public class SettingsActivity extends AppCompatActivity {
         list=(ListView) findViewById(R.id.list_settings);
         Context context=getApplicationContext();
         CustomListView adapter=new CustomListView(this,context.getResources().getStringArray(R.array.settings_options),
-                imgid,"settings");
+                imgid,true,false);
         list.setAdapter(adapter);
 
 

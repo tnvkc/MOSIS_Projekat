@@ -13,7 +13,14 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppThemeLight">
-        <activity android:name=".SendActivity"></activity>
+        <activity android:name=".NotificationActivity">
+            <intent-filter>
+                <action android:name="tamara.mosis.elfak.walknhike.TARGETNOTIFICATION" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+        <activity android:name=".SendActivity" />
         <activity android:name=".FriendRequestsActivity" />
         <activity android:name=".Probe" />
 
@@ -43,7 +50,17 @@
         <activity android:name=".LeaderboardsActivity" />
         <activity android:name=".NotificationsActivity" />
         <activity android:name=".ProfileActivity" />
-        <activity android:name=".MainActivity"></activity>
+        <activity android:name=".MainActivity" />
+
+        <service android:name=".FirebaseMessagingService">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+            </intent-filter>
+        </service>
+
+        <meta-data
+            android:name="com.google.firebase.messaging.default_notification_channel_id"
+            android:value="@string/default_notification_channel_id"></meta-data>
     </application>
 
 </manifest>

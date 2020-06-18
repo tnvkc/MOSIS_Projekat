@@ -20,7 +20,10 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.GetTokenResult;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.iid.FirebaseInstanceId;
+import com.google.gson.internal.$Gson$Preconditions;
 
 
 import java.util.HashMap;
@@ -103,23 +106,27 @@ public class SignUpActivity extends AppCompatActivity {
         firebaseAuth.createUserWithEmailAndPassword(email, pass).addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
-                    if(task.isSuccessful())
-                    {
-                        Toast.makeText(getApplicationContext(), "Signed in! " + txtEmail.getText() +  txtPassword.getText(), Toast.LENGTH_SHORT).show();
-                        String user_id=firebaseAuth.getCurrentUser().getUid();
-                        Map<String,Object> userMap=new HashMap<>();
-                        userMap.put("name",name);
+                    if(task.isSuccessful()) {
 
+
+                        String user_id = firebaseAuth.getCurrentUser().getUid();
+
+                        String token_id = FirebaseInstanceId.getInstance().getToken();
+                        Map<String, Object> userMap = new HashMap<>();
+                        userMap.put("name", name);
+                        userMap.put("token_id", token_id);
                         firestore.collection("Users").document(user_id).set(userMap).addOnSuccessListener(new OnSuccessListener<Void>() {
                             @Override
                             public void onSuccess(Void aVoid) {
                                 progress.dismiss();
-                                Toast.makeText(getApplicationContext(), "created account! " + txtEmail.getText() +  txtPassword.getText(), Toast.LENGTH_SHORT).show();
-                                Intent intent=new Intent(getApplicationContext(), MainActivity.class);
+
+                                Toast.makeText(getApplicationContext(), "created account! " + txtEmail.getText() + txtPassword.getText(), Toast.LENGTH_SHORT).show();
+                                Intent intent = new Intent(getApplicationContext(), MainActivity.class);
                                 startActivity(intent);
                                 finish();
                             }
                         });
+
                     }
                     else
                     {

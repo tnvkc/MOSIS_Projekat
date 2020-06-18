@@ -30,10 +30,6 @@ public class AddFriendActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle("Add friend");
 
-        list=(ListView) findViewById(R.id.add_friend_listview);
-        Context context=getApplicationContext();
-        CustomListView adapter=new CustomListView(this,friends,
-                null,"addUser");
-        list.setAdapter(adapter);
+
     }
 }
