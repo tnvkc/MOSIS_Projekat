@@ -14,6 +14,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -44,9 +45,15 @@ public class FriendslistActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
 
-
+        if(item.getItemId() == R.id.friends_requests_item)
+        {
             Intent intent=new Intent(getApplicationContext(), FriendRequestsActivity.class);
             startActivity(intent);
+
+            Toast.makeText(getApplicationContext(), "klik na add friend", Toast.LENGTH_SHORT);
+        }
+        Toast.makeText(getApplicationContext(), "klik na menu", Toast.LENGTH_SHORT);
+
 
         return super.onOptionsItemSelected(item);
     }

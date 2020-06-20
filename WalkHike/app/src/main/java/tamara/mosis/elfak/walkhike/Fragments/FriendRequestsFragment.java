@@ -43,7 +43,7 @@ public class FriendRequestsFragment extends Fragment {
         // Inflate the layout for this fragment
         View view= inflater.inflate(R.layout.fragment_friend_requests, container, false);
 
-        firebaseFirestore=firebaseFirestore.getInstance();
+        firebaseFirestore=FirebaseFirestore.getInstance();
         usersListView=view.findViewById(R.id.friend_requests_rv) ;
         usersList=new ArrayList<>();
         freqRecyclerAdapter=new FriendRequestsRecyclerAdapter(getContext(),usersList);

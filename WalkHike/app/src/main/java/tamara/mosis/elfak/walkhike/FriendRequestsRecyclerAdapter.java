@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -79,15 +80,15 @@ public class FriendRequestsRecyclerAdapter extends RecyclerView.Adapter<FriendRe
     {
         private View vie;
         private TextView username_view;
-        private Button acceptButton;
-        private Button declineButton;
+        private ImageButton acceptButton;
+        private ImageButton declineButton;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             vie=itemView;
             username_view=(TextView)vie.findViewById(R.id.textViewRequest);
-            acceptButton=vie.findViewById(R.id.button_accept);
-            declineButton=vie.findViewById(R.id.button_decline);
+            acceptButton= (ImageButton) vie.findViewById(R.id.button_accept);
+            declineButton=  (ImageButton)vie.findViewById(R.id.button_decline);
 
 
         }

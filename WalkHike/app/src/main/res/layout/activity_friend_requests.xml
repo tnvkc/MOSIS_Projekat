@@ -5,16 +5,15 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".FriendRequestsActivity">
+
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/friend_requests_toolbar"
         android:layout_width="match_parent"
-        android:background="@color/colorPrimary"
-        android:layout_height="56dp"
-        android:layout_alignParentTop="true"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:layout_editor_absoluteX="0dp">
-    </androidx.appcompat.widget.Toolbar>
+        android:layout_height="wrap_content"
+        android:minHeight="?attr/actionBarSize"
+        android:background="?attr/toolbarColor">
 
+    </androidx.appcompat.widget.Toolbar>
     <Button
         android:id="@+id/buttonDone"
         android:layout_width="wrap_content"
@@ -28,10 +27,12 @@
 
     <fragment
         android:id="@+id/fragment_friend_requests"
-        android:name="tamara.mosis.elfak.walkhike.FriendRequestsFragment"
+        android:name="tamara.mosis.elfak.walkhike.Fragments.FriendRequestsFragment"
         android:layout_width="340dp"
         android:layout_height="531dp"
         android:layout_below="@id/friend_requests_toolbar"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="20dp" />
+
+
 </RelativeLayout>
