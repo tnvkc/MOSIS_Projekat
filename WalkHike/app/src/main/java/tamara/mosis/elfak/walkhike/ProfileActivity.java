@@ -52,34 +52,33 @@ public class ProfileActivity extends AppCompatActivity {
             setTheme(R.style.AppThemeLight);
         setContentView(R.layout.activity_profile);
 
-        textViewName=findViewById(R.id.textViewName);
-        firebaseAuth = FirebaseAuth.getInstance();//i yt
+       textViewName=findViewById(R.id.textViewName);
+       firebaseAuth = FirebaseAuth.getInstance();//i yt
         firestore=FirebaseFirestore.getInstance();//yt
         //Donsfl2GlXYkLvPvrhsWSAZAzvg2
-        userID=firebaseAuth.getCurrentUser().getUid();//yt
-        firestore.collection("Users").document(userID).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+       // userID=firebaseAuth.getCurrentUser().getUid();//yt
+        /*firestore.collection("Users").document(userID).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
             @Override
               public void onSuccess(DocumentSnapshot documentSnapshot) {
                     String username=documentSnapshot.getString("name");
                     textViewName.setText(username);
               }
            }
-        );
+        );*/
 
-        final FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
+       final FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
 
-        toolbar = (Toolbar) findViewById(R.id.profile_toolbar);
-        setSupportActionBar(toolbar);
-        getSupportActionBar().setTitle("Profile");
+       toolbar = (Toolbar) findViewById(R.id.profile_toolbar);
+       setSupportActionBar(toolbar);
+       getSupportActionBar().setTitle("Profile");
 
         getSupportActionBar().setDisplayShowTitleEnabled(true);
-        list = (ListView) findViewById(R.id.listview_profile_options);
+       list = (ListView) findViewById(R.id.listview_profile_options);
         Context context = getApplicationContext();
-        CustomListView adapter = new CustomListView(this, context.getResources().getStringArray(R.array.profile_options),
-                imgid, false,false);
-        list.setAdapter(adapter);
+       CustomListView adapter = new CustomListView(this, context.getResources().getStringArray(R.array.profile_options), imgid, false,false);
+      // list.setAdapter(adapter);
 
-        list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+       /*list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Intent intent;
@@ -109,7 +108,7 @@ public class ProfileActivity extends AppCompatActivity {
                                 startActivity(intent);
                             }
                         });
-                        /*if(firebaseUser != null)
+                        if(firebaseUser != null)
                         {
 
                             Toast.makeText(getApplicationContext(), "LOGGED OUT", Toast.LENGTH_SHORT).show();
@@ -117,13 +116,13 @@ public class ProfileActivity extends AppCompatActivity {
                         else
                         {
                             Toast.makeText(getApplicationContext(), "could not log out", Toast.LENGTH_SHORT).show();
-                        }*/
+                        }
 
                         break;
                     default:
                 }
             }
-        });
+        });*/
 
 
     }
