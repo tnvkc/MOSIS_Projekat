@@ -12,7 +12,6 @@ public class FriendRequestsActivity extends AppCompatActivity {
 
     Toolbar toolbar;
     ListView list;
-    String[] friendRequests={"Friend1","Friend2","friend3"};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

@@ -56,15 +56,15 @@ public class ProfileActivity extends AppCompatActivity {
        firebaseAuth = FirebaseAuth.getInstance();//i yt
         firestore=FirebaseFirestore.getInstance();//yt
         //Donsfl2GlXYkLvPvrhsWSAZAzvg2
-       // userID=firebaseAuth.getCurrentUser().getUid();//yt
-        /*firestore.collection("Users").document(userID).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+        userID=firebaseAuth.getCurrentUser().getUid();//yt
+        firestore.collection("Users").document(userID).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
             @Override
               public void onSuccess(DocumentSnapshot documentSnapshot) {
                     String username=documentSnapshot.getString("name");
                     textViewName.setText(username);
               }
            }
-        );*/
+        );
 
        final FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
 
@@ -75,8 +75,8 @@ public class ProfileActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayShowTitleEnabled(true);
        list = (ListView) findViewById(R.id.listview_profile_options);
         Context context = getApplicationContext();
-       CustomListView adapter = new CustomListView(this, context.getResources().getStringArray(R.array.profile_options), imgid, false,false);
-      // list.setAdapter(adapter);
+       CustomListView adapter = new CustomListView(this, context.getResources().getStringArray(R.array.profile_options), imgid, false);
+       list.setAdapter(adapter);
 
        /*list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override

@@ -21,17 +21,15 @@ public class CustomListView extends ArrayAdapter<String> {
     private String[] names;
     private Integer[] images;
     private boolean switchOrNot;
-    private boolean acceptdecline;
 
 
-    public CustomListView(Activity context, String[] itemName, Integer[] imageid,boolean switchornot,boolean acceptdecline)
+    public CustomListView(Activity context, String[] itemName, Integer[] imageid,boolean switchornot)
     {
         super(context, R.layout.list_member,itemName);
         this.context=context;
         this.names=itemName;
         this.images=imageid;
         this.switchOrNot=switchornot;
-        this.acceptdecline=acceptdecline;
     }
     @NonNull
     @Override
@@ -39,20 +37,20 @@ public class CustomListView extends ArrayAdapter<String> {
     {
         View vw=convertView;
         ViewHolder vh=null;
-        if(vw==null)
-        {
+        if(vw==null) {
             LayoutInflater layoutInflater = context.getLayoutInflater();
 
-                if (images == null)//for AddFriendActivity
-                    vw = layoutInflater.inflate(R.layout.list_member_add_user, null, true);
-                else {
-                    if (switchOrNot)
-                        vw = layoutInflater.inflate(R.layout.list_member_switch, null, true);
-                    else
-                        vw = layoutInflater.inflate(R.layout.list_member, null, true);
-                }
+            if (switchOrNot)
+            {
+                vw = layoutInflater.inflate(R.layout.list_member_switch, null, true);
+                vh = new ViewHolder(vw, true);
 
-            vh=new ViewHolder(vw);
+            } else {
+                vw = layoutInflater.inflate(R.layout.list_member, null, true);
+                vh=new ViewHolder(vw,false);
+
+            }
+
             vw.setTag(vh);
         }
         else
@@ -70,10 +68,18 @@ public class CustomListView extends ArrayAdapter<String> {
         TextView tw;
         ImageView iw;
 
-        ViewHolder(View v)
+        ViewHolder(View v,boolean switchornot)
         {
-            tw=(TextView) v.findViewById(R.id.textViewPhotoInput);
-            iw=(ImageView) v.findViewById(R.id.imageViewPhotoInput);
+            if(switchornot) {
+                tw = (TextView) v.findViewById(R.id.textViewPhotoInput);
+                iw = (ImageView) v.findViewById(R.id.imageViewPhotoInput);
+            }
+
+            else//list_member
+            {
+                tw = (TextView) v.findViewById(R.id.textViewUsername);
+                iw = (ImageView) v.findViewById(R.id.imageViewPhoto);
+            }
 
         }
     }

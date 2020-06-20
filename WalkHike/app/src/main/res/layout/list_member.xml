@@ -17,12 +17,12 @@
             android:text="TextView"
             android:textSize="18dp"
             android:layout_centerVertical="true"
-            android:layout_toRightOf="@id/imageViewPhotoInput"
+            android:layout_toRightOf="@id/imageViewPhoto"
             android:layout_marginLeft="20dp"
             />
 
         <ImageView
-            android:id="@+id/imageViewPhotoInput"
+            android:id="@+id/imageViewPhoto"
             android:layout_width="38dp"
             android:layout_height="38dp"
             android:layout_centerVertical="true"
