@@ -1,16 +1,21 @@
+
 package tamara.mosis.elfak.walkhike;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatDelegate;
+import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.FragmentActivity;
 
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ProgressBar;
+import android.widget.Toast;
 
 import tamara.mosis.elfak.walkhike.Fragments.AddCheckpoint_EditObject;
 import tamara.mosis.elfak.walkhike.Fragments.AddObject_SelectType;
 import tamara.mosis.elfak.walkhike.Fragments.AddObject_SetDetails;
+import tamara.mosis.elfak.walkhike.Fragments.AddObject_ShowInAR;
 
 public class AddNewObjectActivity extends FragmentActivity implements View.OnClickListener {
 
@@ -61,8 +66,7 @@ public class AddNewObjectActivity extends FragmentActivity implements View.OnCli
                             .addToBackStack(null).commit();
 
                     progressBar.setProgress(0);
-                }
-                else if (state == 1) {
+                } else if (state == 1) {
                     AddCheckpoint_EditObject secondFragment = new AddCheckpoint_EditObject();
                     //bundle with arguments...
 
@@ -71,9 +75,7 @@ public class AddNewObjectActivity extends FragmentActivity implements View.OnCli
                             .addToBackStack(null).commit();
 
                     progressBar.setProgress(100);
-                    btnNext.setText("Next");
-                }
-                else if (state == 2) {
+                } else if (state == 2) {
                     AddObject_SetDetails thirdFragment = new AddObject_SetDetails();
                     //bundle with arguments...
 
@@ -81,8 +83,8 @@ public class AddNewObjectActivity extends FragmentActivity implements View.OnCli
                             .replace(R.id.fragment_container, thirdFragment)
                             .addToBackStack(null).commit();
 
+                    btnNext.setText("Next");
                     progressBar.setProgress(200);
-                    btnNext.setText("Done");
                 }
                 break;
             }
@@ -97,8 +99,7 @@ public class AddNewObjectActivity extends FragmentActivity implements View.OnCli
                             .replace(R.id.fragment_container, secondFragment)
                             .addToBackStack(null).commit();
                     progressBar.setProgress(100);
-                }
-                else if (state == 1) {
+                } else if (state == 1) {
                     state = 2;
                     AddObject_SetDetails thirdFragment = new AddObject_SetDetails();
                     //bundle with arguments...
@@ -107,10 +108,26 @@ public class AddNewObjectActivity extends FragmentActivity implements View.OnCli
                             .replace(R.id.fragment_container, thirdFragment)
                             .addToBackStack(null).commit();
 
-                    btnNext.setText("Done");
-                    btnNext.setEnabled(false); //for now
                     progressBar.setProgress(200);
+
+                    //if cbx_show_in_ar is not checked -> set next button text to done
+                    //and change state to 3
+
+                } else if (state == 2) {
+                    state = 3;
+                    AddObject_ShowInAR fourthFragment = new AddObject_ShowInAR();
+
+                    getSupportFragmentManager().beginTransaction()
+                            .replace(R.id.fragment_container, fourthFragment)
+                            .addToBackStack(null).commit();
+
+                    btnNext.setText("Done");
+                    progressBar.setProgress(300);
+                } else if (state == 3) {
+                    Toast.makeText(this, "Object added", Toast.LENGTH_SHORT).show();
+                    finish();
                 }
+                break;
             }
         }
     }

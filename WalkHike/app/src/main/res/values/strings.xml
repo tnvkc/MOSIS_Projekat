@@ -44,8 +44,8 @@
     <string name="leaderboard">Leaderboard</string>
     <string name="add_message">Message</string>
     <string name="add_checkpoint">Checkpoint</string>
-    <string name="add_picture">Picture</string>
-    <string name="add_emoji">Emoji</string>
+    <string name="add_photo">Photo</string>
+    <string name="add_heart">Heart</string>
     <string name="checkpoint_add_name">Add name for your place:</string>
     <string name="share_object_with">Share with</string>
     <string name="object_make_public">make public</string>

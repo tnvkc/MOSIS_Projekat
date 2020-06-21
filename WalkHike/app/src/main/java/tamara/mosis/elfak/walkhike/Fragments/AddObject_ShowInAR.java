@@ -1,9 +1,13 @@
-package tamara.mosis.elfak.walkhike;
-
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.app.AppCompatDelegate;
+package tamara.mosis.elfak.walkhike.Fragments;
 
 import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
 
 import com.google.ar.sceneform.Camera;
 import com.google.ar.sceneform.Node;
@@ -12,7 +16,9 @@ import com.google.ar.sceneform.math.Vector3;
 import com.google.ar.sceneform.rendering.ModelRenderable;
 import com.google.ar.sceneform.ux.ArFragment;
 
-public class ShowArObjectActivity extends AppCompatActivity {
+import tamara.mosis.elfak.walkhike.R;
+
+public class AddObject_ShowInAR extends Fragment {
 
     private ArFragment arFragment;
     private Scene scene;
@@ -21,15 +27,21 @@ public class ShowArObjectActivity extends AppCompatActivity {
     private int objectType;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (AppCompatDelegate.getDefaultNightMode() == AppCompatDelegate.MODE_NIGHT_YES)
-            setTheme(R.style.AppThemeDark);
-        else
-            setTheme(R.style.AppThemeLight);
-        setContentView(R.layout.activity_show_ar_object);
+    }
 
-        arFragment = (ArFragment) getSupportFragmentManager().findFragmentById(R.id.ar_fragment);
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        // Inflate the layout for this fragment
+        return inflater.inflate(R.layout.fragment_add_object__show_ar, container, false);
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        //super.onViewCreated(view, savedInstanceState);
+        arFragment = (ArFragment) getChildFragmentManager().findFragmentById(R.id.add_object_ar);
 
         //hide hand animation
         arFragment.getPlaneDiscoveryController().hide();
@@ -38,15 +50,17 @@ public class ShowArObjectActivity extends AppCompatActivity {
         scene = arFragment.getArSceneView().getScene();
         camera = scene.getCamera();
 
-        //procitati objectType koji stize preko intent-a otvaranju activity-ja:
-        Bundle bundle = getIntent().getExtras();
-        objectType = bundle.getInt("object_id");
+        //procitati prosledjen objectType
+        //Bundle bundle = getIntent().getExtras();
+        //objectType = bundle.getInt("object_id");
+
+        objectType = 1;
 
         switch(objectType) {
             case 1: {
                 ModelRenderable
                         .builder()
-                        .setSource(this, R.raw.trophy)
+                        .setSource(getContext(), R.raw.trophy)
                         .build()
                         .thenAccept(modelRenderable -> {
 
@@ -54,14 +68,14 @@ public class ShowArObjectActivity extends AppCompatActivity {
                             node.setRenderable(modelRenderable);
                             scene.addChild(node);
 
-                            node.setWorldPosition(new Vector3(0.0f, 0.5f, -2.0f));
+                            node.setWorldPosition(new Vector3(0.0f, 0.2f, -3.0f));
                         });
                 break;
             }
             case 2: {
                 ModelRenderable
                         .builder()
-                        .setSource(this, R.raw.emoji_love)
+                        .setSource(getContext(), R.raw.emoji_love)
                         .build()
                         .thenAccept(modelRenderable -> {
 
@@ -69,14 +83,14 @@ public class ShowArObjectActivity extends AppCompatActivity {
                             node.setRenderable(modelRenderable);
                             scene.addChild(node);
 
-                            node.setWorldPosition(new Vector3(0.0f, 0.5f, -2.0f));
+                            node.setWorldPosition(new Vector3(0.0f, 0.2f, -3.0f));
                         });
                 break;
             }
             case 3: {
                 ModelRenderable
                         .builder()
-                        .setSource(this, R.raw.marker)
+                        .setSource(getContext(), R.raw.marker)
                         .build()
                         .thenAccept(modelRenderable -> {
 
@@ -84,11 +98,10 @@ public class ShowArObjectActivity extends AppCompatActivity {
                             node.setRenderable(modelRenderable);
                             scene.addChild(node);
 
-                            node.setWorldPosition(new Vector3(0.0f, 0.5f, -2.0f));
+                            node.setWorldPosition(new Vector3(0.0f, 0.2f, -3.0f));
                         });
                 break;
             }
         }
-
     }
 }
