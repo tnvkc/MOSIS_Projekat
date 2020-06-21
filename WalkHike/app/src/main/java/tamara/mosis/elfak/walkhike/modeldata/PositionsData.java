@@ -81,12 +81,30 @@ public class PositionsData {
 
         @Override
         public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-
+            String myPlaceKey = dataSnapshot.getKey();
+            Position myPlace = dataSnapshot.getValue(Position.class);
+            myPlace.key = myPlaceKey;
+            if (PositionsMapping.containsKey(myPlaceKey)) {
+                int index = PositionsMapping.get(myPlaceKey);
+                positions.set(index, myPlace);
+            } else {
+                positions.add(myPlace);
+                PositionsMapping.put(myPlaceKey, positions.size() - 1);
+            }
+            if (updateListener != null)
+                updateListener.onListUpdated();
         }
 
         @Override
         public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
-
+            String myPlaceKey = dataSnapshot.getKey();
+            if (PositionsMapping.containsKey(myPlaceKey)) {
+                int index = PositionsMapping.get(myPlaceKey);
+                positions.remove(index);
+                recreateKeyIndexMapping();
+            }
+            if (updateListener != null)
+                updateListener.onListUpdated();
         }
 
         @Override
@@ -107,5 +125,34 @@ public class PositionsData {
         PositionsMapping.put(key, positions.size() - 1);
         db.child(FIREBASE_CHILD).child(key).setValue(p);
         p.key = key;
+    }
+
+    public Position getPlace(int index) {
+        return positions.get(index);
+    }
+
+    public void deletePlace(int index) {
+
+        db.child(FIREBASE_CHILD).child(positions.get(index).key).removeValue();
+        positions.remove(index);
+        recreateKeyIndexMapping();
+    }
+
+    public void updatePlace(int index,  String desc, String lng, String lat)
+    {
+        Position myPlace=positions.get(index);
+        myPlace.desc=desc;
+        myPlace.latitude=lat;
+        myPlace.longitude=lng;
+
+        db.child(FIREBASE_CHILD).child(myPlace.key).setValue(myPlace);
+
+    }
+
+    private void recreateKeyIndexMapping()
+    {
+        PositionsMapping.clear();
+        for (int i=0;i<positions.size();i++)
+            PositionsMapping.put(positions.get(i).key,i);
     }
 }

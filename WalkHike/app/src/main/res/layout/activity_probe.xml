@@ -17,6 +17,12 @@
     </androidx.appcompat.widget.Toolbar>
 
     <TextView
+        android:id="@+id/probe_show_text"
+        android:layout_width="match_parent"
+        android:layout_height="71dp"
+        android:text="ovde ce se prikazati" />
+
+    <TextView
         android:id="@+id/probe_lat_text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -68,17 +74,38 @@
         android:layout_marginTop="1dp"
         android:text="add long/lat" />
 
-    <TextView
-        android:id="@+id/probe_show_text"
-        android:layout_width="match_parent"
-        android:layout_height="71dp"
-        android:text="ovde ce se prikazati" />
-
     <Button
         android:id="@+id/probe_btn_show"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="show latitudes" />
+
+    <com.google.android.material.textfield.TextInputEditText
+        android:id="@+id/probe_index_edit"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:editable="true"
+        android:inputType="textPersonName"
+        android:text="1" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/probe_btn_deleteIndex"
+            android:layout_width="277dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="delete index" />
+
+        <Button
+            android:id="@+id/probe_btn_getIndex"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Get 1" />
+    </LinearLayout>
 
     <Button
         android:id="@+id/proba_signup"

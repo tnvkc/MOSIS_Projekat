@@ -33,6 +33,11 @@ public class Probe extends AppCompatActivity {
     TextInputEditText lat;
     TextInputEditText descc;
 
+
+    Button btnGetIndex;
+    Button btnDeleteIndex;
+    TextInputEditText textIndex;
+
     static PositionsData w;
     static MapObjectData md;
     ArrayList<Position> probepos;
@@ -118,6 +123,37 @@ public class Probe extends AppCompatActivity {
         });
 
 
+
+
+        ///////get 1 delete 1
+        textIndex =  (TextInputEditText) findViewById(R.id.probe_index_edit);
+
+
+        btnGetIndex = (Button) findViewById(R.id.probe_btn_getIndex);
+        btnGetIndex.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Position p ;
+                String prikaziii ="";
+                int ii = Integer.parseInt(  textIndex.getText().toString());
+                p = w.getInstance().getPlace(ii);
+                prikaziii += p.toString();
+
+                prikaz.setText(prikaziii);
+
+            }
+        });
+
+
+        btnDeleteIndex = (Button) findViewById(R.id.probe_btn_deleteIndex);
+        btnDeleteIndex.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                int ii = Integer.parseInt(  textIndex.getText().toString());
+                w.getInstance().deletePlace(ii);
+
+            }
+        });
 
     }
 }
