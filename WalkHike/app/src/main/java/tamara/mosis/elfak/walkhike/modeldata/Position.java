@@ -1,15 +1,27 @@
 package tamara.mosis.elfak.walkhike.modeldata;
 
+import com.google.firebase.database.Exclude;
+import com.google.firebase.database.IgnoreExtraProperties;
+
+@IgnoreExtraProperties
 public class Position {
 
-    public String key;
-    public String desc;
     public String latitude;
     public String longitude;
+    public String desc;
 
+    @Exclude
+    public String key;
+    public Position() {}
 
-   public Position(String newDesc)
+    public Position(String desc)
     {
-        this.desc = newDesc;
+        this.desc = desc;
+    }
+
+    @Override
+    public String toString()
+    {
+        return this.desc;
     }
 }
