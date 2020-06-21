@@ -12,6 +12,7 @@ import android.widget.TextView;
 import com.google.android.material.textfield.TextInputEditText;
 
 import java.util.ArrayList;
+import java.util.Map;
 
 import tamara.mosis.elfak.walkhike.Activities.LoginActivity;
 import tamara.mosis.elfak.walkhike.Activities.SignUpActivity;
@@ -32,8 +33,10 @@ public class Probe extends AppCompatActivity {
     TextInputEditText lat;
     TextInputEditText descc;
 
-    static WalkHikeData w;
+    static PositionsData w;
+    static MapObjectData md;
     ArrayList<Position> probepos;
+    ArrayList<MapObject> mapObjcs;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,6 +79,12 @@ public class Probe extends AppCompatActivity {
                 p.latitude = lat.getText().toString();
                 p.longitude = lon.getText().toString();
                 w.getInstance().AddPosition(p);
+
+
+                MapObject m = new MapObject();
+                m.desc = descc.getText().toString();
+                m.position = p;
+                md.getInstance().AddMapObject(m);
             }
         });
 
@@ -89,9 +98,20 @@ public class Probe extends AppCompatActivity {
                 prikaz = (TextView) findViewById(R.id.probe_show_text);
                 String prikaziii ="";
 
+                mapObjcs = new ArrayList<>();
+                mapObjcs = md.getInstance().getMyPlaces();
+
+
                 for(int i = 0; i<probepos.size(); i++)
                 {
                     prikaziii+= probepos.get(i).desc + probepos.get(i).longitude + probepos.get(i).latitude + " ";
+                    prikaziii += "\n";
+
+                }
+                prikaziii += "\n";
+                for(int i =0; i< mapObjcs.size(); i++)
+                {
+                    prikaziii += mapObjcs.get(i).toString();
                 }
                 prikaz.setText(prikaziii);
             }

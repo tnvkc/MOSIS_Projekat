@@ -15,14 +15,14 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-public class WalkHikeData {
+public class PositionsData {
 
     private ArrayList<Position> positions;
     private HashMap<String, Integer> PositionsMapping;
     public DatabaseReference db;
-    private static final String FIREBASE_CHILD= "walk-hike";
+    private static final String FIREBASE_CHILD= "Positions";
 
-    private WalkHikeData()
+    private PositionsData()
     {
         positions = new ArrayList<>();
         PositionsMapping  = new HashMap<String, Integer>();
@@ -32,10 +32,10 @@ public class WalkHikeData {
     }
 
     private static class SingletonHolder {
-        public static final WalkHikeData instance = new WalkHikeData();
+        public static final PositionsData instance = new PositionsData();
     }
 
-    public static WalkHikeData getInstance() {
+    public static PositionsData getInstance() {
         return SingletonHolder.instance;
     }
 

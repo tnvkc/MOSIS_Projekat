@@ -29,7 +29,7 @@
         android:layout_height="wrap_content"
         android:editable="true"
         android:inputType="textPersonName"
-        android:text="TextView" />
+        android:text="123" />
 
     <TextView
         android:id="@+id/probe_long_text"
@@ -41,9 +41,9 @@
         android:id="@+id/probe_long_edit"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:inputType="textPersonName"
         android:editable="true"
-        android:text="TextView" />
+        android:inputType="textPersonName"
+        android:text="123" />
 
     <TextView
         android:id="@+id/probe_desc_text"
@@ -58,7 +58,7 @@
         android:layout_height="wrap_content"
         android:editable="true"
         android:inputType="textPersonName"
-        android:text="TextView" />
+        android:text="proba123" />
 
     <Button
         android:id="@+id/probe_add_longlat"
