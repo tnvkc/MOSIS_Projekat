@@ -1,4 +1,4 @@
-package tamara.mosis.elfak.walkhike;
+package tamara.mosis.elfak.walkhike.Activities;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -12,6 +12,10 @@ import android.widget.ListView;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import java.util.ArrayList;
+
+import tamara.mosis.elfak.walkhike.Notification;
+import tamara.mosis.elfak.walkhike.NotificationsListAdapter;
+import tamara.mosis.elfak.walkhike.R;
 
 public class NotificationsActivity extends AppCompatActivity {
 

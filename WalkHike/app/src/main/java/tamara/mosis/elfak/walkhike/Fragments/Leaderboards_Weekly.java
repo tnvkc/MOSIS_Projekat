@@ -13,7 +13,7 @@ import androidx.fragment.app.Fragment;
 import java.util.ArrayList;
 
 import tamara.mosis.elfak.walkhike.Leaderboard_Entry;
-import tamara.mosis.elfak.walkhike.Leaderboard_Entry_Activity;
+import tamara.mosis.elfak.walkhike.Activities.Leaderboard_Entry_Activity;
 import tamara.mosis.elfak.walkhike.Leaderboard_Entry_Distance;
 import tamara.mosis.elfak.walkhike.LeaderboardsListAdapter;
 import tamara.mosis.elfak.walkhike.R;

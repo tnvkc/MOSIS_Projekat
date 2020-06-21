@@ -1,4 +1,4 @@
-package tamara.mosis.elfak.walkhike;
+package tamara.mosis.elfak.walkhike.Activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -13,6 +13,8 @@ import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.HashMap;
 import java.util.Map;
+
+import tamara.mosis.elfak.walkhike.R;
 
 public class SendActivity extends AppCompatActivity {
 

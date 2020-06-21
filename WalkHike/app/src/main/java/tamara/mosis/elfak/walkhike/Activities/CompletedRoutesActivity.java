@@ -1,4 +1,4 @@
-package tamara.mosis.elfak.walkhike;
+package tamara.mosis.elfak.walkhike.Activities;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -9,6 +9,8 @@ import android.os.Bundle;
 import android.view.MenuItem;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+
+import tamara.mosis.elfak.walkhike.R;
 
 public class CompletedRoutesActivity extends AppCompatActivity {
 

@@ -1,4 +1,4 @@
-package tamara.mosis.elfak.walkhike;
+package tamara.mosis.elfak.walkhike.Activities;
 
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
@@ -27,6 +27,9 @@ import com.google.gson.internal.$Gson$Preconditions;
 
 import java.util.HashMap;
 import java.util.Map;
+
+import tamara.mosis.elfak.walkhike.CustomListView;
+import tamara.mosis.elfak.walkhike.R;
 
 public class ProfileActivity extends AppCompatActivity {
 

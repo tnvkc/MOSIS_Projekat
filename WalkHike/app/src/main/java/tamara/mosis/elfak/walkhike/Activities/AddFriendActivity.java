@@ -1,4 +1,4 @@
-package tamara.mosis.elfak.walkhike;
+package tamara.mosis.elfak.walkhike.Activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
@@ -10,6 +10,8 @@ import android.widget.ListView;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
+
+import tamara.mosis.elfak.walkhike.R;
 
 public class AddFriendActivity extends AppCompatActivity {
 

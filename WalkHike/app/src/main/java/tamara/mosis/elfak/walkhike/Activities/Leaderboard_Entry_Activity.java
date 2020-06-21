@@ -1,4 +1,6 @@
-package tamara.mosis.elfak.walkhike;
+package tamara.mosis.elfak.walkhike.Activities;
+
+import tamara.mosis.elfak.walkhike.Leaderboard_Entry;
 
 public class Leaderboard_Entry_Activity extends Leaderboard_Entry {
 

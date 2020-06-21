@@ -16,13 +16,69 @@
 
     </androidx.appcompat.widget.Toolbar>
 
+    <TextView
+        android:id="@+id/probe_lat_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+
+        android:text="Latitude:" />
+
+    <com.google.android.material.textfield.TextInputEditText
+        android:id="@+id/probe_lat_edit"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:editable="true"
+        android:inputType="textPersonName"
+        android:text="TextView" />
+
+    <TextView
+        android:id="@+id/probe_long_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Longitude:" />
+
+    <com.google.android.material.textfield.TextInputEditText
+        android:id="@+id/probe_long_edit"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:inputType="textPersonName"
+        android:editable="true"
+        android:text="TextView" />
+
+    <TextView
+        android:id="@+id/probe_desc_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+
+        android:text="Desc:" />
+
+    <com.google.android.material.textfield.TextInputEditText
+        android:id="@+id/probe_desc_edit"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:editable="true"
+        android:inputType="textPersonName"
+        android:text="TextView" />
+
     <Button
-        android:id="@+id/proba_1btn"
+        android:id="@+id/probe_add_longlat"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/main_toolbar"
-        android:layout_marginTop="51dp"
-        android:text="Button" />
+        android:layout_marginTop="0"
+        android:text="add long/lat" />
+
+    <TextView
+        android:id="@+id/probe_show_text"
+        android:layout_width="match_parent"
+        android:layout_height="71dp"
+        android:text="ovde ce se prikazati" />
+
+    <Button
+        android:id="@+id/probe_btn_show"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="show latitudes" />
 
     <Button
         android:id="@+id/proba_signup"

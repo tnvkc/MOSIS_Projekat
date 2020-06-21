@@ -1,4 +1,4 @@
-package tamara.mosis.elfak.walkhike;
+package tamara.mosis.elfak.walkhike.Activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
@@ -7,6 +7,8 @@ import androidx.appcompat.widget.Toolbar;
 import android.content.Context;
 import android.os.Bundle;
 import android.widget.ListView;
+
+import tamara.mosis.elfak.walkhike.R;
 
 public class FriendRequestsActivity extends AppCompatActivity {
 

@@ -1,4 +1,4 @@
-package tamara.mosis.elfak.walkhike;
+package tamara.mosis.elfak.walkhike.Activities;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -8,7 +8,6 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
 
 import android.Manifest;
-import android.annotation.SuppressLint;
 import android.app.Service;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -16,8 +15,6 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
-import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationManager;
 import android.widget.Toast;
@@ -26,9 +23,7 @@ import android.widget.Toast;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationListener;
-import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
-import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -41,6 +36,9 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+
+import tamara.mosis.elfak.walkhike.Probe;
+import tamara.mosis.elfak.walkhike.R;
 
 public class MainActivity extends AppCompatActivity implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener, OnMapReadyCallback {
 
@@ -65,7 +63,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
         FirebaseUser currentUser=mfirebaseAuth.getCurrentUser();
         if(currentUser==null)
         {
-            Intent loginIntent=new Intent(MainActivity.this,LoginActivity.class);
+            Intent loginIntent=new Intent(MainActivity.this, LoginActivity.class);
             startActivity(loginIntent);
             finish();
         }

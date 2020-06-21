@@ -1,11 +1,13 @@
-package tamara.mosis.elfak.walkhike;
+package tamara.mosis.elfak.walkhike.Activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
 
 import android.os.Bundle;
 
-public class FriendProfileActivity extends AppCompatActivity {
+import tamara.mosis.elfak.walkhike.R;
+
+public class AddNewObjectActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -14,6 +16,6 @@ public class FriendProfileActivity extends AppCompatActivity {
             setTheme(R.style.AppThemeDark);
         else
             setTheme(R.style.AppThemeLight);
-        setContentView(R.layout.activity_friend_profile);
+        setContentView(R.layout.activity_add_new_object);
     }
 }

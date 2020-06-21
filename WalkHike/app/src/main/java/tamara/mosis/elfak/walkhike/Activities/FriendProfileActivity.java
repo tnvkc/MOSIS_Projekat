@@ -1,14 +1,13 @@
-package tamara.mosis.elfak.walkhike;
+package tamara.mosis.elfak.walkhike.Activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
-import androidx.appcompat.widget.Toolbar;
 
 import android.os.Bundle;
 
-public class EditProfileActivity extends AppCompatActivity {
+import tamara.mosis.elfak.walkhike.R;
 
-    Toolbar toolbar;
+public class FriendProfileActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -17,10 +16,6 @@ public class EditProfileActivity extends AppCompatActivity {
             setTheme(R.style.AppThemeDark);
         else
             setTheme(R.style.AppThemeLight);
-        setContentView(R.layout.activity_edit_profile);
-
-        toolbar = (Toolbar) findViewById(R.id.edit_profile_toolbar);
-        setSupportActionBar(toolbar);
-        getSupportActionBar().setTitle("Edit profile");
+        setContentView(R.layout.activity_friend_profile);
     }
 }

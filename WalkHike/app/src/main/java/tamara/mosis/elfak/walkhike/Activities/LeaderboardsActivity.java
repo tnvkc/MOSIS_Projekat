@@ -1,4 +1,4 @@
-package tamara.mosis.elfak.walkhike;
+package tamara.mosis.elfak.walkhike.Activities;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -16,6 +16,7 @@ import com.google.android.material.tabs.TabLayout;
 import tamara.mosis.elfak.walkhike.Fragments.Leaderboards_Activity;
 import tamara.mosis.elfak.walkhike.Fragments.Leaderboards_Activity_Distance_ViewPagerAdapter;
 import tamara.mosis.elfak.walkhike.Fragments.Leaderboards_Distance;
+import tamara.mosis.elfak.walkhike.R;
 
 public class LeaderboardsActivity extends AppCompatActivity {
 

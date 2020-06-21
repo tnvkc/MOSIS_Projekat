@@ -13,46 +13,46 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppThemeLight">
-        <activity android:name=".NotificationActivity">
+        <activity android:name=".Activities.NotificationActivity">
             <intent-filter>
                 <action android:name="tamara.mosis.elfak.walknhike.TARGETNOTIFICATION" />
 
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
-        <activity android:name=".SendActivity" />
-        <activity android:name=".FriendRequestsActivity" />
+        <activity android:name=".Activities.SendActivity" />
+        <activity android:name=".Activities.FriendRequestsActivity" />
         <activity android:name=".Probe" />
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyC20SAi61o5fJQ1cTHMLh8MEOCWfwRZ_YI" />
 
-        <activity android:name=".SettingsActivity" />
-        <activity android:name=".EditProfileActivity" />
-        <activity android:name=".AddFriendActivity" />
-        <activity android:name=".FriendProfileActivity" />
-        <activity android:name=".HelpActivity" />
-        <activity android:name=".NewPasswordActivity" />
-        <activity android:name=".RecoveryCodeActivity" />
-        <activity android:name=".NewProfilePictureActivity" />
-        <activity android:name=".SignUpActivity">
+        <activity android:name=".Activities.SettingsActivity" />
+        <activity android:name=".Activities.EditProfileActivity" />
+        <activity android:name=".Activities.AddFriendActivity" />
+        <activity android:name=".Activities.FriendProfileActivity" />
+        <activity android:name=".Activities.HelpActivity" />
+        <activity android:name=".Activities.NewPasswordActivity" />
+        <activity android:name=".Activities.RecoveryCodeActivity" />
+        <activity android:name=".Activities.NewProfilePictureActivity" />
+        <activity android:name=".Activities.SignUpActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".LoginActivity" >
+        <activity android:name=".Activities.LoginActivity" >
 
         </activity>
-        <activity android:name=".FriendslistActivity" />
-        <activity android:name=".AddNewObjectActivity" />
-        <activity android:name=".CompletedRoutesActivity" />
-        <activity android:name=".LeaderboardsActivity" />
-        <activity android:name=".NotificationsActivity" />
-        <activity android:name=".ProfileActivity" />
-        <activity android:name=".MainActivity" />
+        <activity android:name=".Activities.FriendslistActivity" />
+        <activity android:name=".Activities.AddNewObjectActivity" />
+        <activity android:name=".Activities.CompletedRoutesActivity" />
+        <activity android:name=".Activities.LeaderboardsActivity" />
+        <activity android:name=".Activities.NotificationsActivity" />
+        <activity android:name=".Activities.ProfileActivity" />
+        <activity android:name=".Activities.MainActivity" />
 
         <service android:name=".FirebaseMessagingService">
             <intent-filter>

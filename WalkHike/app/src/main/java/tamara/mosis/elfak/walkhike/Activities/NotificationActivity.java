@@ -1,9 +1,11 @@
-package tamara.mosis.elfak.walkhike;
+package tamara.mosis.elfak.walkhike.Activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
 import android.widget.TextView;
+
+import tamara.mosis.elfak.walkhike.R;
 
 public class NotificationActivity extends AppCompatActivity {
 
