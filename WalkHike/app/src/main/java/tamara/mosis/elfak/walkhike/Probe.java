@@ -86,8 +86,9 @@ public class Probe extends AppCompatActivity {
                 w.getInstance().AddPosition(p);
 
 
-                MapObject m = new MapObject();
+                MapObjectType1 m = new MapObjectType1();
                 m.desc = descc.getText().toString();
+                m.dodatak1 = "proba dodatak";
                 m.position = p;
                 md.getInstance().AddMapObject(m);
             }
