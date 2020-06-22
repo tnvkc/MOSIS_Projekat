@@ -85,10 +85,10 @@ public class Probe extends AppCompatActivity {
                 p.longitude = lon.getText().toString();
                 w.getInstance().AddPosition(p);
 
-
-                MapObjectType1 m = new MapObjectType1();
+                MapObject m = new MapObject();
+                m.objectType = 1;
+                m.isPublic = true;
                 m.desc = descc.getText().toString();
-                m.dodatak1 = "proba dodatak";
                 m.position = p;
                 md.getInstance().AddMapObject(m);
             }

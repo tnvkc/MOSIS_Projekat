@@ -5,6 +5,14 @@
     android:layout_height="match_parent"
     tools:context=".Fragments.AddObject_SelectType">
 
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/select_object_type"
+        android:gravity="center"
+        android:layout_marginTop="20dp"
+        android:textSize="18sp"/>
+
     <TableLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -21,14 +29,16 @@
                 android:layout_height="100dp"
                 android:src="@drawable/ic_message"
                 android:layout_marginEnd="20dp"
-                android:contentDescription="@string/add_message" />
+                android:contentDescription="@string/add_message"
+                android:id="@+id/object_type_message" />
 
             <ImageView
                 android:layout_width="100dp"
                 android:layout_height="100dp"
                 android:src="@drawable/ic_marker"
                 android:layout_marginStart="20dp"
-                android:contentDescription="@string/add_checkpoint"/>
+                android:contentDescription="@string/add_checkpoint"
+                android:id="@+id/object_type_checkpoint"/>
 
         </TableRow>
         <TableRow
@@ -41,14 +51,16 @@
                 android:layout_height="100dp"
                 android:src="@drawable/ic_photo"
                 android:layout_marginEnd="20dp"
-                android:contentDescription="@string/add_photo" />
+                android:contentDescription="@string/add_photo"
+                android:id="@+id/object_type_photo"/>
 
             <ImageView
                 android:layout_width="100dp"
                 android:layout_height="100dp"
                 android:src="@drawable/ic_heart_border"
                 android:layout_marginStart="20dp"
-                android:contentDescription="@string/add_heart"/>
+                android:contentDescription="@string/add_heart"
+                android:id="@+id/object_type_emoji"/>
 
         </TableRow>
     </TableLayout>
