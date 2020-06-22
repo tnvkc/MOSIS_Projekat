@@ -53,6 +53,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
 
     BottomNavigationView bottom_navigation_menu;
     FloatingActionButton addNewFloating;
+    FloatingActionButton objectInteraction;
     Toolbar toolbar;
     MenuItem profileItem;
 
@@ -103,6 +104,17 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
             @Override
             public void onClick(View v) {
                 Intent intent=new Intent(getApplicationContext(), AddNewObjectActivity.class);
+                startActivity(intent);
+            }
+        });
+        objectInteraction = (FloatingActionButton) findViewById(R.id.main_showArObject);
+        objectInteraction.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent=new Intent(getApplicationContext(), ShowArObjectActivity.class);
+                Bundle bundle = new Bundle();
+                bundle.putInt("object_id", 3); //1 za trophy, 2 za emoji, 3 za marker
+                intent.putExtras(bundle);
                 startActivity(intent);
             }
         });

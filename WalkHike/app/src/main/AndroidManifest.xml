@@ -6,6 +6,10 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
 
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-feature android:glEsVersion="0x00030000" android:required="true" />
+    <uses-feature android:name="android.hardware.camera.ar" android:required="true"/>
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -22,6 +26,10 @@
         </activity>
         <activity android:name=".Activities.SendActivity" />
         <activity android:name=".Activities.FriendRequestsActivity" />
+
+        <meta-data android:name="com.google.ar.core" android:value="required" />
+
+        <activity android:name=".ShowArObjectActivity"></activity>
         <activity android:name=".Probe" />
 
         <meta-data
@@ -37,6 +45,23 @@
         <activity android:name=".Activities.RecoveryCodeActivity" />
         <activity android:name=".Activities.NewProfilePictureActivity" />
         <activity android:name=".Activities.SignUpActivity">
+        <activity android:name=".SettingsActivity" />
+        <activity android:name=".EditProfileActivity" />
+        <activity android:name=".AddFriendActivity" />
+        <activity android:name=".FriendProfileActivity" />
+        <activity android:name=".HelpActivity" />
+        <activity android:name=".NewPasswordActivity" />
+        <activity android:name=".RecoveryCodeActivity" />
+        <activity android:name=".NewProfilePictureActivity" />
+        <activity android:name=".SignUpActivity" />
+        <activity android:name=".LoginActivity" />
+        <activity android:name=".FriendslistActivity" />
+        <activity android:name=".AddNewObjectActivity" />
+        <activity android:name=".CompletedRoutesActivity" />
+        <activity android:name=".LeaderboardsActivity" />
+        <activity android:name=".NotificationsActivity" />
+        <activity android:name=".ProfileActivity" />
+        <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

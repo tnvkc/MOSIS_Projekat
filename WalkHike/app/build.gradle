@@ -1,5 +1,9 @@
 apply plugin: 'com.android.application'
+
 apply plugin: 'com.google.gms.google-services'
+
+apply plugin: 'com.google.ar.sceneform.plugin'
+
 
 android {
     compileSdkVersion 29
@@ -7,13 +11,20 @@ android {
 
     defaultConfig {
         applicationId "tamara.mosis.elfak.walkhike"
-        minSdkVersion 16
+        // Sceneform requires minSdkVersion >= 24.
+        minSdkVersion 24
         targetSdkVersion 29
         multiDexEnabled true
         versionCode 1
         versionName "1.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+
+        compileOptions {
+            sourceCompatibility JavaVersion.VERSION_1_8
+            targetCompatibility JavaVersion.VERSION_1_8
+        }
+
     }
 
     buildTypes {
@@ -47,8 +58,30 @@ dependencies {
     implementation 'com.google.firebase:firebase-storage:19.1.1'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     implementation 'com.google.firebase:firebase-messaging:20.2.0'
+    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
+
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test.ext:junit:1.1.1'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
 
+    implementation 'com.google.ar:core:1.15.0'
+    implementation 'com.google.ar.sceneform.ux:sceneform-ux:1.15.0'
+
 }
+
+apply plugin: 'com.google.ar.sceneform.plugin'
+
+sceneform.asset('sampledata/trophy.obj',
+        'default',
+        'sampledata/trophy.sfa',
+        'src/main/res/raw/trophy')
+
+sceneform.asset('sampledata/marker.obj',
+        'default',
+        'sampledata/marker.sfa',
+        'src/main/res/raw/marker')
+
+sceneform.asset('sampledata/emoji_love.obj',
+        'default',
+        'sampledata/emoji_love.sfa',
+        'src/main/res/raw/emoji_love')
