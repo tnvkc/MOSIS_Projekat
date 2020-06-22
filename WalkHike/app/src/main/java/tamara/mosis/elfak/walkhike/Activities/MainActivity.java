@@ -39,6 +39,7 @@ import com.google.firebase.auth.FirebaseUser;
 
 import tamara.mosis.elfak.walkhike.Probe;
 import tamara.mosis.elfak.walkhike.R;
+import tamara.mosis.elfak.walkhike.ShowArObjectActivity;
 
 public class MainActivity extends AppCompatActivity implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener, OnMapReadyCallback {
 
