@@ -1,0 +1,160 @@
+package tamara.mosis.elfak.walkhike;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatDelegate;
+
+import android.app.IntentService;
+import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
+import android.widget.TextView;
+
+import com.google.android.material.textfield.TextInputEditText;
+
+import java.util.ArrayList;
+
+import tamara.mosis.elfak.walkhike.modeldata.Friendship;
+import tamara.mosis.elfak.walkhike.modeldata.FriendshipData;
+import tamara.mosis.elfak.walkhike.modeldata.MapObject;
+import tamara.mosis.elfak.walkhike.modeldata.Position;
+import tamara.mosis.elfak.walkhike.modeldata.User;
+import tamara.mosis.elfak.walkhike.modeldata.UserData;
+
+public class Probe_Friendship_Activity extends AppCompatActivity {
+
+    Button btnDodajUser;
+
+    Button btnPrikaziUsere;
+    Button btnDodajFriendship;
+
+    Button btnPrikaziFriends;
+    Button btnAcceptFreidns;
+    TextView prikaz;
+
+    TextInputEditText username;
+    TextInputEditText user1Index;
+    TextInputEditText user2Index;
+
+    UserData userdata;
+    FriendshipData friendshipData;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        userdata.getInstance().getMyPlaces();
+        friendshipData.getInstance().getMyPlaces();
+        setContentView(R.layout.activity_probe__friendship_);
+        if (AppCompatDelegate.getDefaultNightMode() == AppCompatDelegate.MODE_NIGHT_YES)
+            setTheme(R.style.AppThemeDark);
+        else
+            setTheme(R.style.AppThemeLight);
+
+        username =  (TextInputEditText) findViewById(R.id.probefriend_name_edit);
+        user1Index =  (TextInputEditText) findViewById(R.id.probefriend_user1_edit);
+        user2Index =  (TextInputEditText) findViewById(R.id.probefriend_user2_edit);
+
+
+        btnDodajUser = (Button) findViewById(R.id.probefriend_add_user);
+        btnDodajUser.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                User p = new User(username.getText().toString());
+
+                userdata.getInstance().AddUser(p);
+            }
+        });
+
+        btnPrikaziUsere =  (Button) findViewById(R.id.probefriends_btn_show_users);
+        btnPrikaziUsere.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                ArrayList<User> probepos = new ArrayList<>();
+
+
+                probepos = userdata.getInstance().getMyPlaces();
+                prikaz = (TextView) findViewById(R.id.probefriend_show_text);
+                String prikaziii = "";
+
+
+
+                for (int i = 0; i < probepos.size(); i++) {
+                    prikaziii += probepos.get(i).username + " ";
+                    prikaziii += "\n";
+
+                }
+
+                prikaz.setText(prikaziii);
+            }
+        });
+
+
+//////////friendships
+
+
+        btnDodajFriendship = (Button) findViewById(R.id.probefriend_btn_add_friendship);
+        btnDodajFriendship.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Friendship p = new Friendship();
+                int index1 = Integer.parseInt(user1Index.getText().toString());
+                p.fromUser = userdata.getInstance().getPlace(index1);
+                index1 = Integer.parseInt(user2Index.getText().toString());
+                p.toUser = userdata.getInstance().getPlace(index1);
+
+                friendshipData.getInstance().AddFriendship(p);
+            }
+        });
+
+        btnPrikaziFriends =  (Button) findViewById(R.id.probefriend_btn_show_friends);
+        btnPrikaziFriends.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                ArrayList<Friendship> probepos = new ArrayList<>();
+
+
+                probepos = friendshipData.getInstance().getMyPlaces();
+                prikaz = (TextView) findViewById(R.id.probefriend_show_text);
+                String prikaziii = "";
+
+
+
+                for (int i = 0; i < probepos.size(); i++) {
+                    prikaziii += probepos.toString() + " ";
+                    prikaziii += "\n";
+
+                }
+
+                prikaz.setText(prikaziii);
+            }
+        });
+
+
+        btnAcceptFreidns = (Button) findViewById(R.id.probefriend_btn_accept);
+        btnAcceptFreidns.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String index1 = user1Index.getText().toString();
+                String index2 = user2Index.getText().toString();
+                int indexx = -1;
+                ArrayList<Friendship> probepos = new ArrayList<>();
+
+
+                probepos = friendshipData.getInstance().getMyPlaces();
+                for(int i =0; i<probepos.size(); i++)
+                {
+                    String a = probepos.get(i).fromUser.username;
+                    if( a.compareTo(index1) == 0)
+                    {
+                        if(probepos.get(i).toUser.username.compareTo(index2) == 0)
+                            indexx = i;
+                    }
+                }
+
+                if(indexx != -1)
+                    friendshipData.getInstance().updateFriendshipTrue(indexx, true);
+            }
+        });
+    }
+}

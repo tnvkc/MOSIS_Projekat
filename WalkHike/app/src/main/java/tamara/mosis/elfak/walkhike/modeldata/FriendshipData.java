@@ -10,22 +10,21 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-import java.sql.DatabaseMetaData;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 
-public class PositionsData {
+public class FriendshipData {
 
-    private ArrayList<Position> positions;
-    private HashMap<String, Integer> PositionsMapping;
+
+    private ArrayList<Friendship> Friendships;
+    private HashMap<String, Integer> FriendshipsMapping;
     public DatabaseReference db;
-    private static final String FIREBASE_CHILD= "Positions";
+    private static final String FIREBASE_CHILD= "Friendships";
 
-    private PositionsData()
+    private FriendshipData()
     {
-        positions = new ArrayList<>();
-        PositionsMapping  = new HashMap<String, Integer>();
+        Friendships = new ArrayList<>();
+        FriendshipsMapping  = new HashMap<String, Integer>();
 
         db = FirebaseDatabase.getInstance().getReference();
         db.child(FIREBASE_CHILD).addChildEventListener(childEventListener);
@@ -34,19 +33,19 @@ public class PositionsData {
     }
 
     private static class SingletonHolder {
-        public static final PositionsData instance = new PositionsData();
+        public static final tamara.mosis.elfak.walkhike.modeldata.FriendshipData instance = new tamara.mosis.elfak.walkhike.modeldata.FriendshipData();
     }
 
-    public static PositionsData getInstance() {
-        return SingletonHolder.instance;
+    public static tamara.mosis.elfak.walkhike.modeldata.FriendshipData getInstance() {
+        return tamara.mosis.elfak.walkhike.modeldata.FriendshipData.SingletonHolder.instance;
     }
 
-    public ArrayList<Position> getMyPlaces() {
-        return positions;
+    public ArrayList<Friendship> getMyPlaces() {
+        return Friendships;
     }
 
-    ListUpdatedEventListener updateListener;
-    public void setEventListener(ListUpdatedEventListener listener) {
+    tamara.mosis.elfak.walkhike.modeldata.FriendshipData.ListUpdatedEventListener updateListener;
+    public void setEventListener(tamara.mosis.elfak.walkhike.modeldata.FriendshipData.ListUpdatedEventListener listener) {
         updateListener = listener;
     }
     public interface ListUpdatedEventListener {
@@ -71,11 +70,11 @@ public class PositionsData {
         public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
             String myPlaceKey = dataSnapshot.getKey();
 
-            if (!PositionsMapping.containsKey(myPlaceKey)) {
-                Position myPlace = dataSnapshot.getValue(Position.class);
+            if (!FriendshipsMapping.containsKey(myPlaceKey)) {
+                Friendship myPlace = dataSnapshot.getValue(Friendship.class);
                 myPlace.key = myPlaceKey;
-                positions.add(myPlace);
-                PositionsMapping.put(myPlaceKey, positions.size() - 1);
+                Friendships.add(myPlace);
+                FriendshipsMapping.put(myPlaceKey, Friendships.size() - 1);
                 if (updateListener != null)
                     updateListener.onListUpdated();
             }
@@ -84,14 +83,14 @@ public class PositionsData {
         @Override
         public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
             String myPlaceKey = dataSnapshot.getKey();
-            Position myPlace = dataSnapshot.getValue(Position.class);
+            Friendship myPlace = dataSnapshot.getValue(Friendship.class);
             myPlace.key = myPlaceKey;
-            if (PositionsMapping.containsKey(myPlaceKey)) {
-                int index = PositionsMapping.get(myPlaceKey);
-                positions.set(index, myPlace);
+            if (FriendshipsMapping.containsKey(myPlaceKey)) {
+                int index = FriendshipsMapping.get(myPlaceKey);
+                Friendships.set(index, myPlace);
             } else {
-                positions.add(myPlace);
-                PositionsMapping.put(myPlaceKey, positions.size() - 1);
+                Friendships.add(myPlace);
+                FriendshipsMapping.put(myPlaceKey, Friendships.size() - 1);
             }
             if (updateListener != null)
                 updateListener.onListUpdated();
@@ -100,9 +99,9 @@ public class PositionsData {
         @Override
         public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
             String myPlaceKey = dataSnapshot.getKey();
-            if (PositionsMapping.containsKey(myPlaceKey)) {
-                int index = PositionsMapping.get(myPlaceKey);
-                positions.remove(index);
+            if (FriendshipsMapping.containsKey(myPlaceKey)) {
+                int index = FriendshipsMapping.get(myPlaceKey);
+                Friendships.remove(index);
                 recreateKeyIndexMapping();
             }
             if (updateListener != null)
@@ -120,41 +119,49 @@ public class PositionsData {
         }
     };
 
-    public void AddPosition(Position p)
+    public void AddFriendship(Friendship p)
     {
         String key = db.push().getKey();
-        positions.add(p);
-        PositionsMapping.put(key, positions.size() - 1);
+        Friendships.add(p);
+        FriendshipsMapping.put(key, Friendships.size() - 1);
         db.child(FIREBASE_CHILD).child(key).setValue(p);
         p.key = key;
     }
 
-    public Position getPlace(int index) {
-        return positions.get(index);
+    public Friendship getPlace(int index) {
+        return Friendships.get(index);
     }
 
     public void deletePlace(int index) {
 
-        db.child(FIREBASE_CHILD).child(positions.get(index).key).removeValue();
-        positions.remove(index);
+        db.child(FIREBASE_CHILD).child(Friendships.get(index).key).removeValue();
+        Friendships.remove(index);
         recreateKeyIndexMapping();
     }
 
-    public void updatePlace(int index,  String desc, String lng, String lat)
+    public void updatePlace(int index,  Friendship u)
     {
-        Position myPlace=positions.get(index);
-        myPlace.desc=desc;
-        myPlace.latitude=lat;
-        myPlace.longitude=lng;
+        Friendship uu =Friendships.get(index);
+        uu.desc=u.desc;
+        uu.accepted=u.accepted;
 
-        db.child(FIREBASE_CHILD).child(myPlace.key).setValue(myPlace);
+
+        db.child(FIREBASE_CHILD).child(uu.key).setValue(uu);
+
+    }
+
+    public void updateFriendshipTrue(int index,  boolean accepted)
+    {
+        Friendship uu =Friendships.get(index);
+        uu.accepted=accepted;
+        db.child(FIREBASE_CHILD).child(uu.key).setValue(uu);
 
     }
 
     private void recreateKeyIndexMapping()
     {
-        PositionsMapping.clear();
-        for (int i=0;i<positions.size();i++)
-            PositionsMapping.put(positions.get(i).key,i);
+        FriendshipsMapping.clear();
+        for (int i=0;i<Friendships.size();i++)
+            FriendshipsMapping.put(Friendships.get(i).key,i);
     }
 }

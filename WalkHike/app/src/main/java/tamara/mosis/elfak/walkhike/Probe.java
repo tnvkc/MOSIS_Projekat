@@ -24,6 +24,7 @@ import tamara.mosis.elfak.walkhike.modeldata.*;
 public class Probe extends AppCompatActivity {
 
     Button mainBtn;
+    Button probeFriends;
 
     Button signupB;
     Button loginB;
@@ -54,6 +55,7 @@ public class Probe extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        w.getInstance().getMyPlaces();
 
         if (AppCompatDelegate.getDefaultNightMode() == AppCompatDelegate.MODE_NIGHT_YES)
             setTheme(R.style.AppThemeDark);
@@ -67,6 +69,15 @@ public class Probe extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent=new Intent(getApplicationContext(), MainActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        probeFriends = (Button) findViewById(R.id.probe_friends);
+        probeFriends.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent=new Intent(getApplicationContext(), Probe_Friendship_Activity.class);
                 startActivity(intent);
             }
         });
@@ -116,12 +127,15 @@ public class Probe extends AppCompatActivity {
             public void onClick(View v) {
 
                 probepos = new ArrayList<>();
+
+
                 probepos = w.getInstance().getMyPlaces();
                 prikaz = (TextView) findViewById(R.id.probe_show_text);
                 String prikaziii ="";
 
                 mapObjcs = new ArrayList<>();
                 mapObjcs = md.getInstance().getMyPlaces();
+
 
 
                 for(int i = 0; i<probepos.size(); i++)
@@ -168,7 +182,6 @@ public class Probe extends AppCompatActivity {
                 Position p = new Position(descc.getText().toString());
                 p.latitude = lat.getText().toString();
                 p.longitude = lon.getText().toString();
-                w.getInstance().AddPosition(p);
 
                 String prikaziii ="";
                 int ii = Integer.parseInt(  textIndex.getText().toString());

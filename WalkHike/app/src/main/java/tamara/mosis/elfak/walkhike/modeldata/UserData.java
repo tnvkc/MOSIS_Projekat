@@ -10,22 +10,20 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-import java.sql.DatabaseMetaData;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 
-public class PositionsData {
+public class UserData {
 
-    private ArrayList<Position> positions;
-    private HashMap<String, Integer> PositionsMapping;
+    private ArrayList<User> users;
+    private HashMap<String, Integer> UsersMapping;
     public DatabaseReference db;
-    private static final String FIREBASE_CHILD= "Positions";
+    private static final String FIREBASE_CHILD= "Users";
 
-    private PositionsData()
+    private UserData()
     {
-        positions = new ArrayList<>();
-        PositionsMapping  = new HashMap<String, Integer>();
+        users = new ArrayList<>();
+        UsersMapping  = new HashMap<String, Integer>();
 
         db = FirebaseDatabase.getInstance().getReference();
         db.child(FIREBASE_CHILD).addChildEventListener(childEventListener);
@@ -34,19 +32,19 @@ public class PositionsData {
     }
 
     private static class SingletonHolder {
-        public static final PositionsData instance = new PositionsData();
+        public static final tamara.mosis.elfak.walkhike.modeldata.UserData instance = new tamara.mosis.elfak.walkhike.modeldata.UserData();
     }
 
-    public static PositionsData getInstance() {
-        return SingletonHolder.instance;
+    public static tamara.mosis.elfak.walkhike.modeldata.UserData getInstance() {
+        return tamara.mosis.elfak.walkhike.modeldata.UserData.SingletonHolder.instance;
     }
 
-    public ArrayList<Position> getMyPlaces() {
-        return positions;
+    public ArrayList<User> getMyPlaces() {
+        return users;
     }
 
-    ListUpdatedEventListener updateListener;
-    public void setEventListener(ListUpdatedEventListener listener) {
+    tamara.mosis.elfak.walkhike.modeldata.UserData.ListUpdatedEventListener updateListener;
+    public void setEventListener(tamara.mosis.elfak.walkhike.modeldata.UserData.ListUpdatedEventListener listener) {
         updateListener = listener;
     }
     public interface ListUpdatedEventListener {
@@ -71,11 +69,11 @@ public class PositionsData {
         public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
             String myPlaceKey = dataSnapshot.getKey();
 
-            if (!PositionsMapping.containsKey(myPlaceKey)) {
-                Position myPlace = dataSnapshot.getValue(Position.class);
+            if (!UsersMapping.containsKey(myPlaceKey)) {
+                User myPlace = dataSnapshot.getValue(User.class);
                 myPlace.key = myPlaceKey;
-                positions.add(myPlace);
-                PositionsMapping.put(myPlaceKey, positions.size() - 1);
+                users.add(myPlace);
+                UsersMapping.put(myPlaceKey, users.size() - 1);
                 if (updateListener != null)
                     updateListener.onListUpdated();
             }
@@ -84,14 +82,14 @@ public class PositionsData {
         @Override
         public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
             String myPlaceKey = dataSnapshot.getKey();
-            Position myPlace = dataSnapshot.getValue(Position.class);
+            User myPlace = dataSnapshot.getValue(User.class);
             myPlace.key = myPlaceKey;
-            if (PositionsMapping.containsKey(myPlaceKey)) {
-                int index = PositionsMapping.get(myPlaceKey);
-                positions.set(index, myPlace);
+            if (UsersMapping.containsKey(myPlaceKey)) {
+                int index = UsersMapping.get(myPlaceKey);
+                users.set(index, myPlace);
             } else {
-                positions.add(myPlace);
-                PositionsMapping.put(myPlaceKey, positions.size() - 1);
+                users.add(myPlace);
+                UsersMapping.put(myPlaceKey, users.size() - 1);
             }
             if (updateListener != null)
                 updateListener.onListUpdated();
@@ -100,9 +98,9 @@ public class PositionsData {
         @Override
         public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
             String myPlaceKey = dataSnapshot.getKey();
-            if (PositionsMapping.containsKey(myPlaceKey)) {
-                int index = PositionsMapping.get(myPlaceKey);
-                positions.remove(index);
+            if (UsersMapping.containsKey(myPlaceKey)) {
+                int index = UsersMapping.get(myPlaceKey);
+                users.remove(index);
                 recreateKeyIndexMapping();
             }
             if (updateListener != null)
@@ -120,41 +118,43 @@ public class PositionsData {
         }
     };
 
-    public void AddPosition(Position p)
+    public void AddUser(User p)
     {
         String key = db.push().getKey();
-        positions.add(p);
-        PositionsMapping.put(key, positions.size() - 1);
+        users.add(p);
+        UsersMapping.put(key, users.size() - 1);
         db.child(FIREBASE_CHILD).child(key).setValue(p);
         p.key = key;
     }
 
-    public Position getPlace(int index) {
-        return positions.get(index);
+    public User getPlace(int index) {
+        return users.get(index);
     }
 
     public void deletePlace(int index) {
 
-        db.child(FIREBASE_CHILD).child(positions.get(index).key).removeValue();
-        positions.remove(index);
+        db.child(FIREBASE_CHILD).child(users.get(index).key).removeValue();
+        users.remove(index);
         recreateKeyIndexMapping();
     }
 
-    public void updatePlace(int index,  String desc, String lng, String lat)
+    public void updatePlace(int index,  User u)
     {
-        Position myPlace=positions.get(index);
-        myPlace.desc=desc;
-        myPlace.latitude=lat;
-        myPlace.longitude=lng;
+        User uu =users.get(index);
+        uu.desc=u.desc;
+        uu.email=u.email;
 
-        db.child(FIREBASE_CHILD).child(myPlace.key).setValue(myPlace);
+
+        db.child(FIREBASE_CHILD).child(uu.key).setValue(uu);
 
     }
 
     private void recreateKeyIndexMapping()
     {
-        PositionsMapping.clear();
-        for (int i=0;i<positions.size();i++)
-            PositionsMapping.put(positions.get(i).key,i);
+        UsersMapping.clear();
+        for (int i=0;i<users.size();i++)
+            UsersMapping.put(users.get(i).key,i);
     }
 }
+
+

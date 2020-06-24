@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".Probe_Friendship_Activity">
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/main_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:minHeight="?attr/actionBarSize"
+        android:background="?attr/toolbarColor">
+
+    </androidx.appcompat.widget.Toolbar>
+
+    <TextView
+        android:id="@+id/probefriend_show_text"
+        android:layout_width="398dp"
+        android:layout_height="71dp"
+        android:fadeScrollbars="false"
+        android:isScrollContainer="true"
+        android:scrollbarAlwaysDrawVerticalTrack="true"
+        android:scrollHorizontally="true"
+        android:text="ovde ce se prikazati" />
+
+    <TextView
+        android:id="@+id/probefriend__text_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+
+        android:text="Name:" />
+
+    <com.google.android.material.textfield.TextInputEditText
+        android:id="@+id/probefriend_name_edit"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:editable="true"
+        android:inputType="textPersonName"
+        android:text="name123" />
+
+
+    <Button
+        android:id="@+id/probefriend_add_user"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/main_toolbar"
+        android:layout_marginTop="1dp"
+        android:text="add user" />
+
+    <Button
+        android:id="@+id/probefriends_btn_show_users"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="show users" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/probefriend_user1_edit"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:editable="true"
+            android:inputType="textPersonName"
+            android:text="name123" />
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/probefriend_user2_edit"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:editable="true"
+            android:inputType="textPersonName"
+            android:text="name123" />
+
+        <Button
+            android:id="@+id/probefriend_btn_add_friendship"
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="add friend" />
+
+        <Button
+            android:id="@+id/probefriend_btn_show_friends"
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="show friends" />
+
+        <Button
+            android:id="@+id/probefriend_btn_accept"
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="accept" />
+    </LinearLayout>
+</LinearLayout>
