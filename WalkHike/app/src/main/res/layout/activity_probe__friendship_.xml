@@ -67,7 +67,7 @@
             android:layout_height="wrap_content"
             android:editable="true"
             android:inputType="textPersonName"
-            android:text="name123" />
+            android:text="0" />
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/probefriend_user2_edit"
@@ -75,7 +75,7 @@
             android:layout_height="wrap_content"
             android:editable="true"
             android:inputType="textPersonName"
-            android:text="name123" />
+            android:text="3" />
 
         <Button
             android:id="@+id/probefriend_btn_add_friendship"

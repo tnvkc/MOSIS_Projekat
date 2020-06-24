@@ -20,7 +20,7 @@ import tamara.mosis.elfak.walkhike.modeldata.Position;
 import tamara.mosis.elfak.walkhike.modeldata.User;
 import tamara.mosis.elfak.walkhike.modeldata.UserData;
 
-public class Probe_Friendship_Activity extends AppCompatActivity {
+public class Probe_Friendship_Activity extends AppCompatActivity implements FriendshipData.ListUpdatedEventListener {
 
     Button btnDodajUser;
 
@@ -37,6 +37,7 @@ public class Probe_Friendship_Activity extends AppCompatActivity {
 
     UserData userdata;
     FriendshipData friendshipData;
+    String user = "name123";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,6 +49,10 @@ public class Probe_Friendship_Activity extends AppCompatActivity {
             setTheme(R.style.AppThemeDark);
         else
             setTheme(R.style.AppThemeLight);
+
+
+
+        friendshipData.getInstance().setEventListener(this);
 
         username =  (TextInputEditText) findViewById(R.id.probefriend_name_edit);
         user1Index =  (TextInputEditText) findViewById(R.id.probefriend_user1_edit);
@@ -111,22 +116,7 @@ public class Probe_Friendship_Activity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                ArrayList<Friendship> probepos = new ArrayList<>();
-
-
-                probepos = friendshipData.getInstance().getMyPlaces();
-                prikaz = (TextView) findViewById(R.id.probefriend_show_text);
-                String prikaziii = "";
-
-
-
-                for (int i = 0; i < probepos.size(); i++) {
-                    prikaziii += probepos.toString() + " ";
-                    prikaziii += "\n";
-
-                }
-
-                prikaz.setText(prikaziii);
+                showFriendships();
             }
         });
 
@@ -156,5 +146,31 @@ public class Probe_Friendship_Activity extends AppCompatActivity {
                     friendshipData.getInstance().updateFriendshipTrue(indexx, true);
             }
         });
+    }
+
+    void showFriendships()
+    {
+        ArrayList<Friendship> probepos = new ArrayList<>();
+        String index1 = user1Index.getText().toString();
+
+        probepos = friendshipData.getInstance().getMyPlaces();
+        prikaz = (TextView) findViewById(R.id.probefriend_show_text);
+        String prikaziii = "";
+
+
+
+        for (int i = 0; i < probepos.size(); i++) {
+            String a = probepos.get(i).toUser.username;
+            if (a.compareTo(user) == 0)
+                prikaziii += probepos.get(i).toString() + " ";
+            prikaziii += "\n";
+        }
+
+        prikaz.setText(prikaziii);
+    }
+
+    @Override
+    public void onListUpdated() {
+        showFriendships();
     }
 }
