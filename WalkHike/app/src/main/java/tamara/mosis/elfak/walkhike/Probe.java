@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.material.textfield.TextInputEditText;
 
@@ -15,12 +16,14 @@ import java.util.ArrayList;
 import java.util.Map;
 
 import tamara.mosis.elfak.walkhike.Activities.LoginActivity;
+import tamara.mosis.elfak.walkhike.Activities.MainActivity;
 import tamara.mosis.elfak.walkhike.Activities.SignUpActivity;
 
 import tamara.mosis.elfak.walkhike.modeldata.*;
 
 public class Probe extends AppCompatActivity {
 
+    Button mainBtn;
 
     Button signupB;
     Button loginB;
@@ -29,6 +32,10 @@ public class Probe extends AppCompatActivity {
     Button btnPrikazi;
     TextView prikaz;
 
+    Button btnStartService;
+    Button btnStopService;
+
+
     TextInputEditText lon;
     TextInputEditText lat;
     TextInputEditText descc;
@@ -36,6 +43,7 @@ public class Probe extends AppCompatActivity {
 
     Button btnGetIndex;
     Button btnDeleteIndex;
+    Button btnUpdateIndex;
     TextInputEditText textIndex;
 
     static PositionsData w;
@@ -53,6 +61,15 @@ public class Probe extends AppCompatActivity {
             setTheme(R.style.AppThemeLight);
         setContentView(R.layout.activity_probe);
 
+
+        mainBtn = (Button) findViewById(R.id.probe_btn_main);
+        mainBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent=new Intent(getApplicationContext(), MainActivity.class);
+                startActivity(intent);
+            }
+        });
 
 
         signupB = (Button) findViewById(R.id.proba_signup);
@@ -86,9 +103,8 @@ public class Probe extends AppCompatActivity {
                 w.getInstance().AddPosition(p);
 
 
-                MapObjectType1 m = new MapObjectType1();
+                MapObject m = new MapObject();
                 m.desc = descc.getText().toString();
-                m.dodatak1 = "proba dodatak";
                 m.position = p;
                 md.getInstance().AddMapObject(m);
             }
@@ -145,6 +161,25 @@ public class Probe extends AppCompatActivity {
             }
         });
 
+        btnUpdateIndex = (Button) findViewById(R.id.probe_btn_updateIndex);
+        btnUpdateIndex.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Position p = new Position(descc.getText().toString());
+                p.latitude = lat.getText().toString();
+                p.longitude = lon.getText().toString();
+                w.getInstance().AddPosition(p);
+
+                String prikaziii ="";
+                int ii = Integer.parseInt(  textIndex.getText().toString());
+                w.getInstance().updatePlace(ii, p.desc, p.longitude, p.latitude);
+                prikaziii += "updated: " + p.toString();
+
+                prikaz.setText(prikaziii);
+
+            }
+        });
+
 
         btnDeleteIndex = (Button) findViewById(R.id.probe_btn_deleteIndex);
         btnDeleteIndex.setOnClickListener(new View.OnClickListener() {
@@ -153,6 +188,33 @@ public class Probe extends AppCompatActivity {
                 int ii = Integer.parseInt(  textIndex.getText().toString());
                 w.getInstance().deletePlace(ii);
 
+            }
+        });
+
+
+        ///////service
+
+
+        btnStartService = (Button) findViewById(R.id.probe_btn_start_service);
+        btnStartService.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(getApplicationContext(), "Start service! ", Toast.LENGTH_SHORT).show();
+                Intent i = new Intent(getApplicationContext(), NotificationService.class);
+                i.putExtra("timer", 10);
+                startService(i);
+            }
+        });
+
+
+        btnStopService = (Button) findViewById(R.id.probe_btn_stop_service);
+        btnStopService.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(getApplicationContext(), "Stop service! ", Toast.LENGTH_SHORT).show();
+                Intent i = new Intent(getApplicationContext(), NotificationService.class);
+
+                stopService(i);
             }
         });
 

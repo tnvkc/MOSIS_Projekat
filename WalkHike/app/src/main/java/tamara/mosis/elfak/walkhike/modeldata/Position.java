@@ -22,6 +22,6 @@ public class Position {
     @Override
     public String toString()
     {
-        return this.desc;
+        return this.desc + "("+ this.latitude + "," + this.longitude +")";
     }
 }

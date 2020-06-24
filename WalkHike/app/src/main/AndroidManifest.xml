@@ -30,7 +30,12 @@
         <meta-data android:name="com.google.ar.core" android:value="required" />
 
         <activity android:name=".ShowArObjectActivity"></activity>
-        <activity android:name=".Probe" />
+        <activity android:name=".Probe" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"
@@ -46,10 +51,7 @@
         <activity android:name=".Activities.NewProfilePictureActivity" />
         <activity android:name=".Activities.SignUpActivity"/>
         <activity android:name=".Activities.LoginActivity" >
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
+
         </activity>
         <activity android:name=".Activities.FriendslistActivity" />
         <activity android:name=".Activities.AddNewObjectActivity" />
@@ -64,6 +66,7 @@
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
         </service>
+        <service android:name=".NotificationService"></service>
 
         <meta-data
             android:name="com.google.firebase.messaging.default_notification_channel_id"

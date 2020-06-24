@@ -18,8 +18,12 @@
 
     <TextView
         android:id="@+id/probe_show_text"
-        android:layout_width="match_parent"
+        android:layout_width="398dp"
         android:layout_height="71dp"
+        android:fadeScrollbars="false"
+        android:isScrollContainer="true"
+        android:scrollbarAlwaysDrawVerticalTrack="true"
+        android:scrollHorizontally="true"
         android:text="ovde ce se prikazati" />
 
     <TextView
@@ -95,10 +99,17 @@
 
         <Button
             android:id="@+id/probe_btn_deleteIndex"
-            android:layout_width="277dp"
+            android:layout_width="200dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="delete index" />
+
+        <Button
+            android:id="@+id/probe_btn_updateIndex"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/common_google_play_services_update_button" />
 
         <Button
             android:id="@+id/probe_btn_getIndex"
@@ -107,20 +118,55 @@
             android:text="Get 1" />
     </LinearLayout>
 
-    <Button
-        android:id="@+id/proba_signup"
-        android:layout_width="wrap_content"
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/main_toolbar"
-        android:layout_marginTop="51dp"
-        android:text="Signup activity" />
+        android:orientation="horizontal">
+        <Button
+            android:id="@+id/proba_signup"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/main_toolbar"
+            android:layout_marginTop="5dp"
+            android:text="Signup activity" />
+        <Button
+            android:id="@+id/proba_login"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/main_toolbar"
+            android:layout_marginTop="5dp"
+            android:text="Login Activity" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/probe_btn_start_service"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/main_toolbar"
+            android:layout_marginTop="5dp"
+            android:text="start service" />
+
+        <Button
+            android:id="@+id/probe_btn_stop_service"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/main_toolbar"
+            android:layout_marginTop="5dp"
+            android:text="stop service" />
+    </LinearLayout>
 
     <Button
-        android:id="@+id/proba_login"
-        android:layout_width="wrap_content"
+        android:id="@+id/probe_btn_main"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/main_toolbar"
-        android:layout_marginTop="51dp"
-        android:text="Login Activity" />
+        android:text="Main" />
+
 
 </LinearLayout>

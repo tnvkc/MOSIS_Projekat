@@ -42,8 +42,8 @@ public class MapObjectData {
         return objects;
     }
 
-    PositionsData.ListUpdatedEventListener updateListener;
-    public void setEventListener(PositionsData.ListUpdatedEventListener listener) {
+    ListUpdatedEventListener updateListener;
+    public void setEventListener(ListUpdatedEventListener listener) {
         updateListener = listener;
     }
     public interface ListUpdatedEventListener {
@@ -106,5 +106,7 @@ public class MapObjectData {
         PositionsMapping.put(key, objects.size() - 1);
         db.child(FIREBASE_CHILD).child(key).setValue(m);
         m.key = key;
+        if (updateListener != null)
+            updateListener.onListUpdated();
     }
 }

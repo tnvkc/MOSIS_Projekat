@@ -23,6 +23,7 @@ import android.widget.Toast;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationListener;
+import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -250,7 +251,16 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
                 //Toast.makeText(this, "Usao u latlong", Toast.LENGTH_SHORT );
             }
         }
-        //startLocationUpdates();
+        startLocationUpdates();
+    }
+
+    private void startLocationUpdates() {
+        LocationRequest locationRequest=new LocationRequest();
+        locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+        //10 sec
+        locationRequest.setInterval(10000);
+        locationRequest.setFastestInterval(5000);
+        LocationServices.FusedLocationApi.requestLocationUpdates(googleApiClient,locationRequest,MainActivity.this);
     }
 
     @Override
