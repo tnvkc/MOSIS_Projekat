@@ -55,7 +55,7 @@ public class Probe extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        w.getInstance().getMyPlaces();
+        w.getInstance().getPositions();
 
         if (AppCompatDelegate.getDefaultNightMode() == AppCompatDelegate.MODE_NIGHT_YES)
             setTheme(R.style.AppThemeDark);
@@ -129,12 +129,12 @@ public class Probe extends AppCompatActivity {
                 probepos = new ArrayList<>();
 
 
-                probepos = w.getInstance().getMyPlaces();
+                probepos = w.getInstance().getPositions();
                 prikaz = (TextView) findViewById(R.id.probe_show_text);
                 String prikaziii ="";
 
                 mapObjcs = new ArrayList<>();
-                mapObjcs = md.getInstance().getMyPlaces();
+                mapObjcs = md.getInstance().getMapObjects();
 
 
 
@@ -167,7 +167,7 @@ public class Probe extends AppCompatActivity {
                 Position p ;
                 String prikaziii ="";
                 int ii = Integer.parseInt(  textIndex.getText().toString());
-                p = w.getInstance().getPlace(ii);
+                p = w.getInstance().getPosition(ii);
                 prikaziii += p.toString();
 
                 prikaz.setText(prikaziii);
@@ -185,7 +185,7 @@ public class Probe extends AppCompatActivity {
 
                 String prikaziii ="";
                 int ii = Integer.parseInt(  textIndex.getText().toString());
-                w.getInstance().updatePlace(ii, p.desc, p.longitude, p.latitude);
+                w.getInstance().updatePosition(ii, p.desc, p.longitude, p.latitude);
                 prikaziii += "updated: " + p.toString();
 
                 prikaz.setText(prikaziii);
@@ -199,7 +199,7 @@ public class Probe extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 int ii = Integer.parseInt(  textIndex.getText().toString());
-                w.getInstance().deletePlace(ii);
+                w.getInstance().deletePosition(ii);
 
             }
         });

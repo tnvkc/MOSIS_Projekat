@@ -38,7 +38,7 @@ public class MapObjectData {
         return MapObjectData.SingletonHolder.instance;
     }
 
-    public ArrayList<MapObject> getMyPlaces() {
+    public ArrayList<MapObject> getMapObjects() {
         return objects;
     }
 
@@ -66,13 +66,13 @@ public class MapObjectData {
     ChildEventListener childEventListener = new ChildEventListener() {
         @Override
         public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-            String myPlaceKey = dataSnapshot.getKey();
+            String myMapObjectKey = dataSnapshot.getKey();
 
-            if (!PositionsMapping.containsKey(myPlaceKey)) {
-                MapObject myPlace = dataSnapshot.getValue(MapObject.class);
-                myPlace.key = myPlaceKey;
-                objects.add(myPlace);
-                PositionsMapping.put(myPlaceKey, objects.size() - 1);
+            if (!PositionsMapping.containsKey(myMapObjectKey)) {
+                MapObject myMapObject = dataSnapshot.getValue(MapObject.class);
+                myMapObject.key = myMapObjectKey;
+                objects.add(myMapObject);
+                PositionsMapping.put(myMapObjectKey, objects.size() - 1);
                 if (updateListener != null)
                     updateListener.onListUpdated();
             }

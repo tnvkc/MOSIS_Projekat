@@ -72,7 +72,7 @@ public class LoginActivity extends AppCompatActivity {
         else
             setTheme(R.style.AppThemeLight);
         setContentView(R.layout.activity_login);
-        userData.getInstance().getMyPlaces();
+        userData.getInstance().getUsers();
 
         firebaseAuth = FirebaseAuth.getInstance();
         firestore=FirebaseFirestore.getInstance();
@@ -124,7 +124,7 @@ public class LoginActivity extends AppCompatActivity {
                     int indexx = -1;
 
 
-                    probepos = userData.getInstance().getMyPlaces();
+                    probepos = userData.getInstance().getUsers();
                     for(int i =0; i<probepos.size(); i++)
                     {
                         String a = probepos.get(i).email;

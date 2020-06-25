@@ -58,7 +58,7 @@ public class SignUpActivity extends AppCompatActivity {
             setTheme(R.style.AppThemeLight);
         setContentView(R.layout.activity_sign_up);
 
-        userData.getInstance().getMyPlaces();
+        userData.getInstance().getUsers();
        firebaseAuth = FirebaseAuth.getInstance();
        firestore=FirebaseFirestore.getInstance();
 
@@ -160,14 +160,14 @@ public class SignUpActivity extends AppCompatActivity {
                     int indexx = -1;
 
 
-                    probepos = userData.getInstance().getMyPlaces();
+                    probepos = userData.getInstance().getUsers();
                     for (int i = 0; i < probepos.size(); i++) {
                         String a = probepos.get(i).email;
                         if (a.compareTo(email) == 0) {
                             indexx = i;
                         }
                     }
-                    User uu = new User();
+                    User uu;
                     if (indexx != -1) {
                         uu = probepos.get(indexx);
 

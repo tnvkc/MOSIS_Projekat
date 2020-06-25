@@ -18,8 +18,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import tamara.mosis.elfak.walkhike.modeldata.User;
+
 public class FriendRequestsRecyclerAdapter extends RecyclerView.Adapter<FriendRequestsRecyclerAdapter.ViewHolder>{
     private List<Users> usersList;
+    private List<User> users;
     private Context context;
 
     private String currentId;//ours
@@ -28,6 +31,11 @@ public class FriendRequestsRecyclerAdapter extends RecyclerView.Adapter<FriendRe
     public FriendRequestsRecyclerAdapter(Context context,List<Users> usersList)
     {
         this.usersList=usersList;
+        this.context=context;
+    }
+    public FriendRequestsRecyclerAdapter(List<User> users, Context context)
+    {
+        this.users=users;
         this.context=context;
     }
     @Override
@@ -40,8 +48,16 @@ public class FriendRequestsRecyclerAdapter extends RecyclerView.Adapter<FriendRe
     @Override
     public void onBindViewHolder(@NonNull final FriendRequestsRecyclerAdapter.ViewHolder holder, int position)
     {
-        final String username=usersList.get(position).getName();
+        final String username;
+        if(users == null)
+        { username=usersList.get(position).getName();
         holder.username_view.setText(username);
+        }
+        else
+        {   username=users.get(position).username + users.get(position).email;
+            holder.username_view.setText(username);
+        }
+
         final String user_id=usersList.get(position).userId;
 
         holder.acceptButton.setOnClickListener

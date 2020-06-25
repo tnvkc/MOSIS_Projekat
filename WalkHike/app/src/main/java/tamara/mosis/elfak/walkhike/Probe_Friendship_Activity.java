@@ -20,7 +20,7 @@ import tamara.mosis.elfak.walkhike.modeldata.Position;
 import tamara.mosis.elfak.walkhike.modeldata.User;
 import tamara.mosis.elfak.walkhike.modeldata.UserData;
 
-public class Probe_Friendship_Activity extends AppCompatActivity implements FriendshipData.ListUpdatedEventListener {
+public class Probe_Friendship_Activity extends AppCompatActivity  {
 
     Button btnDodajUser;
 
@@ -37,13 +37,13 @@ public class Probe_Friendship_Activity extends AppCompatActivity implements Frie
 
     UserData userdata;
     FriendshipData friendshipData;
-    String user = "name123";
+    String user = "UserProba1";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        userdata.getInstance().getMyPlaces();
-        friendshipData.getInstance().getMyPlaces();
+        userdata.getInstance().getUsers();
+        friendshipData.getInstance().getFriendships();
         setContentView(R.layout.activity_probe__friendship_);
         if (AppCompatDelegate.getDefaultNightMode() == AppCompatDelegate.MODE_NIGHT_YES)
             setTheme(R.style.AppThemeDark);
@@ -52,7 +52,7 @@ public class Probe_Friendship_Activity extends AppCompatActivity implements Frie
 
 
 
-        friendshipData.getInstance().setEventListener(this);
+
 
         username =  (TextInputEditText) findViewById(R.id.probefriend_name_edit);
         user1Index =  (TextInputEditText) findViewById(R.id.probefriend_user1_edit);
@@ -77,7 +77,7 @@ public class Probe_Friendship_Activity extends AppCompatActivity implements Frie
                 ArrayList<User> probepos = new ArrayList<>();
 
 
-                probepos = userdata.getInstance().getMyPlaces();
+                probepos = userdata.getInstance().getUsers();
                 prikaz = (TextView) findViewById(R.id.probefriend_show_text);
                 String prikaziii = "";
 
@@ -103,9 +103,9 @@ public class Probe_Friendship_Activity extends AppCompatActivity implements Frie
             public void onClick(View v) {
                 Friendship p = new Friendship();
                 int index1 = Integer.parseInt(user1Index.getText().toString());
-                p.fromUser = userdata.getInstance().getPlace(index1);
+                p.fromUser = userdata.getInstance().getUser(index1);
                 index1 = Integer.parseInt(user2Index.getText().toString());
-                p.toUser = userdata.getInstance().getPlace(index1);
+                p.toUser = userdata.getInstance().getUser(index1);
 
                 friendshipData.getInstance().AddFriendship(p);
             }
@@ -125,13 +125,13 @@ public class Probe_Friendship_Activity extends AppCompatActivity implements Frie
         btnAcceptFreidns.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String index1 = user1Index.getText().toString();
+                String index1 =  user1Index.getText().toString();
                 String index2 = user2Index.getText().toString();
                 int indexx = -1;
                 ArrayList<Friendship> probepos = new ArrayList<>();
 
 
-                probepos = friendshipData.getInstance().getMyPlaces();
+                probepos = friendshipData.getInstance().getFriendships();
                 for(int i =0; i<probepos.size(); i++)
                 {
                     String a = probepos.get(i).fromUser.username;
@@ -153,7 +153,7 @@ public class Probe_Friendship_Activity extends AppCompatActivity implements Frie
         ArrayList<Friendship> probepos = new ArrayList<>();
         String index1 = user1Index.getText().toString();
 
-        probepos = friendshipData.getInstance().getMyPlaces();
+        probepos = friendshipData.getInstance().getFriendships();
         prikaz = (TextView) findViewById(R.id.probefriend_show_text);
         String prikaziii = "";
 
@@ -169,8 +169,8 @@ public class Probe_Friendship_Activity extends AppCompatActivity implements Frie
         prikaz.setText(prikaziii);
     }
 
-    @Override
+    /*@Override
     public void onListUpdated() {
         showFriendships();
-    }
+    }*/
 }

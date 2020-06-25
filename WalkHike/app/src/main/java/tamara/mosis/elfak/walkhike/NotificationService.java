@@ -154,8 +154,8 @@ public class NotificationService extends IntentService implements MapObjectData.
     public void onListUpdated() {
         promena = "Stigla ";
 
-        int sizee = MoD.getInstance().getMyPlaces().size() - 1;
-        MapObject m = MoD.getInstance().getMyPlaces().get(sizee);
+        int sizee = MoD.getInstance().getMapObjects().size() - 1;
+        MapObject m = MoD.getInstance().getMapObjects().get(sizee);
         promena += m.toString();
 
     }
@@ -182,7 +182,7 @@ public class NotificationService extends IntentService implements MapObjectData.
 
     private void findNearby()
     {
-        positions = PD.getInstance().getMyPlaces();
+        positions = PD.getInstance().getPositions();
         for(int i =0; i< positions.size(); i++)
         {
 

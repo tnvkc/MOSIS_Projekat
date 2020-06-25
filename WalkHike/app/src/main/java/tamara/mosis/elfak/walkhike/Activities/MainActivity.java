@@ -14,6 +14,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.util.AttributeSet;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -40,9 +41,12 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
+import java.util.ArrayList;
+
 import tamara.mosis.elfak.walkhike.Probe;
 import tamara.mosis.elfak.walkhike.R;
 import tamara.mosis.elfak.walkhike.ShowArObjectActivity;
+import tamara.mosis.elfak.walkhike.modeldata.FriendshipData;
 import tamara.mosis.elfak.walkhike.modeldata.User;
 import tamara.mosis.elfak.walkhike.modeldata.UserData;
 
@@ -65,18 +69,15 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
 
 
     UserData userData;
+    FriendshipData friendshipData;
 
     @Override
     protected void onStart()
     {
         super.onStart();
-        FirebaseUser currentUser=mfirebaseAuth.getCurrentUser();
-        if(currentUser==null)
-        {
-            Intent loginIntent=new Intent(MainActivity.this, LoginActivity.class);
-            startActivity(loginIntent);
-            finish();
-        }
+
+
+
     }
 
     @Override
@@ -87,9 +88,12 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
         else
             setTheme(R.style.AppThemeLight);
 
+
+
         setContentView(R.layout.activity_main);
-        userData.getInstance().getMyPlaces();
         mfirebaseAuth=FirebaseAuth.getInstance();
+        userData.getInstance().getUsers();
+        friendshipData.getInstance().getFriendships();
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
                 && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, PERMISSION_CODE);
@@ -98,25 +102,16 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
 
 
         }
+        ArrayList<User> probepos = new ArrayList<>();
 
+
+        probepos = userData.getInstance().getUsers();
 
         getDeviceLocation();
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.main_map_fragment);
         mapFragment.getMapAsync(this);
 
-        SharedPreferences sharedPref = getApplicationContext().getSharedPreferences( "Userdata", Context.MODE_PRIVATE);
-        String username = sharedPref.getString(getString(R.string.loggedUser_username), "EMPTY");
-        String email = sharedPref.getString(getString(R.string.loggedUser_email), "EMPTY");
-        int indexx  = sharedPref.getInt(getString(R.string.loggedUser_index), -1);
 
-        User u;
-        if(indexx != -1) {
-            u = userData.getInstance().getPlace(indexx);
-            if(u.email.compareTo(email) == 0)
-                Toast.makeText(getApplicationContext(), "Welcome " + username + ", " + email + "!", Toast.LENGTH_SHORT).show();
-            else
-                Toast.makeText(getApplicationContext(), "There was a problem " + username + ", " + email + "!", Toast.LENGTH_SHORT).show();
-        }
 
         toolbar = (Toolbar)findViewById(R.id.main_toolbar);
         setSupportActionBar(toolbar);
@@ -179,14 +174,67 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
             }
         });
 
+
+
     }
+
+
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.main_menu_profile, menu);
+
+
+        FirebaseUser currentUser=mfirebaseAuth.getCurrentUser();
+        if(currentUser==null)
+        {
+            Intent loginIntent=new Intent(MainActivity.this, LoginActivity.class);
+            startActivity(loginIntent);
+            finish();
+        }
+
+
+
+        SharedPreferences sharedPref = getApplicationContext().getSharedPreferences( "Userdata", Context.MODE_PRIVATE);
+        String username = sharedPref.getString(getString(R.string.loggedUser_username), "EMPTY");
+        String email = sharedPref.getString(getString(R.string.loggedUser_email), "EMPTY");
+        int indexx  = sharedPref.getInt(getString(R.string.loggedUser_index), -1);
+
+        String mmail = currentUser.getEmail().toString();
+        int ii = email.compareTo(mmail);
+        if(username == "EMPTY" ||  ii != 0)
+        {
+            SharedPreferences.Editor editor = sharedPref.edit();
+
+            editor.remove(getString(R.string.loggedUser_email));
+            editor.remove(getString(R.string.loggedUser_username));
+
+            editor.remove(getString(R.string.loggedUser_index));
+            editor.commit();
+
+            mfirebaseAuth.signOut();
+            Intent intent=new Intent(getApplicationContext(), LoginActivity.class);
+            startActivity(intent);
+            finish();
+        }
+
+        Toast.makeText(getApplicationContext(), "Welcome " + username + ", " + email + "!", Toast.LENGTH_SHORT).show();
+        /*User u;
+        if(indexx != -1) {
+            u = userData.getInstance().getUser(indexx);
+            if(u.email.compareTo(email) == 0)
+                Toast.makeText(getApplicationContext(), "Welcome " + username + ", " + email + "!", Toast.LENGTH_SHORT).show();
+            else
+                Toast.makeText(getApplicationContext(), "There was a problem " + username + ", " + email + "!", Toast.LENGTH_SHORT).show();
+        }*/
         return super.onCreateOptionsMenu(menu);
         //return false;
+
+
     }
+
+
 
 
     @Override
@@ -293,6 +341,15 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
 
+    }
+
+    @Nullable
+    @Override
+    public View onCreateView(@NonNull String name, @NonNull Context context, @NonNull AttributeSet attrs) {
+
+
+
+        return super.onCreateView(name, context, attrs);
     }
 
     @Override

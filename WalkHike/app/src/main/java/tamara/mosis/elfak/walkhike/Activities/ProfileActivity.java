@@ -8,6 +8,7 @@ import androidx.appcompat.widget.Toolbar;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
@@ -42,9 +43,10 @@ public class ProfileActivity extends AppCompatActivity {
     Button Logout;
 
     private ProgressDialog progress;
-    private FirebaseAuth firebaseAuth;
+    private FirebaseAuth mfirebaseAuth;
     private FirebaseFirestore firestore;//yt
     private String userID;//yt
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,10 +58,10 @@ public class ProfileActivity extends AppCompatActivity {
         setContentView(R.layout.activity_profile);
 
        textViewName=findViewById(R.id.textViewName);
-       firebaseAuth = FirebaseAuth.getInstance();//i yt
+        mfirebaseAuth = FirebaseAuth.getInstance();//i yt
         firestore=FirebaseFirestore.getInstance();//yt
         //Donsfl2GlXYkLvPvrhsWSAZAzvg2
-        userID=firebaseAuth.getCurrentUser().getUid();//yt
+        userID=mfirebaseAuth.getCurrentUser().getUid();//yt
         firestore.collection("Users").document(userID).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
             @Override
               public void onSuccess(DocumentSnapshot documentSnapshot) {
@@ -69,7 +71,7 @@ public class ProfileActivity extends AppCompatActivity {
            }
         );
 
-       final FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
+       final FirebaseUser firebaseUser = mfirebaseAuth.getCurrentUser();
 
        toolbar = (Toolbar) findViewById(R.id.profile_toolbar);
        setSupportActionBar(toolbar);
@@ -81,7 +83,7 @@ public class ProfileActivity extends AppCompatActivity {
        CustomListView adapter = new CustomListView(this, context.getResources().getStringArray(R.array.profile_options), imgid, false);
        list.setAdapter(adapter);
 
-       /*list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+       list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Intent intent;
@@ -101,7 +103,7 @@ public class ProfileActivity extends AppCompatActivity {
                     case 3:
                         //intent=new Intent(getApplicationContext(), EditProfileActivity.class);
                         // startActivity(intent);
-                        Map<String,Object> tokenMapRemove=new HashMap<>();
+                       /* Map<String,Object> tokenMapRemove=new HashMap<>();
                         tokenMapRemove.put("token_id", FieldValue.delete());
                         firestore.collection("Users").document(userID).update(tokenMapRemove).addOnSuccessListener(new OnSuccessListener<Void>() {
                             @Override
@@ -110,11 +112,27 @@ public class ProfileActivity extends AppCompatActivity {
                                 Intent intent=new Intent(getApplicationContext(), LoginActivity.class);
                                 startActivity(intent);
                             }
-                        });
+                        });*/
                         if(firebaseUser != null)
                         {
+                            SharedPreferences sharedPref = getApplicationContext().getSharedPreferences( "Userdata", Context.MODE_PRIVATE);
+
+
+                            SharedPreferences.Editor editor = sharedPref.edit();
+
+                            editor.remove(getString(R.string.loggedUser_email));
+                            editor.remove(getString(R.string.loggedUser_username));
+
+                            editor.remove(getString(R.string.loggedUser_index));
+                            editor.commit();
+
+                            mfirebaseAuth.signOut();
 
                             Toast.makeText(getApplicationContext(), "LOGGED OUT", Toast.LENGTH_SHORT).show();
+
+                            intent=new Intent(getApplicationContext(), LoginActivity.class);
+                            startActivity(intent);
+                            finish();
                         }
                         else
                         {
@@ -125,7 +143,7 @@ public class ProfileActivity extends AppCompatActivity {
                     default:
                 }
             }
-        });*/
+        });
 
 
     }

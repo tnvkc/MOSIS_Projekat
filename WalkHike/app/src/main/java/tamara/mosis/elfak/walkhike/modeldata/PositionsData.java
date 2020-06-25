@@ -41,7 +41,7 @@ public class PositionsData {
         return SingletonHolder.instance;
     }
 
-    public ArrayList<Position> getMyPlaces() {
+    public ArrayList<Position> getPositions() {
         return positions;
     }
 
@@ -69,13 +69,13 @@ public class PositionsData {
     ChildEventListener childEventListener = new ChildEventListener() {
         @Override
         public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-            String myPlaceKey = dataSnapshot.getKey();
+            String myPositionKey = dataSnapshot.getKey();
 
-            if (!PositionsMapping.containsKey(myPlaceKey)) {
-                Position myPlace = dataSnapshot.getValue(Position.class);
-                myPlace.key = myPlaceKey;
-                positions.add(myPlace);
-                PositionsMapping.put(myPlaceKey, positions.size() - 1);
+            if (!PositionsMapping.containsKey(myPositionKey)) {
+                Position myPosition = dataSnapshot.getValue(Position.class);
+                myPosition.key = myPositionKey;
+                positions.add(myPosition);
+                PositionsMapping.put(myPositionKey, positions.size() - 1);
                 if (updateListener != null)
                     updateListener.onListUpdated();
             }
@@ -83,15 +83,15 @@ public class PositionsData {
 
         @Override
         public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-            String myPlaceKey = dataSnapshot.getKey();
-            Position myPlace = dataSnapshot.getValue(Position.class);
-            myPlace.key = myPlaceKey;
-            if (PositionsMapping.containsKey(myPlaceKey)) {
-                int index = PositionsMapping.get(myPlaceKey);
-                positions.set(index, myPlace);
+            String myPositionKey = dataSnapshot.getKey();
+            Position myPosition = dataSnapshot.getValue(Position.class);
+            myPosition.key = myPositionKey;
+            if (PositionsMapping.containsKey(myPositionKey)) {
+                int index = PositionsMapping.get(myPositionKey);
+                positions.set(index, myPosition);
             } else {
-                positions.add(myPlace);
-                PositionsMapping.put(myPlaceKey, positions.size() - 1);
+                positions.add(myPosition);
+                PositionsMapping.put(myPositionKey, positions.size() - 1);
             }
             if (updateListener != null)
                 updateListener.onListUpdated();
@@ -99,9 +99,9 @@ public class PositionsData {
 
         @Override
         public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
-            String myPlaceKey = dataSnapshot.getKey();
-            if (PositionsMapping.containsKey(myPlaceKey)) {
-                int index = PositionsMapping.get(myPlaceKey);
+            String myPositionKey = dataSnapshot.getKey();
+            if (PositionsMapping.containsKey(myPositionKey)) {
+                int index = PositionsMapping.get(myPositionKey);
                 positions.remove(index);
                 recreateKeyIndexMapping();
             }
@@ -129,25 +129,25 @@ public class PositionsData {
         p.key = key;
     }
 
-    public Position getPlace(int index) {
+    public Position getPosition(int index) {
         return positions.get(index);
     }
 
-    public void deletePlace(int index) {
+    public void deletePosition(int index) {
 
         db.child(FIREBASE_CHILD).child(positions.get(index).key).removeValue();
         positions.remove(index);
         recreateKeyIndexMapping();
     }
 
-    public void updatePlace(int index,  String desc, String lng, String lat)
+    public void updatePosition(int index,  String desc, String lng, String lat)
     {
-        Position myPlace=positions.get(index);
-        myPlace.desc=desc;
-        myPlace.latitude=lat;
-        myPlace.longitude=lng;
+        Position myPosition=positions.get(index);
+        myPosition.desc=desc;
+        myPosition.latitude=lat;
+        myPosition.longitude=lng;
 
-        db.child(FIREBASE_CHILD).child(myPlace.key).setValue(myPlace);
+        db.child(FIREBASE_CHILD).child(myPosition.key).setValue(myPosition);
 
     }
 

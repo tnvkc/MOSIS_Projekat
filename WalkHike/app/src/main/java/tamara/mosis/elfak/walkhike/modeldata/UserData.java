@@ -39,7 +39,7 @@ public class UserData {
         return tamara.mosis.elfak.walkhike.modeldata.UserData.SingletonHolder.instance;
     }
 
-    public ArrayList<User> getMyPlaces() {
+    public ArrayList<User> getUsers() {
         return users;
     }
 
@@ -67,13 +67,13 @@ public class UserData {
     ChildEventListener childEventListener = new ChildEventListener() {
         @Override
         public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-            String myPlaceKey = dataSnapshot.getKey();
+            String myUserKey = dataSnapshot.getKey();
 
-            if (!UsersMapping.containsKey(myPlaceKey)) {
-                User myPlace = dataSnapshot.getValue(User.class);
-                myPlace.key = myPlaceKey;
-                users.add(myPlace);
-                UsersMapping.put(myPlaceKey, users.size() - 1);
+            if (!UsersMapping.containsKey(myUserKey)) {
+                User myUser = dataSnapshot.getValue(User.class);
+                myUser.key = myUserKey;
+                users.add(myUser);
+                UsersMapping.put(myUserKey, users.size() - 1);
                 if (updateListener != null)
                     updateListener.onListUpdated();
             }
@@ -81,15 +81,15 @@ public class UserData {
 
         @Override
         public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-            String myPlaceKey = dataSnapshot.getKey();
-            User myPlace = dataSnapshot.getValue(User.class);
-            myPlace.key = myPlaceKey;
-            if (UsersMapping.containsKey(myPlaceKey)) {
-                int index = UsersMapping.get(myPlaceKey);
-                users.set(index, myPlace);
+            String myUserKey = dataSnapshot.getKey();
+            User myUser = dataSnapshot.getValue(User.class);
+            myUser.key = myUserKey;
+            if (UsersMapping.containsKey(myUserKey)) {
+                int index = UsersMapping.get(myUserKey);
+                users.set(index, myUser);
             } else {
-                users.add(myPlace);
-                UsersMapping.put(myPlaceKey, users.size() - 1);
+                users.add(myUser);
+                UsersMapping.put(myUserKey, users.size() - 1);
             }
             if (updateListener != null)
                 updateListener.onListUpdated();
@@ -97,9 +97,9 @@ public class UserData {
 
         @Override
         public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
-            String myPlaceKey = dataSnapshot.getKey();
-            if (UsersMapping.containsKey(myPlaceKey)) {
-                int index = UsersMapping.get(myPlaceKey);
+            String myUserKey = dataSnapshot.getKey();
+            if (UsersMapping.containsKey(myUserKey)) {
+                int index = UsersMapping.get(myUserKey);
                 users.remove(index);
                 recreateKeyIndexMapping();
             }
@@ -127,18 +127,18 @@ public class UserData {
         p.key = key;
     }
 
-    public User getPlace(int index) {
+    public User getUser(int index) {
         return users.get(index);
     }
 
-    public void deletePlace(int index) {
+    public void deleteUser(int index) {
 
         db.child(FIREBASE_CHILD).child(users.get(index).key).removeValue();
         users.remove(index);
         recreateKeyIndexMapping();
     }
 
-    public void updatePlace(int index,  User u)
+    public void updateUser(int index,  User u)
     {
         User uu =users.get(index);
         uu.desc=u.desc;
