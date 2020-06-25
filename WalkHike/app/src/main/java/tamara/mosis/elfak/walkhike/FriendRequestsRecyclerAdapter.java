@@ -18,25 +18,30 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import tamara.mosis.elfak.walkhike.modeldata.Friendship;
+import tamara.mosis.elfak.walkhike.modeldata.FriendshipData;
 import tamara.mosis.elfak.walkhike.modeldata.User;
 
 public class FriendRequestsRecyclerAdapter extends RecyclerView.Adapter<FriendRequestsRecyclerAdapter.ViewHolder>{
-    private List<Users> usersList;
-    private List<User> users;
+    //private List<Users> usersList;
+    private List<Friendship> users;
     private Context context;
 
     private String currentId;//ours
     private FirebaseFirestore mFirestore;
 
+    FriendshipData friendshipData;
+
     public FriendRequestsRecyclerAdapter(Context context,List<Users> usersList)
     {
-        this.usersList=usersList;
+        //this.usersList=usersList;
         this.context=context;
     }
-    public FriendRequestsRecyclerAdapter(List<User> users, Context context)
+    public FriendRequestsRecyclerAdapter(List<Friendship> users, Context context)
     {
         this.users=users;
         this.context=context;
+        friendshipData.getInstance().getFriendships();
     }
     @Override
     public FriendRequestsRecyclerAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType)
@@ -50,15 +55,16 @@ public class FriendRequestsRecyclerAdapter extends RecyclerView.Adapter<FriendRe
     {
         final String username;
         if(users == null)
-        { username=usersList.get(position).getName();
-        holder.username_view.setText(username);
+        {// username=usersList.get(position).getName();
+       // holder.username_view.setText(username);
+            //final String user_id=usersList.get(position).userId;
         }
         else
-        {   username=users.get(position).username + users.get(position).email;
+        {   username=users.get(position).fromUser.username + users.get(position).fromUser.email;
             holder.username_view.setText(username);
         }
 
-        final String user_id=usersList.get(position).userId;
+
 
         holder.acceptButton.setOnClickListener
                 (new View.OnClickListener()
@@ -67,6 +73,8 @@ public class FriendRequestsRecyclerAdapter extends RecyclerView.Adapter<FriendRe
                     public  void onClick(final View view)
                     {
                         removeItem(holder.getAdapterPosition());
+                        friendshipData.getInstance().updateFriendshipAccept(users.get(position).fromUser.email, users.get(position).toUser.email, true);
+                        users.remove(position);
                     }
                 });
 
@@ -76,20 +84,21 @@ public class FriendRequestsRecyclerAdapter extends RecyclerView.Adapter<FriendRe
                     @Override
                     public  void onClick(final View view)
                     {
-                        removeItem(holder.getAdapterPosition());
+                        //removeItem(holder.getAdapterPosition());
                     }
                 });
     }
 
     @Override
     public int getItemCount() {
-        return usersList.size();
+        //return usersList.size();
+        return users.size();
     }
 
     private void removeItem(int position) {
-        usersList.remove(position);
+       //usersList.remove(position);
         notifyItemRemoved(position);
-        notifyItemRangeChanged(position, usersList.size());
+        //notifyItemRangeChanged(position, usersList.size());
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder

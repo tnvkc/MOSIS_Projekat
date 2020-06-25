@@ -158,6 +158,26 @@ public class FriendshipData {
 
     }
 
+    public void updateFriendshipAccept(String mailFrom, String mailTo,  boolean accepted)
+    {
+
+        int indexx = -1;
+        for(int i =0; i< Friendships.size(); i++)
+        {
+
+            if (mailFrom.compareTo(Friendships.get(i).fromUser.email) == 0
+            && mailTo.compareTo(Friendships.get(i).toUser.email) == 0)
+                indexx = i;
+        }
+
+        if(indexx != -1) {
+            Friendship uu = Friendships.get(indexx);
+            uu.accepted = accepted;
+            db.child(FIREBASE_CHILD).child(uu.key).setValue(uu);
+        }
+
+    }
+
     private void recreateKeyIndexMapping()
     {
         FriendshipsMapping.clear();

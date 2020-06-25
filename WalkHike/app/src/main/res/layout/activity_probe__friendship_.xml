@@ -67,7 +67,7 @@
             android:layout_height="wrap_content"
             android:editable="true"
             android:inputType="textPersonName"
-            android:text="0" />
+            android:text="email2@email.com" />
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/probefriend_user2_edit"
@@ -75,7 +75,7 @@
             android:layout_height="wrap_content"
             android:editable="true"
             android:inputType="textPersonName"
-            android:text="3" />
+            android:text="email1@email.com" />
 
         <Button
             android:id="@+id/probefriend_btn_add_friendship"

@@ -14,7 +14,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentChange;
@@ -46,7 +48,7 @@ public class FriendRequestsFragment extends Fragment implements FriendshipData.L
 
     FriendshipData friendshipData;
     UserData userdata;
-    private List<User> users;
+    private List<Friendship> friendshipss;
     TextView prikaz;
     public FriendRequestsFragment() {
         // Required empty public constructor
@@ -67,6 +69,15 @@ public class FriendRequestsFragment extends Fragment implements FriendshipData.L
        // usersListView.setLayoutManager(new LinearLayoutManager(getContext()));
         //usersListView.setAdapter(freqRecyclerAdapter);
         prikaz = (TextView) view.findViewById(R.id.friendrequest_textview);
+
+        friendshipss=new ArrayList<>();
+        freqRecyclerAdapter=new FriendRequestsRecyclerAdapter(friendshipss,getContext());
+
+        usersListView.setHasFixedSize(true);
+        usersListView.setLayoutManager(new LinearLayoutManager(getContext()));
+        usersListView.setAdapter(freqRecyclerAdapter);
+
+
         showFriendships();
         return view;
     }
@@ -78,7 +89,7 @@ public class FriendRequestsFragment extends Fragment implements FriendshipData.L
 
 
 
-
+        //friendshipss=new ArrayList<>();
         SharedPreferences sharedPref = getContext().getSharedPreferences( "Userdata", Context.MODE_PRIVATE);
         String username = sharedPref.getString(getString(R.string.loggedUser_username), "EMPTY");
         String email = sharedPref.getString(getString(R.string.loggedUser_email), "EMPTY");
@@ -94,8 +105,10 @@ public class FriendRequestsFragment extends Fragment implements FriendshipData.L
 
         for (int i = 0; i < probepos.size(); i++) {
             String a = probepos.get(i).toUser.email;
-            if (a.compareTo(index1) == 0 && probepos.get(i).accepted == false)
+            if (a.compareTo(index1) == 0 && probepos.get(i).accepted == false && !friendshipss.contains(probepos.get(i))) {
                 prikaziii += probepos.get(i).toString() + " ";
+                friendshipss.add(probepos.get(i));
+            }
             prikaziii += "\n";
         }
 

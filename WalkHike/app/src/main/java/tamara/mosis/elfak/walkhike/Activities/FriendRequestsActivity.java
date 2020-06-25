@@ -6,7 +6,10 @@ import androidx.appcompat.widget.Toolbar;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import tamara.mosis.elfak.walkhike.R;
 
@@ -15,6 +18,7 @@ public class FriendRequestsActivity extends AppCompatActivity {
     Toolbar toolbar;
     ListView list;
 
+    Button buttonDone;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -28,6 +32,15 @@ public class FriendRequestsActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle("Friend requests");
 
+
+        buttonDone = findViewById(R.id.buttonDone);
+        buttonDone.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(getApplicationContext(), "heloo", Toast.LENGTH_SHORT).show();
+                finish();
+            }
+        });
 
     }
 }

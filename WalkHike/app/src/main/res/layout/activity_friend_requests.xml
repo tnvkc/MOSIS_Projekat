@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     tools:context=".Activities.FriendRequestsActivity">
 
     <androidx.appcompat.widget.Toolbar
@@ -14,25 +15,27 @@
         android:background="?attr/toolbarColor">
 
     </androidx.appcompat.widget.Toolbar>
+
+
+    <fragment
+        android:id="@+id/fragment_friend_requests"
+        android:name="tamara.mosis.elfak.walkhike.Fragments.FriendRequestsFragment"
+        android:layout_width="match_parent"
+        android:layout_height="500dp"
+
+        android:layout_centerHorizontal="true"
+
+        android:layout_marginTop="20dp" />
     <Button
         android:id="@+id/buttonDone"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/fragment_friend_requests"
+
+        android:layout_gravity="center_horizontal"
         android:layout_marginBottom="5dp"
         android:text="Done"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="15dp"
         />
 
-    <fragment
-        android:id="@+id/fragment_friend_requests"
-        android:name="tamara.mosis.elfak.walkhike.Fragments.FriendRequestsFragment"
-        android:layout_width="340dp"
-        android:layout_height="531dp"
-        android:layout_below="@id/friend_requests_toolbar"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="20dp" />
-
-
-</RelativeLayout>
+</LinearLayout>

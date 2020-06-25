@@ -134,16 +134,16 @@ public class Probe_Friendship_Activity extends AppCompatActivity  {
                 probepos = friendshipData.getInstance().getFriendships();
                 for(int i =0; i<probepos.size(); i++)
                 {
-                    String a = probepos.get(i).fromUser.username;
+                    String a = probepos.get(i).fromUser.email;
                     if( a.compareTo(index1) == 0)
                     {
-                        if(probepos.get(i).toUser.username.compareTo(index2) == 0)
+                        if(probepos.get(i).toUser.email.compareTo(index2) == 0)
                             indexx = i;
                     }
                 }
 
                 if(indexx != -1)
-                    friendshipData.getInstance().updateFriendshipTrue(indexx, true);
+                    friendshipData.getInstance().updateFriendshipTrue(indexx, false);
             }
         });
     }
