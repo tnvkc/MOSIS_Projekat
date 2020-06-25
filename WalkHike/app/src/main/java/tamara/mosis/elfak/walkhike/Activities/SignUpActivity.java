@@ -5,7 +5,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
 
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
@@ -23,10 +25,13 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.iid.FirebaseInstanceId;
 
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
 import tamara.mosis.elfak.walkhike.R;
+import tamara.mosis.elfak.walkhike.modeldata.User;
+import tamara.mosis.elfak.walkhike.modeldata.UserData;
 
 public class SignUpActivity extends AppCompatActivity {
 
@@ -35,6 +40,8 @@ public class SignUpActivity extends AppCompatActivity {
     EditText txtEmail;
     EditText txtPassword;
     TextView orLogIn;
+
+    UserData userData;
 
     private ProgressDialog progress;
     private FirebaseAuth firebaseAuth;
@@ -51,6 +58,7 @@ public class SignUpActivity extends AppCompatActivity {
             setTheme(R.style.AppThemeLight);
         setContentView(R.layout.activity_sign_up);
 
+        userData.getInstance().getMyPlaces();
        firebaseAuth = FirebaseAuth.getInstance();
        firestore=FirebaseFirestore.getInstance();
 
@@ -84,6 +92,7 @@ public class SignUpActivity extends AppCompatActivity {
     {
         String email = txtEmail.getText().toString();
         String pass = txtPassword.getText().toString();
+
         final String name=txtUsername.getText().toString();
 
         if(TextUtils.isEmpty(email))
@@ -108,7 +117,15 @@ public class SignUpActivity extends AppCompatActivity {
                     if(task.isSuccessful()) {
 
 
-                        String user_id = firebaseAuth.getCurrentUser().getUid();
+                        User u = new User();
+                        u.username =name;
+                        u.email = email;
+
+                        userData.getInstance().AddUser(u);
+
+
+
+                       /* String user_id = firebaseAuth.getCurrentUser().getUid();
 
                         String token_id = FirebaseInstanceId.getInstance().getToken();
                         Map<String, Object> userMap = new HashMap<>();
@@ -124,7 +141,7 @@ public class SignUpActivity extends AppCompatActivity {
                                 startActivity(intent);
                                 finish();
                             }
-                        });
+                        });*/
 
                     }
                     else
@@ -132,6 +149,46 @@ public class SignUpActivity extends AppCompatActivity {
                         Toast.makeText(getApplicationContext(), "Could not register! ", Toast.LENGTH_SHORT).show();
                     }
 
+            }
+        });
+
+        firebaseAuth.signInWithEmailAndPassword(email, pass).addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+            @Override
+            public void onComplete(@NonNull Task<AuthResult> task) {
+                if (task.isSuccessful()) {
+                    ArrayList<User> probepos = new ArrayList<>();
+                    int indexx = -1;
+
+
+                    probepos = userData.getInstance().getMyPlaces();
+                    for (int i = 0; i < probepos.size(); i++) {
+                        String a = probepos.get(i).email;
+                        if (a.compareTo(email) == 0) {
+                            indexx = i;
+                        }
+                    }
+                    User uu = new User();
+                    if (indexx != -1) {
+                        uu = probepos.get(indexx);
+
+                        Context context = getApplicationContext();
+                        SharedPreferences sharedPref = context.getSharedPreferences(
+                                "Userdata", Context.MODE_PRIVATE);
+                        SharedPreferences.Editor editor = sharedPref.edit();
+                        editor.putString(getString(R.string.loggedUser_email), uu.email);
+                        editor.putString(getString(R.string.loggedUser_username), uu.username);
+
+                        editor.putInt(getString(R.string.loggedUser_index), indexx);
+                        editor.commit();
+
+                        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                        startActivity(intent);
+                        finish();
+                    }
+                }else {
+                    Toast.makeText(getApplicationContext(), "Could not login! ", Toast.LENGTH_SHORT).show();
+                }
+                progress.dismiss();
             }
         });
 

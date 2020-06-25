@@ -5,7 +5,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
 
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
@@ -23,11 +25,15 @@ import com.google.firebase.auth.GetTokenResult;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.iid.FirebaseInstanceId;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
 import tamara.mosis.elfak.walkhike.Activities.MainActivity;
 import tamara.mosis.elfak.walkhike.R;
+import tamara.mosis.elfak.walkhike.modeldata.Friendship;
+import tamara.mosis.elfak.walkhike.modeldata.User;
+import tamara.mosis.elfak.walkhike.modeldata.UserData;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -39,6 +45,8 @@ public class LoginActivity extends AppCompatActivity {
     private FirebaseAuth firebaseAuth;
     FirebaseUser logedInUser;
     private FirebaseFirestore firestore;
+
+    UserData userData;
 
    /* @Override
     protected void onStart()
@@ -64,6 +72,7 @@ public class LoginActivity extends AppCompatActivity {
         else
             setTheme(R.style.AppThemeLight);
         setContentView(R.layout.activity_login);
+        userData.getInstance().getMyPlaces();
 
         firebaseAuth = FirebaseAuth.getInstance();
         firestore=FirebaseFirestore.getInstance();
@@ -87,6 +96,10 @@ public class LoginActivity extends AppCompatActivity {
         String email = txtEmail.getText().toString();
         String pass = txtPassword.getText().toString();
 
+
+
+
+
         if(TextUtils.isEmpty(email))
         {
             Toast.makeText(getApplicationContext(), "empty email", Toast.LENGTH_SHORT).show();
@@ -107,8 +120,40 @@ public class LoginActivity extends AppCompatActivity {
             public void onComplete(@NonNull Task<AuthResult> task) {
                 if(task.isSuccessful())
                 {
+                    ArrayList<User> probepos = new ArrayList<>();
+                    int indexx = -1;
+
+
+                    probepos = userData.getInstance().getMyPlaces();
+                    for(int i =0; i<probepos.size(); i++)
+                    {
+                        String a = probepos.get(i).email;
+                        if( a.compareTo(email) == 0)
+                        {
+                            indexx = i;
+                        }
+                    }
+                    User uu = new User();
+                    if(indexx != -1)
+                    {
+                        uu = probepos.get(indexx);
+
+                        Context context = getApplicationContext();
+                        SharedPreferences sharedPref = context.getSharedPreferences(
+                                "Userdata", Context.MODE_PRIVATE);
+                        SharedPreferences.Editor editor = sharedPref.edit();
+                        editor.putString(getString(R.string.loggedUser_email), uu.email);
+                        editor.putString(getString(R.string.loggedUser_username), uu.username);
+
+                        editor.putInt(getString(R.string.loggedUser_index), indexx);
+                        editor.commit();
+
+                        Intent intent=new Intent(getApplicationContext(), MainActivity.class);
+                        startActivity(intent);
+                        finish();
+                    }
                     // Toast.makeText(getApplicationContext(), "loged in! " + txtEmail.getText() +  txtPassword.getText(), Toast.LENGTH_SHORT).show();
-                    firebaseAuth.getCurrentUser().getIdToken(true).addOnSuccessListener(new OnSuccessListener<GetTokenResult>() {
+                   /* firebaseAuth.getCurrentUser().getIdToken(true).addOnSuccessListener(new OnSuccessListener<GetTokenResult>() {
                         @Override
                         public void onSuccess(GetTokenResult getTokenResult) {
                             String token_id= FirebaseInstanceId.getInstance().getToken();
@@ -126,7 +171,8 @@ public class LoginActivity extends AppCompatActivity {
                             });
 
                         }
-                    });
+                    });*/
+
 
                 }
                 else

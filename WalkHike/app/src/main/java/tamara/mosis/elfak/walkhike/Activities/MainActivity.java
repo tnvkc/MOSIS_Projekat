@@ -9,7 +9,9 @@ import androidx.core.app.ActivityCompat;
 
 import android.Manifest;
 import android.app.Service;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.view.Menu;
@@ -41,6 +43,8 @@ import com.google.firebase.auth.FirebaseUser;
 import tamara.mosis.elfak.walkhike.Probe;
 import tamara.mosis.elfak.walkhike.R;
 import tamara.mosis.elfak.walkhike.ShowArObjectActivity;
+import tamara.mosis.elfak.walkhike.modeldata.User;
+import tamara.mosis.elfak.walkhike.modeldata.UserData;
 
 public class MainActivity extends AppCompatActivity implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener, OnMapReadyCallback {
 
@@ -58,6 +62,9 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
     FloatingActionButton objectInteraction;
     Toolbar toolbar;
     MenuItem profileItem;
+
+
+    UserData userData;
 
     @Override
     protected void onStart()
@@ -81,7 +88,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
             setTheme(R.style.AppThemeLight);
 
         setContentView(R.layout.activity_main);
-
+        userData.getInstance().getMyPlaces();
         mfirebaseAuth=FirebaseAuth.getInstance();
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
                 && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
@@ -91,10 +98,25 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
 
 
         }
+
+
         getDeviceLocation();
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.main_map_fragment);
         mapFragment.getMapAsync(this);
 
+        SharedPreferences sharedPref = getApplicationContext().getSharedPreferences( "Userdata", Context.MODE_PRIVATE);
+        String username = sharedPref.getString(getString(R.string.loggedUser_username), "EMPTY");
+        String email = sharedPref.getString(getString(R.string.loggedUser_email), "EMPTY");
+        int indexx  = sharedPref.getInt(getString(R.string.loggedUser_index), -1);
+
+        User u;
+        if(indexx != -1) {
+            u = userData.getInstance().getPlace(indexx);
+            if(u.email.compareTo(email) == 0)
+                Toast.makeText(getApplicationContext(), "Welcome " + username + ", " + email + "!", Toast.LENGTH_SHORT).show();
+            else
+                Toast.makeText(getApplicationContext(), "There was a problem " + username + ", " + email + "!", Toast.LENGTH_SHORT).show();
+        }
 
         toolbar = (Toolbar)findViewById(R.id.main_toolbar);
         setSupportActionBar(toolbar);
