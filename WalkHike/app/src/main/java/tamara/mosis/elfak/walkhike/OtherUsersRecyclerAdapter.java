@@ -2,6 +2,7 @@ package tamara.mosis.elfak.walkhike;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,33 +22,44 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import tamara.mosis.elfak.walkhike.modeldata.Friendship;
+import tamara.mosis.elfak.walkhike.modeldata.FriendshipData;
+import tamara.mosis.elfak.walkhike.modeldata.User;
+import tamara.mosis.elfak.walkhike.modeldata.UserData;
+
 
 public class OtherUsersRecyclerAdapter extends RecyclerView.Adapter<OtherUsersRecyclerAdapter.ViewHolderOther>
 {
-    private List<Users> usersList;
+    private List<User> usersList;
     private Context context;
 
     private String currentId;//ours
     private FirebaseFirestore mFirestore;
 
-    public OtherUsersRecyclerAdapter(Context context,List<Users> usersList)
+    FriendshipData friendshipData;
+    UserData userData;
+    User current;
+    public OtherUsersRecyclerAdapter(Context context,List<User> usersList, User u)
     {
         this.usersList=usersList;
+        this.current = u;
         this.context=context;
     }
     @Override
     public ViewHolderOther onCreateViewHolder(ViewGroup parent,int viewType)
     {
         View view= LayoutInflater.from(parent.getContext()).inflate(R.layout.list_member_add_user,parent,false);
+
         return new ViewHolderOther(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull final ViewHolderOther holder, int position)
     {
-        final String username=usersList.get(position).getName();
-        holder.username_view.setText(username);
-        final String user_id=usersList.get(position).userId;
+        final String username=usersList.get(position).username;
+        final String email=usersList.get(position).email;
+        holder.username_view.setText(username + ", "+email);
+        //final String user_id=usersList.get(position).userId;
 
         holder.addFriendButton.setOnClickListener
                 (new View.OnClickListener()
@@ -55,7 +67,21 @@ public class OtherUsersRecyclerAdapter extends RecyclerView.Adapter<OtherUsersRe
             @Override
             public  void onClick(final View view)
             {
-                mFirestore= FirebaseFirestore.getInstance();
+                User other = usersList.get(position);
+                Friendship f = new Friendship();
+                f.fromUser = current;
+                f.toUser = other;
+                f.accepted = false;
+
+                friendshipData.getInstance().AddFriendship(f);
+
+                Toast.makeText(view.getContext(),"Request sent",Toast.LENGTH_LONG);
+                usersList.remove(position);
+                //view.setActivated(false);
+                removeItem(holder.getAdapterPosition());
+                //friendshipData.getInstance().AddFriendship();
+
+               /* mFirestore= FirebaseFirestore.getInstance();
                 currentId= FirebaseAuth.getInstance().getUid();
 
                 Map<String,Object> notificationMessage=new HashMap<>();
@@ -71,6 +97,12 @@ public class OtherUsersRecyclerAdapter extends RecyclerView.Adapter<OtherUsersRe
             }
         });
     }
+    private void removeItem(int position) {
+        //usersList.remove(position);
+        notifyItemRemoved(position);
+        //notifyItemRangeChanged(position, usersList.size());
+    }
+
 
     @Override
     public int getItemCount() {

@@ -37,7 +37,7 @@ import tamara.mosis.elfak.walkhike.modeldata.UserData;
 public class FriendsFragment extends Fragment {
 
     private RecyclerView usersListView;
-    private List<Users> usersList;
+    private List<User> usersList;
     private UsersRecyclerAdapter usersRecyclerAdapter;
     private FirebaseFirestore firebaseFirestore;
 
@@ -61,13 +61,16 @@ public class FriendsFragment extends Fragment {
         View view= inflater.inflate(R.layout.fragment_friends, container, false);
         friendshipData.getInstance().getFriendships();
         firebaseFirestore=firebaseFirestore.getInstance();
-        /*usersListView=view.findViewById(R.id.friends_list_rv) ;
+        usersListView=view.findViewById(R.id.friends_list_rv) ;
         usersList=new ArrayList<>();
         usersRecyclerAdapter=new UsersRecyclerAdapter(getContext(),usersList);
 
         usersListView.setHasFixedSize(true);
         usersListView.setLayoutManager(new LinearLayoutManager(getContext()));
-        usersListView.setAdapter(usersRecyclerAdapter);*/
+        usersListView.setAdapter(usersRecyclerAdapter);
+
+
+        //usersList = new ArrayList<>();
         buttonAddFriend=view.findViewById(R.id.friends_requests_item);
         prikaz = (TextView) view.findViewById(R.id.friendsfrag_textview);
         showFriendships();
@@ -98,17 +101,24 @@ public class FriendsFragment extends Fragment {
         for (int i = 0; i < probepos.size(); i++) {
             String a = probepos.get(i).toUser.email;
             String b = probepos.get(i).fromUser.email;
-            if ((a.compareTo(index1) == 0  || b.compareTo(index1) == 0 ))
+            if (a.compareTo(index1) == 0 )
             {
-                if(probepos.get(i).accepted == true)
-                    prikaziii += probepos.get(i).toString() + " ";
-                else
-                {
-                    //buttonAddFriend.setChecked(true);//setIcon(R.drawable.ic_notifications_black_24dp);//@drawable/ic_people_black_24dp);
+                if(probepos.get(i).accepted == true) {
 
+                    usersList.add(probepos.get(i).fromUser);
                 }
             }
+            if(b.compareTo(index1) == 0 )
+            {
+                if(probepos.get(i).accepted == true) {
+                    usersList.add(probepos.get(i).toUser);
+                }
+            }
+        }
 
+        for(int i = 0; i< usersList.size(); i++)
+        {
+            prikaziii += usersList.get(i).toString() + " ";
             prikaziii += "\n";
         }
 

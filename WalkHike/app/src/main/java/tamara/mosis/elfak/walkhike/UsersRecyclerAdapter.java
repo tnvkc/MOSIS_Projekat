@@ -12,13 +12,16 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.List;
 
+import tamara.mosis.elfak.walkhike.modeldata.User;
+
 
 public class UsersRecyclerAdapter extends RecyclerView.Adapter<UsersRecyclerAdapter.ViewHolder>
 {
-    private List<Users> usersList;
+    //private List<Users> usersList;
+    private List<User> usersList;
     private Context context;
 
-    public UsersRecyclerAdapter(Context context,List<Users> usersList)
+    public UsersRecyclerAdapter(Context context,List<User> usersList)
     {
         this.usersList=usersList;
         this.context=context;
@@ -32,9 +35,10 @@ public class UsersRecyclerAdapter extends RecyclerView.Adapter<UsersRecyclerAdap
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        final String username=usersList.get(position).getName();
-        holder.username_view.setText(username);
-        final String user_id=usersList.get(position).userId;
+        final String username=usersList.get(position).username;
+        final String email=usersList.get(position).email;
+        holder.username_view.setText(username +", " + email);
+        //final String user_id=usersList.get(position).userId;
 
        /* holder.vie.setOnClickListener(new View.OnClickListener()
         {
