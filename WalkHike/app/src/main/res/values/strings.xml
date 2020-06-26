@@ -53,6 +53,8 @@
     <string name="button_prev">Prev</string>
     <string name="button_next">Next</string>
     <string name="select_object_type">Select object type</string>
-    <string name="insert_message">Insert your message</string>
+    <string name="insert_message">Insert your message:</string>
+    <string name="edit_desc">Insert description</string>
+    <string name="see_in_ar">*see in AR</string>
 
 </resources>

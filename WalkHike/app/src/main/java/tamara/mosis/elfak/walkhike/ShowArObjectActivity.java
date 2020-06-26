@@ -61,7 +61,7 @@ public class ShowArObjectActivity extends AppCompatActivity {
             case 2: {
                 ModelRenderable
                         .builder()
-                        .setSource(this, R.raw.emoji_love)
+                        .setSource(this, R.raw.heart)
                         .build()
                         .thenAccept(modelRenderable -> {
 

@@ -28,6 +28,7 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -94,7 +95,6 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.main_map_fragment);
         mapFragment.getMapAsync(this);
 
-
         toolbar = (Toolbar)findViewById(R.id.main_toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle(R.string.app_name);
@@ -105,7 +105,11 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
             @Override
             public void onClick(View v) {
                 Intent intent=new Intent(getApplicationContext(), AddNewObjectActivity.class);
-                startActivity(intent);
+                Bundle bundle = new Bundle();
+                bundle.putDouble("lat", location.getLatitude());
+                bundle.putDouble("lon", location.getLongitude());
+                intent.putExtras(bundle);
+                startActivityForResult(intent, 1);
             }
         });
         objectInteraction = (FloatingActionButton) findViewById(R.id.main_showArObject);
@@ -155,6 +159,55 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
                 return false;
             }
         });
+
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        if (requestCode == 1) {
+            //vracanje iz AddNewObjectActivity-ja
+            if (resultCode == RESULT_OK) {
+
+                Bundle bundle = data.getExtras();
+                double lat = bundle.getDouble("lat");
+                double lon = bundle.getDouble("lon");
+                int object_type = bundle.getInt("object_type");
+
+                LatLng loc = new LatLng(lat, lon);
+                int resId = 0;
+                String desc = "";
+
+                if (object_type == 1) {
+                    desc = "Message";
+                    resId = R.drawable.ic_message;
+                } else if (object_type == 2) {
+                    desc = "Checkpoint";
+                    resId = R.drawable.ic_marker;
+                } else if (object_type == 3) {
+                    desc = "Photo";
+                    resId = R.drawable.ic_photo;
+                } else if (object_type == 4) {
+                    desc = "Emoji";
+                    resId = R.drawable.ic_heart;
+                }
+
+                AddMarkerObject(resId, loc, desc);
+            }
+        }
+
+        super.onActivityResult(requestCode, resultCode, data);
+    }
+
+    protected void AddMarkerObject(int resId, LatLng location, String markerDesc) {
+        if(map!=null){
+            map.addMarker(new MarkerOptions()
+                                .position(location)
+                                .title(markerDesc)
+                                .icon(BitmapDescriptorFactory.fromResource(resId))
+            );
+            map.moveCamera(CameraUpdateFactory.newLatLng(location));
+            map.animateCamera(CameraUpdateFactory.newLatLngZoom(location,10f));
+        }
 
     }
 
@@ -244,7 +297,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
             Toast.makeText(MainActivity.this, "Lat : "+location.getLatitude()+" Lng "+location.getLongitude(), Toast.LENGTH_SHORT).show();
             if(map!=null){
                 LatLng latLng=new LatLng(location.getLatitude(),location.getLongitude());
-                map.addMarker(new MarkerOptions().position(latLng).title("Current Location"));
+                //map.addMarker(new MarkerOptions().position(latLng).title("Current Location"));
                map.moveCamera(CameraUpdateFactory.newLatLng(latLng));
                map.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng,10f));
                 //Toast.makeText(this, "Usao u latlong", Toast.LENGTH_SHORT );
@@ -268,7 +321,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
     //Toast.makeText(MapWithPlayServiceLocationActivity.this, "Lat : "+location.getLatitude()+" Lng "+location.getLongitude(), Toast.LENGTH_SHORT).show();
         if(map!=null){
             LatLng latLng=new LatLng(location.getLatitude(),location.getLongitude());
-            map.addMarker(new MarkerOptions().position(latLng).title("Current Location"));
+            //map.addMarker(new MarkerOptions().position(latLng).title("Current Location"));
             map.moveCamera(CameraUpdateFactory.newLatLng(latLng));
             map.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng,10f));
         }

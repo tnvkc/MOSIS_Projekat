@@ -81,7 +81,7 @@ sceneform.asset('sampledata/marker.obj',
         'sampledata/marker.sfa',
         'src/main/res/raw/marker')
 
-sceneform.asset('sampledata/emoji_love.obj',
+sceneform.asset('sampledata/heart.obj',
         'default',
-        'sampledata/emoji_love.sfa',
-        'src/main/res/raw/emoji_love')
+        'sampledata/heart.sfa',
+        'src/main/res/raw/heart')

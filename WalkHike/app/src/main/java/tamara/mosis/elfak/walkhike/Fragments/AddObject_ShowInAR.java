@@ -16,6 +16,7 @@ import com.google.ar.sceneform.math.Vector3;
 import com.google.ar.sceneform.rendering.ModelRenderable;
 import com.google.ar.sceneform.ux.ArFragment;
 
+import tamara.mosis.elfak.walkhike.Activities.AddNewObjectActivity;
 import tamara.mosis.elfak.walkhike.R;
 
 public class AddObject_ShowInAR extends Fragment {
@@ -24,7 +25,8 @@ public class AddObject_ShowInAR extends Fragment {
     private Scene scene;
     private Camera camera;
 
-    private int objectType;
+    int type;
+    AddNewObjectActivity myParentActivity;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -41,6 +43,10 @@ public class AddObject_ShowInAR extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         //super.onViewCreated(view, savedInstanceState);
+
+        myParentActivity = (AddNewObjectActivity) getActivity();
+        type = myParentActivity.getObjectType();
+
         arFragment = (ArFragment) getChildFragmentManager().findFragmentById(R.id.add_object_ar);
 
         //hide hand animation
@@ -50,32 +56,11 @@ public class AddObject_ShowInAR extends Fragment {
         scene = arFragment.getArSceneView().getScene();
         camera = scene.getCamera();
 
-        //procitati prosledjen objectType
-        //Bundle bundle = getIntent().getExtras();
-        //objectType = bundle.getInt("object_id");
-
-        objectType = 1;
-
-        switch(objectType) {
-            case 1: {
-                ModelRenderable
-                        .builder()
-                        .setSource(getContext(), R.raw.trophy)
-                        .build()
-                        .thenAccept(modelRenderable -> {
-
-                            Node node = new Node();
-                            node.setRenderable(modelRenderable);
-                            scene.addChild(node);
-
-                            node.setWorldPosition(new Vector3(0.0f, 0.2f, -3.0f));
-                        });
-                break;
-            }
+        switch(type) {
             case 2: {
                 ModelRenderable
                         .builder()
-                        .setSource(getContext(), R.raw.emoji_love)
+                        .setSource(getContext(), R.raw.marker)
                         .build()
                         .thenAccept(modelRenderable -> {
 
@@ -87,10 +72,10 @@ public class AddObject_ShowInAR extends Fragment {
                         });
                 break;
             }
-            case 3: {
+            case 4: {
                 ModelRenderable
                         .builder()
-                        .setSource(getContext(), R.raw.marker)
+                        .setSource(getContext(), R.raw.heart)
                         .build()
                         .thenAccept(modelRenderable -> {
 
