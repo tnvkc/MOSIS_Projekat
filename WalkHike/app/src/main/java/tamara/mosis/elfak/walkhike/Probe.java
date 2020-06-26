@@ -2,8 +2,16 @@ package tamara.mosis.elfak.walkhike;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
+import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
 
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -13,6 +21,7 @@ import android.widget.Toast;
 import com.google.android.material.textfield.TextInputEditText;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Map;
 
 import tamara.mosis.elfak.walkhike.Activities.LoginActivity;
@@ -52,6 +61,8 @@ public class Probe extends AppCompatActivity {
     ArrayList<Position> probepos;
     ArrayList<MapObject> mapObjcs;
 
+
+    private NotificationManager mNotificationManager;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -212,10 +223,16 @@ public class Probe extends AppCompatActivity {
         btnStartService.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                ClearNotiSharedPRef();
+
+
                 Toast.makeText(getApplicationContext(), "Start service! ", Toast.LENGTH_SHORT).show();
                 Intent i = new Intent(getApplicationContext(), NotificationService.class);
                 i.putExtra("timer", 10);
                 startService(i);
+
+
             }
         });
 
@@ -224,12 +241,69 @@ public class Probe extends AppCompatActivity {
         btnStopService.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(getApplicationContext(), "Stop service! ", Toast.LENGTH_SHORT).show();
-                Intent i = new Intent(getApplicationContext(), NotificationService.class);
+               // Toast.makeText(getApplicationContext(), "Stop service! ", Toast.LENGTH_SHORT).show();
+               //Intent i = new Intent(getApplicationContext(), NotificationService.class);
 
-                stopService(i);
+                //stopService(i);
+
+
+
+                NotificationCompat.Builder mBuilder =
+                        new NotificationCompat.Builder(getApplicationContext(), "notify_001");
+                Intent ii = new Intent(getApplicationContext(), MainActivity.class);
+                PendingIntent pendingIntent = PendingIntent.getActivity(getApplicationContext(), 0, ii, 0);
+
+                NotificationCompat.BigTextStyle bigText = new NotificationCompat.BigTextStyle();
+                bigText.bigText("Someone wants to be your friend");
+                bigText.setBigContentTitle("New friend request");
+
+                mBuilder.setContentIntent(pendingIntent);
+                mBuilder.setSmallIcon(R.mipmap.ic_launcher_round);
+                mBuilder.setContentTitle("Request");
+                mBuilder.setContentText("friend request");
+                mBuilder.setPriority(android.app.Notification.PRIORITY_MAX);
+                mBuilder.setStyle(bigText);
+
+                mNotificationManager =
+                        (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+
+                // === Removed some obsoletes
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
+                {
+                    String channelId = "walkhikw_friends";
+                    NotificationChannel channel = new NotificationChannel(
+                            channelId,
+                            "walkhikw_friends",
+                            NotificationManager.IMPORTANCE_HIGH);
+                    mNotificationManager.createNotificationChannel(channel);
+                    mBuilder.setChannelId(channelId);
+                }
+
+                mNotificationManager.notify(0, mBuilder.build());
             }
         });
 
+    }
+
+    void ClearNotiSharedPRef()
+    {
+        SharedPreferences sharedPref = getApplicationContext().getSharedPreferences(
+                getString(R.string.NotificationsFriend), Context.MODE_PRIVATE);
+        int numOfNotis = sharedPref.getInt(getString(R.string.NotificationsNumber), 0);
+
+        SharedPreferences.Editor editor = sharedPref.edit();
+
+
+
+        for(int i = 0; i<numOfNotis; i++)
+        {
+            editor.remove(getString(R.string.NotificationsFriend) + i);
+            editor.remove(getString(R.string.NotificationsDate) + i);
+        }
+
+        editor.putInt(getString(R.string.NotificationsNumber), 0);
+
+
+        editor.commit();
     }
 }

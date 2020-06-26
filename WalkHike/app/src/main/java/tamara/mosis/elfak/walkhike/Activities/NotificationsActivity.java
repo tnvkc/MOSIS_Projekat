@@ -4,8 +4,11 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
 import android.widget.ListView;
 
@@ -13,7 +16,9 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import java.util.ArrayList;
 
+import tamara.mosis.elfak.walkhike.Fragments.FriendRequestsFragment;
 import tamara.mosis.elfak.walkhike.Notification;
+import tamara.mosis.elfak.walkhike.NotificationService;
 import tamara.mosis.elfak.walkhike.NotificationsListAdapter;
 import tamara.mosis.elfak.walkhike.R;
 
@@ -21,6 +26,8 @@ public class NotificationsActivity extends AppCompatActivity {
 
     ListView notification_list;
     BottomNavigationView bottom_navigation_menu;
+    ArrayList<Notification> notifications;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,8 +37,26 @@ public class NotificationsActivity extends AppCompatActivity {
         else
             setTheme(R.style.AppThemeLight);
         setContentView(R.layout.activity_notifications);
-
         notification_list = findViewById(R.id.notification_list);
+        FriendRequestsFragment.setUpListener(new FriendRequestsFragment.MyListener() {
+            @Override
+            public void onListUpdated() {
+                Log.d("Hello", "Hello World");
+            }
+
+        });
+
+       NotificationService.setUpListenerFriendNoti(new NotificationService.ListenerForFriendNotis() {
+           @Override
+           public void onNewFriendship() {
+                notifications = prepareNotificationTestData();
+               NotificationsListAdapter listAdapter = new NotificationsListAdapter(getApplicationContext(), R.layout.notification_view, notifications);
+               notification_list.setAdapter(listAdapter);
+           }
+       });
+
+
+
 
         bottom_navigation_menu = findViewById(R.id.bottom_navigation_menu);
         bottom_navigation_menu.setSelectedItemId(R.id.notifications);
@@ -67,7 +92,7 @@ public class NotificationsActivity extends AppCompatActivity {
                 return false;
             }
         });
-        ArrayList<Notification> notifications = prepareNotificationTestData();
+        notifications = prepareNotificationTestData();
 
         NotificationsListAdapter listAdapter = new NotificationsListAdapter(this, R.layout.notification_view, notifications);
         notification_list.setAdapter(listAdapter);
@@ -75,7 +100,7 @@ public class NotificationsActivity extends AppCompatActivity {
 
     private ArrayList<Notification> prepareNotificationTestData() {
 
-        Notification notification1 = new Notification(1, "User Milan S. passed you on weekly leaderboard. Go on a walk now and have\nyour revenge!", "30 minutes ago");
+       /* Notification notification1 = new Notification(1, "User Milan S. passed you on weekly leaderboard. Go on a walk now and have\nyour revenge!", "30 minutes ago");
         Notification notification2 = new Notification(2, "User Milica V. just left something near you!\n" +
                 "Go on a walk now to find out what!", "45 minutes ago");
         Notification notification3 = new Notification(1, "User Sandra S. passed you on weekly leaderboard. Go on a walk now and have\nyour revenge!", "1 day ago");
@@ -94,8 +119,25 @@ public class NotificationsActivity extends AppCompatActivity {
         notifications.add(notification4);
         notifications.add(notification5);
         notifications.add(notification6);
-        notifications.add(notification7);
+        notifications.add(notification7);*/
+
+        ArrayList<Notification> notifications = new ArrayList<>();
+        SharedPreferences sharedPref = getApplicationContext().getSharedPreferences(
+                getString(R.string.NotificationsFriend), Context.MODE_PRIVATE);
+        int numOfNotis = sharedPref.getInt(getString(R.string.NotificationsNumber), 0);
+
+        for(int i = 0; i< numOfNotis; i++)
+        {
+
+            String emailFromUser = sharedPref.getString(getString(R.string.NotificationsFromUser) + i, "EMPTY");
+            String dateNoti = sharedPref.getString(getString(R.string.NotificationsDate) + i, "EMPTY");
+            Notification notification1 = new Notification(2, "User " + emailFromUser+
+                    " wants to be your friend!", dateNoti);
+            notifications.add(notification1);
+        }
 
         return notifications;
     }
+
+
 }

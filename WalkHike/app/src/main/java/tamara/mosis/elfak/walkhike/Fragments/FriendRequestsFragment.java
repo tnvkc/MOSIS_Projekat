@@ -108,6 +108,8 @@ public class FriendRequestsFragment extends Fragment implements FriendshipData.L
             if (a.compareTo(index1) == 0 && probepos.get(i).accepted == false && !friendshipss.contains(probepos.get(i))) {
                 prikaziii += probepos.get(i).toString() + " ";
                 friendshipss.add(probepos.get(i));
+
+                doWork();
             }
             prikaziii += "\n";
         }
@@ -138,7 +140,25 @@ public class FriendRequestsFragment extends Fragment implements FriendshipData.L
     }
 
     @Override
-    public void onListUpdated() {
+    public void onListUpdatedFreidns() {
         showFriendships();
     }
+
+
+    private static MyListener  myListener;
+
+    public static void setUpListener(MyListener Listener) {
+        myListener = Listener;
+    }
+
+    public void doWork() { //View view
+
+        if(myListener!= null)
+            myListener.onListUpdated();
+    }
+
+    public interface MyListener{
+        void onListUpdated();
+    }
+
 }

@@ -57,4 +57,10 @@
     <string name="loggedUser_email">userEmail</string>
     <string name="loggedUser_index">userIndex</string>
 
+
+    <string name="NotificationsFriend">friendNotis</string>
+    <string name="NotificationsNumber">friendNotis</string>
+    <string name="NotificationsFromUser">fromUserNoti</string>
+    <string name="NotificationsDate">NotiDate</string>
+
 </resources>

@@ -36,27 +36,36 @@ public class FriendshipData {
         public static final tamara.mosis.elfak.walkhike.modeldata.FriendshipData instance = new tamara.mosis.elfak.walkhike.modeldata.FriendshipData();
     }
 
-    public static tamara.mosis.elfak.walkhike.modeldata.FriendshipData getInstance() {
-        return tamara.mosis.elfak.walkhike.modeldata.FriendshipData.SingletonHolder.instance;
+    public static FriendshipData getInstance() {
+        return FriendshipData.SingletonHolder.instance;
     }
 
     public ArrayList<Friendship> getFriendships() {
         return Friendships;
     }
 
-    tamara.mosis.elfak.walkhike.modeldata.FriendshipData.ListUpdatedEventListener updateListener;
-    public void setEventListener(tamara.mosis.elfak.walkhike.modeldata.FriendshipData.ListUpdatedEventListener listener) {
+    FriendshipData.ListUpdatedEventListener updateListener;
+    public void setEventListener(FriendshipData.ListUpdatedEventListener listener) {
         updateListener = listener;
     }
     public interface ListUpdatedEventListener {
-        void onListUpdated();
+        void onListUpdatedFreidns();
     }
+
+    FriendshipData.NewItemListUpdatedEventListener NewUpdateListener;
+    public void setNewItemEventListener(FriendshipData.NewItemListUpdatedEventListener listener) {
+        NewUpdateListener = listener;
+    }
+    public interface NewItemListUpdatedEventListener {
+        void onListUpdatedNewFriends(Friendship newF);
+    }
+//////////////////////////
 
     ValueEventListener parentEventListener = new ValueEventListener() {
         @Override
         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
             if (updateListener != null)
-                updateListener.onListUpdated();
+                updateListener.onListUpdatedFreidns();
         }
 
         @Override
@@ -76,7 +85,11 @@ public class FriendshipData {
                 Friendships.add(myFriendship);
                 FriendshipsMapping.put(myFriendshipKey, Friendships.size() - 1);
                 if (updateListener != null)
-                    updateListener.onListUpdated();
+                    updateListener.onListUpdatedFreidns();
+
+                if(NewUpdateListener != null){
+                    NewUpdateListener.onListUpdatedNewFriends(myFriendship);
+                }
             }
         }
 
@@ -93,7 +106,7 @@ public class FriendshipData {
                 FriendshipsMapping.put(myFriendshipKey, Friendships.size() - 1);
             }
             if (updateListener != null)
-                updateListener.onListUpdated();
+                updateListener.onListUpdatedFreidns();
         }
 
         @Override
@@ -105,7 +118,7 @@ public class FriendshipData {
                 recreateKeyIndexMapping();
             }
             if (updateListener != null)
-                updateListener.onListUpdated();
+                updateListener.onListUpdatedFreidns();
         }
 
         @Override
