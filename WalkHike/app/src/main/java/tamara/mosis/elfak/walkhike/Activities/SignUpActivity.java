@@ -30,6 +30,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import tamara.mosis.elfak.walkhike.R;
+import tamara.mosis.elfak.walkhike.modeldata.Position;
 import tamara.mosis.elfak.walkhike.modeldata.User;
 import tamara.mosis.elfak.walkhike.modeldata.UserData;
 
@@ -120,6 +121,9 @@ public class SignUpActivity extends AppCompatActivity {
                         User u = new User();
                         u.username =name;
                         u.email = email;
+                        u.UserPosition = new Position("-5000", "-5000");
+                        u.desc = "Add a description";
+                        u.image = "";
 
                         userData.getInstance().AddUser(u);
 
@@ -152,7 +156,7 @@ public class SignUpActivity extends AppCompatActivity {
             }
         });
 
-        firebaseAuth.signInWithEmailAndPassword(email, pass).addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+       /* firebaseAuth.signInWithEmailAndPassword(email, pass).addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
                 if (task.isSuccessful()) {
@@ -190,7 +194,7 @@ public class SignUpActivity extends AppCompatActivity {
                 }
                 progress.dismiss();
             }
-        });
+        });*/
 
     }
 }

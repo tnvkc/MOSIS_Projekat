@@ -43,6 +43,7 @@ import com.google.firebase.auth.FirebaseUser;
 
 import java.util.ArrayList;
 
+import tamara.mosis.elfak.walkhike.NotificationService;
 import tamara.mosis.elfak.walkhike.Probe;
 import tamara.mosis.elfak.walkhike.R;
 import tamara.mosis.elfak.walkhike.ShowArObjectActivity;
@@ -50,7 +51,7 @@ import tamara.mosis.elfak.walkhike.modeldata.FriendshipData;
 import tamara.mosis.elfak.walkhike.modeldata.User;
 import tamara.mosis.elfak.walkhike.modeldata.UserData;
 
-public class MainActivity extends AppCompatActivity implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener, OnMapReadyCallback {
+public class MainActivity extends AppCompatActivity implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener, OnMapReadyCallback, View.OnClickListener {
 
     private FirebaseAuth mfirebaseAuth;
     private static final int PERMISSION_CODE = 1;
@@ -64,10 +65,12 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
     BottomNavigationView bottom_navigation_menu;
     FloatingActionButton addNewFloating;
     FloatingActionButton objectInteraction;
+    FloatingActionButton startServiceButton;
     Toolbar toolbar;
     MenuItem profileItem;
 
 
+    boolean startedService = false;
     UserData userData;
     FriendshipData friendshipData;
 
@@ -94,6 +97,8 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
         mfirebaseAuth=FirebaseAuth.getInstance();
         userData.getInstance().getUsers();
         friendshipData.getInstance().getFriendships();
+
+
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
                 && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, PERMISSION_CODE);
@@ -102,10 +107,6 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
 
 
         }
-        ArrayList<User> probepos = new ArrayList<>();
-
-
-        probepos = userData.getInstance().getUsers();
 
         getDeviceLocation();
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.main_map_fragment);
@@ -137,6 +138,9 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
                 startActivity(intent);
             }
         });
+
+        startServiceButton = findViewById(R.id.main_startService);
+        startServiceButton.setOnClickListener(this);
 
 
         bottom_navigation_menu = findViewById(R.id.bottom_navigation_menu);
@@ -195,7 +199,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
         }
 
 
-
+//da li nam treba ovaj deo?
         SharedPreferences sharedPref = getApplicationContext().getSharedPreferences( "Userdata", Context.MODE_PRIVATE);
         String username = sharedPref.getString(getString(R.string.loggedUser_username), "EMPTY");
         String email = sharedPref.getString(getString(R.string.loggedUser_email), "EMPTY");
@@ -357,12 +361,38 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
     //Toast.makeText(MapWithPlayServiceLocationActivity.this, "Lat : "+location.getLatitude()+" Lng "+location.getLongitude(), Toast.LENGTH_SHORT).show();
         if(map!=null){
             LatLng latLng=new LatLng(location.getLatitude(),location.getLongitude());
+            map.clear();
             map.addMarker(new MarkerOptions().position(latLng).title("Current Location"));
             map.moveCamera(CameraUpdateFactory.newLatLng(latLng));
-            map.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng,10f));
+            //map.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng,10f));
         }
     }
 
 
+    @Override
+    public void onClick(View v) {
+        if(v.getId() == R.id.main_startService)
+        {
 
+            if(!startedService) {
+                Toast.makeText(getApplicationContext(), "Start service", Toast.LENGTH_SHORT).show();
+
+
+                Intent i = new Intent(getApplicationContext(), NotificationService.class);
+                i.putExtra("timer", 10);
+                startService(i);
+                startedService = true;
+            }
+            else {
+                Toast.makeText(getApplicationContext(), "Stop service", Toast.LENGTH_SHORT).show();
+                v.setActivated(false);
+
+                Intent i = new Intent(getApplicationContext(), NotificationService.class);
+
+                stopService(i);
+                startedService = false;
+            }
+
+        }
+    }
 }

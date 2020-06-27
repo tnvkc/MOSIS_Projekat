@@ -45,6 +45,7 @@ import tamara.mosis.elfak.walkhike.modeldata.MapObjectData;
 import tamara.mosis.elfak.walkhike.modeldata.Position;
 import tamara.mosis.elfak.walkhike.modeldata.PositionsData;
 import tamara.mosis.elfak.walkhike.modeldata.User;
+import tamara.mosis.elfak.walkhike.modeldata.UserData;
 
 public class NotificationService extends IntentService implements MapObjectData.ListUpdatedEventListener,FriendshipData.NewItemListUpdatedEventListener,
         GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener {
@@ -63,15 +64,21 @@ public class NotificationService extends IntentService implements MapObjectData.
     LatLng latLng;
     int index;
     int numberOfFriendNotis;
+    int numberOfObjectNotis;
 
 
     MapObjectData MoD;
     PositionsData PD;
     FriendshipData friendshipData;
+    UserData userData;
 
     private ArrayList<Position> positions;
+    private ArrayList<Position> DonePositions;
 
 
+    private ArrayList<MapObject> objects;
+
+    private ArrayList<User> users;
 
     private NotificationManager mNotificationManager;
 
@@ -83,34 +90,67 @@ public class NotificationService extends IntentService implements MapObjectData.
     @Override
     public int onStartCommand(Intent i, int flags, int startId){
         super.onStartCommand(i, flags, startId);
+        PD.getInstance().getPositions();
         return START_STICKY;
+
     }
 
     @Override
-    public void onCreate()
-    {
+    public void onCreate() {
         super.onCreate();
         running = true;
         latLng = new LatLng(1, 1);
-        MoD.getInstance().setEventListener( this);
+        MoD.getInstance().setEventListener(this);
         friendshipData.getInstance().setNewItemEventListener(this);
         Log.v("timer", "service started");
 
 
-        SharedPreferences sharedPref = getApplicationContext().getSharedPreferences( "Userdata", Context.MODE_PRIVATE);
+        SharedPreferences sharedPref = getApplicationContext().getSharedPreferences("Userdata", Context.MODE_PRIVATE);
         String username = sharedPref.getString(getString(R.string.loggedUser_username), "EMPTY");
         String email = sharedPref.getString(getString(R.string.loggedUser_email), "EMPTY");
-        int indexx  = sharedPref.getInt(getString(R.string.loggedUser_index), -1);
+        int indexx = sharedPref.getInt(getString(R.string.loggedUser_index), -1);
 
         SharedPreferences sharedPref1 = getApplicationContext().getSharedPreferences(
                 getString(R.string.NotificationsFriend), Context.MODE_PRIVATE);
         int numOfNotis = sharedPref1.getInt(getString(R.string.NotificationsNumber), 0);
-        numberOfFriendNotis = 0;
+        numberOfFriendNotis = numOfNotis;
 
         LoggedUser = new User();
         LoggedUser.username = username;
         LoggedUser.email = email;
+
+        positions = PD.getInstance().getPositions();
+        users = userData.getInstance().getUsers();
+        //DonePositions = new ArrayList<>();
+
+        numberOfObjectNotis = 100;
     }
+
+    void writeObjectInSharedPrefs()  //treba da se preradi da radi za MApObject a ne Pos tj friend
+    {
+        SharedPreferences sharedPref = getApplicationContext().getSharedPreferences(
+                getString(R.string.NotificationsFriend), Context.MODE_PRIVATE);
+        int numOfNotis = sharedPref.getInt(getString(R.string.NotificationsNumber), 0);
+        if(numberOfFriendNotis == numOfNotis + 1) {
+
+
+            SharedPreferences.Editor editor = sharedPref.edit();
+
+
+           // editor.putString(getString(R.string.NotificationsFromUser) + numOfNotis, newF.fromUser.email);
+            editor.putString(getString(R.string.NotificationsDate) + numOfNotis, Calendar.getInstance().getTime().toString());
+
+            numOfNotis++;
+            editor.putInt(getString(R.string.NotificationsNumber), numOfNotis);
+
+            editor.commit();
+        }
+        if(myObjectListener != null)
+            notifyObjectNoti();
+    }
+
+
+
 
     @Override
     public void onDestroy() {
@@ -126,10 +166,7 @@ public class NotificationService extends IntentService implements MapObjectData.
 
         while(running)
         {
-            if(positions != null)
-                Log.v("timer" ,  latLng.toString() + " "+ positions.get(index).toString());
-            else
-                Log.v("timer" ,  latLng.toString() + " !");
+
             time++;
             CheckFriendNotis();
             try
@@ -155,6 +192,8 @@ public class NotificationService extends IntentService implements MapObjectData.
             return;
         } else {
             GetLocationData();
+
+
         }
     }
 
@@ -218,30 +257,18 @@ public class NotificationService extends IntentService implements MapObjectData.
             Position p = new Position();
             p.latitude = "" + latLng.latitude;
             p.longitude = "" + latLng.longitude;
-            p.desc = "Noti";
+            p.desc = "User is here: ";
             promena = p.toString();
-            findNearby();
+
+            userData.getInstance().updateUserPosition(LoggedUser.email, p);
+
+            //findNearbyUsers();
             //PD.getInstance().updatePlace(1, p.desc, p.longitude, p.latitude);
         }
     }
 
 
-    private void findNearby()
-    {
-        positions = PD.getInstance().getPositions();
-        for(int i =0; i< positions.size(); i++)
-        {
 
-            float[] res = new float[10];
-            Location.distanceBetween(latLng.latitude, latLng.longitude, Double.parseDouble( positions.get(i).latitude), Double.parseDouble( positions.get(i).longitude), res);
-            res[0] *= 0.000621371192f;
-            if(res[0]   <1000)//res[1] < 10 && res[2] <10)
-            {
-                promena += " jedna";
-                index = i;
-            }
-        }
-    }
 
 
     @Override
@@ -268,6 +295,9 @@ public class NotificationService extends IntentService implements MapObjectData.
                 editor.putInt(getString(R.string.NotificationsNumber), numOfNotis);
 
                 editor.commit();
+
+
+
 
                 NotificationCompat.Builder mBuilder =
                         new NotificationCompat.Builder(getApplicationContext(), "notify_001");
@@ -310,6 +340,135 @@ public class NotificationService extends IntentService implements MapObjectData.
         }
     }
 
+    private void findNearbyUsers() {
+        if(users.size() != 0) {
+            int removea[] = new int[users.size()];
+            int n = 0;
+            for (int i = 0; i < users.size(); i++) {
+
+                if(users.get(i).email.compareTo(LoggedUser.email) != 0) {
+                    float[] res = new float[10];
+                    Location.distanceBetween(latLng.latitude, latLng.longitude, Double.parseDouble(users.get(i).UserPosition.latitude),
+                            Double.parseDouble(users.get(i).UserPosition.longitude), res);
+                    res[0] *= 0.000621371192f;
+                    if (res[0] < 1000)//res[1] < 10 && res[2] <10)
+                    {
+
+                        index = i;
+                        removea[n] = i;
+
+                        n++;
+
+                        Log.v("Position", users.get(i).UserPosition.toString() + " !");
+
+
+                        NotificationCompat.Builder mBuilder =
+                                new NotificationCompat.Builder(getApplicationContext(), "notify_"+ users.get(i).username);
+                        Intent ii = new Intent(getApplicationContext(), MainActivity.class);
+                        PendingIntent pendingIntent = PendingIntent.getActivity(getApplicationContext().getApplicationContext(), 0, ii, 0);
+
+
+                        NotificationCompat.BigTextStyle bigText = new NotificationCompat.BigTextStyle();
+                        bigText.bigText("User near you!");
+                        bigText.setBigContentTitle("User " +users.get(i).username+ " near you!");
+
+                        mBuilder.setContentIntent(pendingIntent);
+                        mBuilder.setSmallIcon(R.mipmap.ic_launcher_round);
+                        mBuilder.setContentTitle("Near you");
+                        mBuilder.setContentText("User " +users.get(i).username+ " near you!");
+                        mBuilder.setPriority(android.app.Notification.PRIORITY_MAX);
+                        mBuilder.setStyle(bigText);
+
+                        mNotificationManager =
+                                (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+
+                        // === Removed some obsoletes
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                            String channelId = "walkhikw_usersnear";
+                            NotificationChannel channel = new NotificationChannel(
+                                    channelId,
+                                    "walkhikw_usersnear",
+                                    NotificationManager.IMPORTANCE_HIGH);
+                            mNotificationManager.createNotificationChannel(channel);
+                            mBuilder.setChannelId(channelId);
+                        }
+
+                        mNotificationManager.notify(numberOfObjectNotis, mBuilder.build());
+                        numberOfObjectNotis++;
+                        users.remove(i);
+                    }
+                }
+            }
+        }
+    }
+
+    private void findNearby()
+    {
+
+        int removea[] = new int[positions.size()];
+        int n = 0;
+        for(int i =0; i< positions.size(); i++)
+        {
+
+            float[] res = new float[10];
+            Location.distanceBetween(latLng.latitude, latLng.longitude, Double.parseDouble(positions.get(i).latitude), Double.parseDouble(positions.get(i).longitude), res);
+            res[0] *= 0.000621371192f;
+            if (res[0] < 1000)//res[1] < 10 && res[2] <10)
+            {
+
+                index = i;
+                removea[n] = i;
+                n++;
+                Log.v("Position" ,  positions.get(i).toString() + " !");
+
+
+
+
+
+                NotificationCompat.Builder mBuilder =
+                        new NotificationCompat.Builder(getApplicationContext(), "notify_");
+                Intent ii = new Intent(getApplicationContext(), MainActivity.class);
+                PendingIntent pendingIntent = PendingIntent.getActivity(getApplicationContext().getApplicationContext(), 0, ii, 0);
+
+
+                NotificationCompat.BigTextStyle bigText = new NotificationCompat.BigTextStyle();
+                bigText.bigText("Positon near you!");
+                bigText.setBigContentTitle("Positon near you!");
+
+                mBuilder.setContentIntent(pendingIntent);
+                mBuilder.setSmallIcon(R.mipmap.ic_launcher_round);
+                mBuilder.setContentTitle("Near you");
+                mBuilder.setContentText("Positon near you!");
+                mBuilder.setPriority(android.app.Notification.PRIORITY_MAX);
+                mBuilder.setStyle(bigText);
+
+                mNotificationManager =
+                        (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+
+                // === Removed some obsoletes
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
+                {
+                    String channelId = "walkhikw_usersnear";
+                    NotificationChannel channel = new NotificationChannel(
+                            channelId,
+                            "walkhikw_usersnear",
+                            NotificationManager.IMPORTANCE_HIGH);
+                    mNotificationManager.createNotificationChannel(channel);
+                    mBuilder.setChannelId(channelId);
+                }
+
+                mNotificationManager.notify(100, mBuilder.build());
+
+            }
+
+        }
+
+        for(int i =0; i< n; i++) {
+            positions.remove(removea[i]);
+        }
+
+    }
+
 
 
 
@@ -327,6 +486,37 @@ public class NotificationService extends IntentService implements MapObjectData.
     public interface ListenerForFriendNotis{
         void onNewFriendship();
     }
+
+
+    private static ListenerForObjectNotis  myObjectListener;
+
+    public static void setUpListenerObjectNoti(ListenerForObjectNotis Listener) {
+        myObjectListener = Listener;
+    }
+
+    public void notifyObjectNoti() { //View view
+        myListener.onNewFriendship();
+    }
+
+    public interface ListenerForObjectNotis{
+        void onNewFriendship();
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 }
 
 

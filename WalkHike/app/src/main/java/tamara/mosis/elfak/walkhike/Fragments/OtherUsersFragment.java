@@ -65,6 +65,9 @@ public class OtherUsersFragment extends Fragment {
         u.email = email;
         u.username = username;
 
+        if(userdata.getInstance().getUsers().get(indexx).email.compareTo(u.email) == 0)
+            u = userdata.getInstance().getUsers().get(indexx);
+
         usersListView=view.findViewById(R.id.other_users_list_rv) ;
         usersList=new ArrayList<>();
         usersRecyclerAdapter=new OtherUsersRecyclerAdapter(getContext(),usersList, u);

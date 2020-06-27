@@ -44,6 +44,7 @@ public class Probe extends AppCompatActivity {
 
     Button btnStartService;
     Button btnStopService;
+    Button btnClearSharedPrefs;
 
 
     TextInputEditText lon;
@@ -224,7 +225,7 @@ public class Probe extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                ClearNotiSharedPRef();
+               // ClearNotiSharedPRef();
 
 
                 Toast.makeText(getApplicationContext(), "Start service! ", Toast.LENGTH_SHORT).show();
@@ -235,6 +236,15 @@ public class Probe extends AppCompatActivity {
 
             }
         });
+
+        btnClearSharedPrefs = (Button) findViewById(R.id.probe_btn_clear_sharedPrefs);
+        btnClearSharedPrefs.setOnClickListener(new View.OnClickListener() {
+           @Override
+           public void onClick(View v) {
+
+               ClearNotiSharedPRef();
+           }
+       });
 
 
         btnStopService = (Button) findViewById(R.id.probe_btn_stop_service);

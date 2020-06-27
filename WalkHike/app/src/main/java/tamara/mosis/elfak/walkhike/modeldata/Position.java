@@ -19,6 +19,12 @@ public class Position {
         this.desc = desc;
     }
 
+    public Position(String lat, String lon)
+    {
+        this.latitude = lat;
+        this.longitude = lon;
+    }
+
     @Override
     public String toString()
     {

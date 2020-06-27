@@ -149,6 +149,25 @@ public class UserData {
 
     }
 
+    public void updateUserPosition(String email,  Position newPos)
+    {
+        int indexx = -1;
+        for(int i =0; i<users.size(); i++)
+        {
+            if(users.get(i).email.compareTo(email) == 0)
+                indexx = i;
+        }
+        if(indexx == -1)
+            return;
+
+        User uu =users.get(indexx);
+        uu.UserPosition = newPos;
+
+
+        db.child(FIREBASE_CHILD).child(uu.key).setValue(uu);
+
+    }
+
     private void recreateKeyIndexMapping()
     {
         UsersMapping.clear();

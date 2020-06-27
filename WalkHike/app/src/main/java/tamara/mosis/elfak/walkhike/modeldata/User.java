@@ -7,6 +7,8 @@ public class User {
     public String username;
     public String email;
     public String desc;
+    public Position UserPosition;
+    public String image;
 
     @Exclude
     public String key;

@@ -13,6 +13,7 @@ import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -40,6 +41,7 @@ public class LoginActivity extends AppCompatActivity {
     Button loginB;
     EditText txtEmail;
     EditText txtPassword;
+    TextView orSignUp;
 
     private ProgressDialog progress;
     private FirebaseAuth firebaseAuth;
@@ -88,6 +90,16 @@ public class LoginActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Toast.makeText(getApplicationContext(), "done login", Toast.LENGTH_SHORT).show();
                 loginUser();
+            }
+        });
+
+        orSignUp = (TextView) findViewById(R.id.login_signup_textview);
+        orSignUp.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent loginIntent=new Intent(LoginActivity.this,SignUpActivity.class);
+                startActivity(loginIntent);
+                finish();
             }
         });
     }

@@ -75,7 +75,7 @@
         />
 
     <TextView
-        android:id="@+id/textView8"
+        android:id="@+id/login_signup_textview"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="68dp"
