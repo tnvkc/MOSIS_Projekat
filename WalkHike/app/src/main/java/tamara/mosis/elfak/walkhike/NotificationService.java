@@ -44,6 +44,7 @@ import tamara.mosis.elfak.walkhike.modeldata.MapObject;
 import tamara.mosis.elfak.walkhike.modeldata.MapObjectData;
 import tamara.mosis.elfak.walkhike.modeldata.Position;
 import tamara.mosis.elfak.walkhike.modeldata.PositionsData;
+import tamara.mosis.elfak.walkhike.modeldata.ScoresData;
 import tamara.mosis.elfak.walkhike.modeldata.User;
 import tamara.mosis.elfak.walkhike.modeldata.UserData;
 
@@ -62,6 +63,9 @@ public class NotificationService extends IntentService implements MapObjectData.
     User LoggedUser;
     Location location;
     LatLng latLng;
+    LatLng lastPos;
+
+
     int index;
     int numberOfFriendNotis;
     int numberOfObjectNotis;
@@ -71,6 +75,7 @@ public class NotificationService extends IntentService implements MapObjectData.
     PositionsData PD;
     FriendshipData friendshipData;
     UserData userData;
+    ScoresData scoresData;
 
     private ArrayList<Position> positions;
     private ArrayList<Position> DonePositions;
@@ -102,6 +107,7 @@ public class NotificationService extends IntentService implements MapObjectData.
         latLng = new LatLng(1, 1);
         MoD.getInstance().setEventListener(this);
         friendshipData.getInstance().setNewItemEventListener(this);
+
         Log.v("timer", "service started");
 
 
@@ -253,6 +259,7 @@ public class NotificationService extends IntentService implements MapObjectData.
     @Override
     public void onLocationChanged(Location location) {
         if(running) {
+            lastPos =latLng;
             latLng = new LatLng(location.getLatitude(), location.getLongitude());
             Position p = new Position();
             p.latitude = "" + latLng.latitude;
@@ -260,7 +267,16 @@ public class NotificationService extends IntentService implements MapObjectData.
             p.desc = "User is here: ";
             promena = p.toString();
 
-            userData.getInstance().updateUserPosition(LoggedUser.email, p);
+
+
+            float dist[] = new float[5];
+            Location.distanceBetween(latLng.latitude, latLng.longitude, lastPos.latitude, lastPos.longitude, dist);
+           // dist[0] *= 0.000621371192f;
+            int diiist = (int) dist[0];
+            if(diiist > 0) {
+                userData.getInstance().updateUserPosition(LoggedUser.email, p);
+                scoresData.getInstance().updateScoreDistance(diiist, LoggedUser);
+            }
 
             //findNearbyUsers();
             //PD.getInstance().updatePlace(1, p.desc, p.longitude, p.latitude);

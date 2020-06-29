@@ -180,7 +180,7 @@ public class Probe_Friendship_Activity extends AppCompatActivity  {
                     String a = probepos.get(i).email;
                     if( a.compareTo(userEmail) == 0)
                     {
-                        p.user = probepos.get(i);
+                        p.useer = probepos.get(i).email;
                     }
                 }
 

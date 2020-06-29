@@ -31,6 +31,8 @@ import java.util.Map;
 
 import tamara.mosis.elfak.walkhike.R;
 import tamara.mosis.elfak.walkhike.modeldata.Position;
+import tamara.mosis.elfak.walkhike.modeldata.Scores;
+import tamara.mosis.elfak.walkhike.modeldata.ScoresData;
 import tamara.mosis.elfak.walkhike.modeldata.User;
 import tamara.mosis.elfak.walkhike.modeldata.UserData;
 
@@ -43,6 +45,7 @@ public class SignUpActivity extends AppCompatActivity {
     TextView orLogIn;
 
     UserData userData;
+    ScoresData scoresData;
 
     private ProgressDialog progress;
     private FirebaseAuth firebaseAuth;
@@ -126,6 +129,10 @@ public class SignUpActivity extends AppCompatActivity {
                         u.image = "";
 
                         userData.getInstance().AddUser(u);
+                        Scores s ;
+                            s = new Scores();
+                            s.useer = email;
+                            scoresData.getInstance().AddScore(s);
 
 
 
@@ -184,6 +191,8 @@ public class SignUpActivity extends AppCompatActivity {
 
                         editor.putInt(getString(R.string.loggedUser_index), indexx);
                         editor.commit();
+
+
 
                         Intent intent = new Intent(getApplicationContext(), MainActivity.class);
                         startActivity(intent);

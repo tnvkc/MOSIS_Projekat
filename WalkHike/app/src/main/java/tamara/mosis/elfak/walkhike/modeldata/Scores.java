@@ -12,7 +12,8 @@ public class Scores {
     public int weeklyDistance;
     public int monthlyDistance;
     public int alltimeDistance;
-    public User user;
+    public String useer;
+   // public User user;
 
     @Exclude
     public String key;
@@ -27,13 +28,13 @@ public class Scores {
         this.alltimeActivity = 0;
         this.monthlyActivity  = 0;
         this.weeklyActivity = 0;
-        this.user = newUser;
+        //this.user = newUser;
     }
 
     @Override
     public String toString()
-    {
-        return this.user.toString() + " : activity + " + this.weeklyActivity + "," + this.monthlyActivity + ", " + this.alltimeActivity +
+    {//this.user.toString()
+        return useer + " : activity + " + this.weeklyActivity + "," + this.monthlyActivity + ", " + this.alltimeActivity +
                  " : distance + " + this.weeklyDistance + "," + this.monthlyDistance + ", " + this.alltimeDistance ;
     }
 }

@@ -54,6 +54,8 @@ import tamara.mosis.elfak.walkhike.R;
 import tamara.mosis.elfak.walkhike.ShowArObjectActivity;
 
 import tamara.mosis.elfak.walkhike.modeldata.FriendshipData;
+import tamara.mosis.elfak.walkhike.modeldata.Scores;
+import tamara.mosis.elfak.walkhike.modeldata.ScoresData;
 import tamara.mosis.elfak.walkhike.modeldata.User;
 import tamara.mosis.elfak.walkhike.modeldata.UserData;
 import tamara.mosis.elfak.walkhike.modeldata.MapObject;
@@ -82,6 +84,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
     boolean startedService = false;
     UserData userData;
     FriendshipData friendshipData;
+    ScoresData scoresData;
 
     LinearLayout info_window_container;
     ImageView info_window_icon;
@@ -90,6 +93,8 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
     TextView info_window_lon;
 
     Marker lastSelected;
+
+    ArrayList<Scores> skorovi;
 
     @Override
     protected void onStart()
@@ -109,6 +114,8 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
         mfirebaseAuth=FirebaseAuth.getInstance();
         userData.getInstance().getUsers();
         friendshipData.getInstance().getFriendships();
+        skorovi =  scoresData.getInstance().getScores();
+
 
 
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
@@ -117,6 +124,10 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
         } else {
             //map.setMyLocationEnabled(true);
         }
+
+        SharedPreferences sharedPref = getApplicationContext().getSharedPreferences( "Userdata", Context.MODE_PRIVATE);
+        String username = sharedPref.getString(getString(R.string.loggedUser_username), "EMPTY");
+        String emaill = sharedPref.getString(getString(R.string.loggedUser_email), "EMPTY");
 
         getDeviceLocation();
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.main_map_fragment);
@@ -167,6 +178,16 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
         info_window_lon = findViewById(R.id.info_window_lon);
 
         lastSelected = null;
+        if(!startedService) {
+            Toast.makeText(getApplicationContext(), "Start service", Toast.LENGTH_SHORT).show();
+
+            Intent i = new Intent(getApplicationContext(), NotificationService.class);
+            i.putExtra("timer", 10);
+            startService(i);
+            startedService = true;
+        }
+
+
     }
 
     @Override
@@ -214,6 +235,8 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
             map.moveCamera(CameraUpdateFactory.newLatLng(loc));
             map.animateCamera(CameraUpdateFactory.newLatLngZoom(loc,10f));
         }
+
+
     }
 
     @Override
@@ -236,6 +259,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
         String email = sharedPref.getString(getString(R.string.loggedUser_email), "EMPTY");
         int indexx  = sharedPref.getInt(getString(R.string.loggedUser_index), -1);
 
+        skorovi = scoresData.getInstance().getScores();
 
 
         Toast.makeText(getApplicationContext(), "Welcome " + username + ", " + email + "!", Toast.LENGTH_SHORT).show();
@@ -374,9 +398,9 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
         if(map!=null){
             LatLng latLng=new LatLng(location.getLatitude(),location.getLongitude());
             map.clear();
-            //map.addMarker(new MarkerOptions().position(latLng).title("Current Location"));
+            map.addMarker(new MarkerOptions().position(latLng).title("Current Location"));
             map.moveCamera(CameraUpdateFactory.newLatLng(latLng));
-            //map.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng,10f));
+            map.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng,15f));
         }
     }
 

@@ -85,6 +85,9 @@ public class FriendRequestsRecyclerAdapter extends RecyclerView.Adapter<FriendRe
                     public  void onClick(final View view)
                     {
                         //removeItem(holder.getAdapterPosition());
+                        removeItem(holder.getAdapterPosition());
+                        friendshipData.getInstance().deleteFriendship(users.get(position).fromUser.email, users.get(position).toUser.email);
+                        users.remove(position);
                     }
                 });
     }
@@ -98,7 +101,7 @@ public class FriendRequestsRecyclerAdapter extends RecyclerView.Adapter<FriendRe
     private void removeItem(int position) {
        //usersList.remove(position);
         notifyItemRemoved(position);
-        //notifyItemRangeChanged(position, usersList.size());
+        notifyItemRangeChanged(position, users.size());
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder

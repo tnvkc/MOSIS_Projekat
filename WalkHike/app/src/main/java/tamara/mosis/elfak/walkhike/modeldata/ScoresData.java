@@ -1,5 +1,7 @@
 package tamara.mosis.elfak.walkhike.modeldata;
 
+import android.security.keystore.UserPresenceUnavailableException;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
@@ -131,6 +133,21 @@ public class ScoresData {
         return Scores.get(index);
     }
 
+    public Scores getScore(String userEmail) {
+        Scores uu = null;
+        for(int i =0; i< this.Scores.size(); i++)
+        {
+            if(this.Scores.get(i).useer.compareTo(userEmail) ==0)
+            {
+                uu = this.Scores.get(i);
+            }
+        }
+
+        return uu;
+
+
+    }
+
     public void deleteScore(int index) {
 
         db.child(FIREBASE_CHILD).child(Scores.get(index).key).removeValue();
@@ -148,7 +165,7 @@ public class ScoresData {
         uu.weeklyDistance=u.weeklyDistance;
         uu.monthlyDistance=u.monthlyDistance;
         uu.alltimeDistance = u.alltimeDistance;
-        uu.user = u.user;
+        uu.useer = u.useer;
 
         db.child(FIREBASE_CHILD).child(uu.key).setValue(uu);
 
@@ -159,7 +176,7 @@ public class ScoresData {
         Scores uu = new Scores();
         for(int i =0; i< this.Scores.size(); i++)
         {
-            if(this.Scores.get(i).user.email.compareTo(u.email) ==0)
+            if(this.Scores.get(i).useer.compareTo(u.email) ==0)
             {
                 uu = this.Scores.get(i);
             }
@@ -178,23 +195,24 @@ public class ScoresData {
 
     public void updateScoreDistance(int additionalScoreDistance, User u)
     {
-        Scores uu = new Scores();
+        Scores uu = null;
         for(int i =0; i< this.Scores.size(); i++)
         {
-            if(this.Scores.get(i).user.email.compareTo(u.email) ==0)
+            if(this.Scores.get(i).useer.compareTo(u.email) ==0)
             {
                 uu = this.Scores.get(i);
             }
         }
 
 
+        if(uu != null) {
+            uu.weeklyDistance += additionalScoreDistance;
+            uu.monthlyDistance += additionalScoreDistance;
+            uu.alltimeDistance += additionalScoreDistance;
 
-        uu.weeklyDistance +=additionalScoreDistance;
-        uu.monthlyDistance +=additionalScoreDistance;
-        uu.alltimeDistance +=additionalScoreDistance;
 
-
-        db.child(FIREBASE_CHILD).child(uu.key).setValue(uu);
+            db.child(FIREBASE_CHILD).child(uu.key).setValue(uu);
+        }
 
     }
 

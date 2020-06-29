@@ -33,6 +33,8 @@ import java.util.Map;
 import tamara.mosis.elfak.walkhike.Activities.MainActivity;
 import tamara.mosis.elfak.walkhike.R;
 import tamara.mosis.elfak.walkhike.modeldata.Friendship;
+import tamara.mosis.elfak.walkhike.modeldata.Scores;
+import tamara.mosis.elfak.walkhike.modeldata.ScoresData;
 import tamara.mosis.elfak.walkhike.modeldata.User;
 import tamara.mosis.elfak.walkhike.modeldata.UserData;
 
@@ -49,6 +51,7 @@ public class LoginActivity extends AppCompatActivity {
     private FirebaseFirestore firestore;
 
     UserData userData;
+    ScoresData scoresData;
 
    /* @Override
     protected void onStart()
@@ -75,6 +78,7 @@ public class LoginActivity extends AppCompatActivity {
             setTheme(R.style.AppThemeLight);
         setContentView(R.layout.activity_login);
         userData.getInstance().getUsers();
+        scoresData.getInstance().getScores();
 
         firebaseAuth = FirebaseAuth.getInstance();
         firestore=FirebaseFirestore.getInstance();
@@ -106,14 +110,21 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
 
+        scoresData.getInstance().getScores();
+        userData.getInstance().getUsers();
+
         SharedPreferences sharedPref = getApplicationContext().getSharedPreferences( "Userdata", Context.MODE_PRIVATE);
         String username = sharedPref.getString(getString(R.string.loggedUser_username), "EMPTY");
         String emaill = sharedPref.getString(getString(R.string.loggedUser_email), "EMPTY");
         int indexx  = sharedPref.getInt(getString(R.string.loggedUser_index), -1);
 
+        Scores s = null;
+
         FirebaseUser currentUser=firebaseAuth.getCurrentUser();
         if(currentUser!=null && emaill.compareTo("EMPTY") != 0)
         {
+
+            User u = userData.getInstance().getUser(emaill);
 
 
             Intent loginIntent=new Intent(LoginActivity.this, MainActivity.class);
@@ -122,6 +133,7 @@ public class LoginActivity extends AppCompatActivity {
         }
         else
         {
+
 
             SharedPreferences.Editor editor = sharedPref.edit();
 
@@ -190,6 +202,8 @@ public class LoginActivity extends AppCompatActivity {
 
                         editor.putInt(getString(R.string.loggedUser_index), indexx);
                         editor.commit();
+
+
 
                         Intent intent=new Intent(getApplicationContext(), MainActivity.class);
                         startActivity(intent);
