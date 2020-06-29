@@ -33,7 +33,7 @@ public class SettingsActivity extends AppCompatActivity {
         if (AppCompatDelegate.getDefaultNightMode() == AppCompatDelegate.MODE_NIGHT_YES)
             setTheme(R.style.AppThemeDark);
         else
-           setTheme(R.style.AppThemeLight);
+            setTheme(R.style.AppThemeLight);
 
 
         setContentView(R.layout.activity_settings);
@@ -48,13 +48,22 @@ public class SettingsActivity extends AppCompatActivity {
                 imgid,true);
         list.setAdapter(adapter);
 
+        list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                if(position==1)//druga opcija settings?
+                {
 
+                }
+
+            }
+        });
         Button b = (Button) findViewById(R.id.switch_theme);
         b.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                    dark = !dark;
-                    Toast.makeText(getApplicationContext(), " " + dark, Toast.LENGTH_SHORT).show();
+                dark = !dark;
+                Toast.makeText(getApplicationContext(), " " + dark, Toast.LENGTH_SHORT).show();
                 if (AppCompatDelegate.getDefaultNightMode() == AppCompatDelegate.MODE_NIGHT_YES) {
                     AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
                 } else {

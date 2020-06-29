@@ -157,7 +157,8 @@ public class UserData {
         User uu =users.get(index);
         uu.desc=u.desc;
         uu.email=u.email;
-
+        if(u.image!=null)
+            uu.image=u.image;
 
         db.child(FIREBASE_CHILD).child(uu.key).setValue(uu);
 
