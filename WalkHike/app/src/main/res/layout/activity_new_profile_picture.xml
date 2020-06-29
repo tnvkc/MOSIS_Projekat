@@ -28,13 +28,13 @@
         />
 
     <Button
-        android:id="@+id/button9"
+        android:id="@+id/buttonSave"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Save"
         android:layout_marginTop="0dp"
         android:layout_centerHorizontal="true"
-        android:layout_below="@id/imageView17"
+        android:layout_below="@id/imageViewChosen"
         />
 
     <ListView
@@ -47,7 +47,7 @@
         />
 
     <ImageView
-        android:id="@+id/imageView17"
+        android:id="@+id/imageViewChosen"
         android:layout_width="296dp"
         android:layout_height="297dp"
         android:layout_below="@android:id/list"
