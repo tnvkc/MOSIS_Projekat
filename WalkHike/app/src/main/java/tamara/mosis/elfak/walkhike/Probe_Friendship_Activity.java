@@ -17,6 +17,8 @@ import tamara.mosis.elfak.walkhike.modeldata.Friendship;
 import tamara.mosis.elfak.walkhike.modeldata.FriendshipData;
 import tamara.mosis.elfak.walkhike.modeldata.MapObject;
 import tamara.mosis.elfak.walkhike.modeldata.Position;
+import tamara.mosis.elfak.walkhike.modeldata.Scores;
+import tamara.mosis.elfak.walkhike.modeldata.ScoresData;
 import tamara.mosis.elfak.walkhike.modeldata.User;
 import tamara.mosis.elfak.walkhike.modeldata.UserData;
 
@@ -35,8 +37,15 @@ public class Probe_Friendship_Activity extends AppCompatActivity  {
     TextInputEditText user1Index;
     TextInputEditText user2Index;
 
+    Button btnDodajScores;
+    Button btnShowScores;
+    Button btnChangeScores;
+    TextInputEditText scoreNew;
+    TextInputEditText scoreUser;
+
     UserData userdata;
     FriendshipData friendshipData;
+    ScoresData scoresData;
     String user = "UserProba1";
 
     @Override
@@ -144,6 +153,71 @@ public class Probe_Friendship_Activity extends AppCompatActivity  {
 
                 if(indexx != -1)
                     friendshipData.getInstance().updateFriendshipTrue(indexx, false);
+            }
+        });
+
+
+        //////////scores
+        prikaz = (TextView) findViewById(R.id.probefriend_show_text);
+        scoreNew =  (TextInputEditText) findViewById(R.id.probefriend_scores_textedit);
+        scoreUser =  (TextInputEditText) findViewById(R.id.probefriend_scores_user);
+        //user2Index =  (TextInputEditText) findViewById(R.id.probefriend_user2_edit);
+
+        btnDodajUser = (Button) findViewById(R.id.probefriend_btn_add_scores);
+        btnDodajUser.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Scores p = new Scores();
+                int index1 = Integer.parseInt( scoreNew.getText().toString());
+                String userEmail = scoreUser.getText().toString();
+
+                ArrayList<User> probepos = new ArrayList<>();
+
+
+                probepos = userdata.getInstance().getUsers();
+                for(int i =0; i<probepos.size(); i++)
+                {
+                    String a = probepos.get(i).email;
+                    if( a.compareTo(userEmail) == 0)
+                    {
+                        p.user = probepos.get(i);
+                    }
+                }
+
+
+                p.monthlyActivity += index1;
+                scoresData.getInstance().AddScore(p);
+
+            }
+        });
+
+        btnShowScores =  (Button) findViewById(R.id.probefriend_btn_show_scores);
+        btnShowScores.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ArrayList<Scores> skores = scoresData.getInstance().getScores();
+                String prikaziii = "";
+                for(int i =0; i<skores.size();i++)
+                {
+                    prikaziii += skores.get(i).toString() + "\n";
+                }
+                prikaz.setText(prikaziii);
+            }
+        });
+
+
+        btnChangeScores = (Button) findViewById(R.id.probefriend_btn_scores_change);
+        btnChangeScores.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                User u = userdata.getInstance().getUser(scoreUser.getText().toString());
+                if(u != null)
+                {
+                    scoresData.getInstance().updateScoreActivity(133, u);
+                    scoresData.getInstance().updateScoreDistance(12, u);
+                }
+
             }
         });
     }

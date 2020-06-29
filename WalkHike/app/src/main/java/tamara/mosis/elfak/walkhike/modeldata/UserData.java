@@ -131,6 +131,20 @@ public class UserData {
         return users.get(index);
     }
 
+
+    public User getUser(String email) {
+        User u = null;
+        for(int i = 0; i< this.users.size(); i++)
+        {
+            if(this.users.get(i).email.compareTo(email) == 0)
+            {
+                u = this.users.get(i);
+            }
+        }
+
+        return u;
+    }
+
     public void deleteUser(int index) {
 
         db.child(FIREBASE_CHILD).child(users.get(index).key).removeValue();

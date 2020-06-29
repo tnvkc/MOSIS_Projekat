@@ -156,7 +156,7 @@ public class SignUpActivity extends AppCompatActivity {
             }
         });
 
-       /* firebaseAuth.signInWithEmailAndPassword(email, pass).addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+        firebaseAuth.signInWithEmailAndPassword(email, pass).addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
                 if (task.isSuccessful()) {
@@ -194,7 +194,7 @@ public class SignUpActivity extends AppCompatActivity {
                 }
                 progress.dismiss();
             }
-        });*/
+        });
 
     }
 }

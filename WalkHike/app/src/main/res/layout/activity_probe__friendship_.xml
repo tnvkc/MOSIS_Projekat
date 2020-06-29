@@ -56,46 +56,99 @@
         android:layout_height="wrap_content"
         android:text="show users" />
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/probefriend_user1_edit"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:editable="true"
+                android:inputType="textPersonName"
+                android:text="email2@email.com" />
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/probefriend_user2_edit"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:editable="true"
+                android:inputType="textPersonName"
+                android:text="email1@email.com" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+            <Button
+                android:id="@+id/probefriend_btn_add_friendship"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="add friend" />
+
+            <Button
+                android:id="@+id/probefriend_btn_show_friends"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="show friends" />
+
+            <Button
+                android:id="@+id/probefriend_btn_accept"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="accept" />
+        </LinearLayout>
+    </LinearLayout>
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
         <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/probefriend_user1_edit"
+            android:id="@+id/probefriend_scores_textedit"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:editable="true"
             android:inputType="textPersonName"
-            android:text="email2@email.com" />
+            android:text="12" />
 
         <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/probefriend_user2_edit"
+            android:id="@+id/probefriend_scores_user"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:editable="true"
             android:inputType="textPersonName"
             android:text="email1@email.com" />
 
-        <Button
-            android:id="@+id/probefriend_btn_add_friendship"
-            android:layout_width="200dp"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="add friend" />
+            android:orientation="horizontal">
 
-        <Button
-            android:id="@+id/probefriend_btn_show_friends"
-            android:layout_width="200dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="show friends" />
+            <Button
+                android:id="@+id/probefriend_btn_add_scores"
+                android:layout_width="200dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="add score" />
 
-        <Button
-            android:id="@+id/probefriend_btn_accept"
-            android:layout_width="200dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="accept" />
+            <Button
+                android:id="@+id/probefriend_btn_show_scores"
+                android:layout_width="200dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="show score" />
+
+            <Button
+                android:id="@+id/probefriend_btn_scores_change"
+                android:layout_width="200dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="change score" />
+        </LinearLayout>
     </LinearLayout>
 </LinearLayout>

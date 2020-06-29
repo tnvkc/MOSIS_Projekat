@@ -236,23 +236,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
         String email = sharedPref.getString(getString(R.string.loggedUser_email), "EMPTY");
         int indexx  = sharedPref.getInt(getString(R.string.loggedUser_index), -1);
 
-        String mmail = currentUser.getEmail().toString();
-        int ii = email.compareTo(mmail);
-        if(username == "EMPTY" ||  ii != 0)
-        {
-            SharedPreferences.Editor editor = sharedPref.edit();
 
-            editor.remove(getString(R.string.loggedUser_email));
-            editor.remove(getString(R.string.loggedUser_username));
-
-            editor.remove(getString(R.string.loggedUser_index));
-            editor.commit();
-
-            mfirebaseAuth.signOut();
-            Intent intent=new Intent(getApplicationContext(), LoginActivity.class);
-            startActivity(intent);
-            finish();
-        }
 
         Toast.makeText(getApplicationContext(), "Welcome " + username + ", " + email + "!", Toast.LENGTH_SHORT).show();
         /*User u;

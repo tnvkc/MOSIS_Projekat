@@ -89,10 +89,10 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Toast.makeText(getApplicationContext(), "done login", Toast.LENGTH_SHORT).show();
-                //loginUser();
+                loginUser();
 
-                Intent intent=new Intent(getApplicationContext(), MainActivity.class);
-                startActivity(intent);
+               // Intent intent=new Intent(getApplicationContext(), MainActivity.class);
+                //startActivity(intent);
             }
         });
 
@@ -105,6 +105,34 @@ public class LoginActivity extends AppCompatActivity {
                 finish();
             }
         });
+
+        SharedPreferences sharedPref = getApplicationContext().getSharedPreferences( "Userdata", Context.MODE_PRIVATE);
+        String username = sharedPref.getString(getString(R.string.loggedUser_username), "EMPTY");
+        String emaill = sharedPref.getString(getString(R.string.loggedUser_email), "EMPTY");
+        int indexx  = sharedPref.getInt(getString(R.string.loggedUser_index), -1);
+
+        FirebaseUser currentUser=firebaseAuth.getCurrentUser();
+        if(currentUser!=null && emaill.compareTo("EMPTY") != 0)
+        {
+
+
+            Intent loginIntent=new Intent(LoginActivity.this, MainActivity.class);
+            startActivity(loginIntent);
+            finish();
+        }
+        else
+        {
+
+            SharedPreferences.Editor editor = sharedPref.edit();
+
+            editor.remove(getString(R.string.loggedUser_email));
+            editor.remove(getString(R.string.loggedUser_username));
+
+            editor.remove(getString(R.string.loggedUser_index));
+            editor.commit();
+
+            firebaseAuth.signOut();
+        }
     }
     private void loginUser()
     {
