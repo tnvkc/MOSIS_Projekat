@@ -178,14 +178,14 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
         info_window_lon = findViewById(R.id.info_window_lon);
 
         lastSelected = null;
-        if(!startedService) {
+        /*if(!startedService) {
             Toast.makeText(getApplicationContext(), "Start service", Toast.LENGTH_SHORT).show();
 
             Intent i = new Intent(getApplicationContext(), NotificationService.class);
             i.putExtra("timer", 10);
             startService(i);
             startedService = true;
-        }
+        }*/
 
 
     }
