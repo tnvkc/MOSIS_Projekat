@@ -202,9 +202,7 @@ public class AddNewObjectActivity extends FragmentActivity implements View.OnCli
                     Toast.makeText(this, "Object added", Toast.LENGTH_SHORT).show();
 
                     Intent callerIntent = getIntent();
-                    Bundle resBundle = callerIntent.getExtras();
-                    resBundle.putInt("object_type", objectType);
-                    callerIntent.putExtras(resBundle);
+                    callerIntent.putExtra("map_object", newMapObject);
 
                     setResult(RESULT_OK, callerIntent);
                     finish();

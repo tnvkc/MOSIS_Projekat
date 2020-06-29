@@ -78,7 +78,10 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Toast.makeText(getApplicationContext(), "done login", Toast.LENGTH_SHORT).show();
-                loginUser();
+                //loginUser();
+
+                Intent intent=new Intent(getApplicationContext(), MainActivity.class);
+                startActivity(intent);
             }
         });
     }

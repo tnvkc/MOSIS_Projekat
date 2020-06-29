@@ -5,10 +5,14 @@
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
-
     <uses-permission android:name="android.permission.CAMERA" />
-    <uses-feature android:glEsVersion="0x00030000" android:required="true" />
-    <uses-feature android:name="android.hardware.camera.ar" android:required="true"/>
+
+    <uses-feature
+        android:glEsVersion="0x00030000"
+        android:required="true" />
+    <uses-feature
+        android:name="android.hardware.camera.ar"
+        android:required="true" />
 
     <application
         android:allowBackup="true"
@@ -27,9 +31,11 @@
         <activity android:name=".Activities.SendActivity" />
         <activity android:name=".Activities.FriendRequestsActivity" />
 
-        <meta-data android:name="com.google.ar.core" android:value="required" />
+        <meta-data
+            android:name="com.google.ar.core"
+            android:value="required" />
 
-        <activity android:name=".ShowArObjectActivity"></activity>
+        <activity android:name=".ShowArObjectActivity" />
         <activity android:name=".Probe" />
 
         <meta-data
@@ -44,10 +50,11 @@
         <activity android:name=".Activities.NewPasswordActivity" />
         <activity android:name=".Activities.RecoveryCodeActivity" />
         <activity android:name=".Activities.NewProfilePictureActivity" />
-        <activity android:name=".Activities.SignUpActivity"/>
-        <activity android:name=".Activities.LoginActivity" >
+        <activity android:name=".Activities.SignUpActivity" />
+        <activity android:name=".Activities.LoginActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
@@ -67,7 +74,7 @@
 
         <meta-data
             android:name="com.google.firebase.messaging.default_notification_channel_id"
-            android:value="@string/default_notification_channel_id"></meta-data>
+            android:value="@string/default_notification_channel_id" />
     </application>
 
 </manifest>

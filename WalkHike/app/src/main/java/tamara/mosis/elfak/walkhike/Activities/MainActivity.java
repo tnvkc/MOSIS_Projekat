@@ -17,6 +17,9 @@ import android.view.MenuItem;
 import android.view.View;
 import android.location.Location;
 import android.location.LocationManager;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 
@@ -31,6 +34,7 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -41,8 +45,12 @@ import com.google.firebase.auth.FirebaseUser;
 import tamara.mosis.elfak.walkhike.Probe;
 import tamara.mosis.elfak.walkhike.R;
 import tamara.mosis.elfak.walkhike.ShowArObjectActivity;
+import tamara.mosis.elfak.walkhike.modeldata.MapObject;
+import tamara.mosis.elfak.walkhike.modeldata.Position;
 
-public class MainActivity extends AppCompatActivity implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener, OnMapReadyCallback {
+public class MainActivity extends AppCompatActivity implements GoogleApiClient.ConnectionCallbacks,
+        GoogleApiClient.OnConnectionFailedListener, LocationListener, OnMapReadyCallback,
+        BottomNavigationView.OnNavigationItemSelectedListener, GoogleMap.OnMarkerClickListener {
 
     private FirebaseAuth mfirebaseAuth;
     private static final int PERMISSION_CODE = 1;
@@ -59,6 +67,14 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
     Toolbar toolbar;
     MenuItem profileItem;
 
+    LinearLayout info_window_container;
+    ImageView info_window_icon;
+    TextView info_window_username;
+    TextView info_window_lat;
+    TextView info_window_lon;
+
+    Marker lastSelected;
+
     @Override
     protected void onStart()
     {
@@ -66,9 +82,9 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
         FirebaseUser currentUser=mfirebaseAuth.getCurrentUser();
         if(currentUser==null)
         {
-            Intent loginIntent=new Intent(MainActivity.this, LoginActivity.class);
-            startActivity(loginIntent);
-            finish();
+        //    Intent loginIntent=new Intent(MainActivity.this, LoginActivity.class);
+        //    startActivity(loginIntent);
+        //    finish();
         }
     }
 
@@ -124,42 +140,19 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
             }
         });
 
-
         bottom_navigation_menu = findViewById(R.id.bottom_navigation_menu);
         bottom_navigation_menu.setSelectedItemId(R.id.map);
-        bottom_navigation_menu.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
-            @Override
-            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                switch (item.getItemId()) {
-                    case R.id.notifications: {
-                        Intent intent=new Intent(getApplicationContext(), NotificationsActivity.class);
-                        startActivity(intent);
-                        overridePendingTransition(0, 0);
-                        return true;
-                    }
-                    case R.id.friends: {
-                        Intent intent=new Intent(getApplicationContext(), FriendslistActivity.class);
-                        startActivity(intent);
-                        overridePendingTransition(0, 0);
-                        return true;
-                    }
-                    case R.id.completed_routes: {
-                        Intent intent=new Intent(getApplicationContext(), CompletedRoutesActivity.class);
-                        startActivity(intent);
-                        overridePendingTransition(0, 0);
-                        return true;
-                    }
-                    case R.id.leaderboard: {
-                        Intent intent=new Intent(getApplicationContext(), LeaderboardsActivity.class);
-                        startActivity(intent);
-                        overridePendingTransition(0, 0);
-                        return true;
-                    }
-                }
-                return false;
-            }
-        });
+        bottom_navigation_menu.setOnNavigationItemSelectedListener(this);
 
+        info_window_container = findViewById(R.id.info_window_container);
+        info_window_container.setVisibility(View.GONE);
+
+        info_window_icon = findViewById(R.id.info_window_icon);
+        info_window_username = findViewById(R.id.info_window_username);
+        info_window_lat = findViewById(R.id.info_window_lat);
+        info_window_lon = findViewById(R.id.info_window_lon);
+
+        lastSelected = null;
     }
 
     @Override
@@ -167,48 +160,47 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
         if (requestCode == 1) {
             //vracanje iz AddNewObjectActivity-ja
             if (resultCode == RESULT_OK) {
-
-                Bundle bundle = data.getExtras();
-                double lat = bundle.getDouble("lat");
-                double lon = bundle.getDouble("lon");
-                int object_type = bundle.getInt("object_type");
-
-                LatLng loc = new LatLng(lat, lon);
-                int resId = 0;
-                String desc = "";
-
-                if (object_type == 1) {
-                    desc = "Message";
-                    resId = R.drawable.ic_message;
-                } else if (object_type == 2) {
-                    desc = "Checkpoint";
-                    resId = R.drawable.ic_marker;
-                } else if (object_type == 3) {
-                    desc = "Photo";
-                    resId = R.drawable.ic_photo;
-                } else if (object_type == 4) {
-                    desc = "Emoji";
-                    resId = R.drawable.ic_heart;
-                }
-
-                AddMarkerObject(resId, loc, desc);
+                MapObject result = (MapObject) data.getSerializableExtra("map_object");
+                AddMarkerObject(result);
             }
         }
-
         super.onActivityResult(requestCode, resultCode, data);
     }
 
-    protected void AddMarkerObject(int resId, LatLng location, String markerDesc) {
-        if(map!=null){
-            map.addMarker(new MarkerOptions()
-                                .position(location)
-                                .title(markerDesc)
-                                .icon(BitmapDescriptorFactory.fromResource(resId))
-            );
-            map.moveCamera(CameraUpdateFactory.newLatLng(location));
-            map.animateCamera(CameraUpdateFactory.newLatLngZoom(location,10f));
+    protected void AddMarkerObject(MapObject mapObject) {
+
+        double lat, lon;
+
+        Position position = mapObject.position;
+        lat = Double.parseDouble(position.latitude);
+        lon = Double.parseDouble(position.longitude);
+
+        LatLng loc = new LatLng(lat, lon);
+
+        int objectType = mapObject.objectType;
+        int resId = 0;
+
+        if (objectType == 1) {
+            resId = R.drawable.ic_message;
+        } else if (objectType == 2) {
+            resId = R.drawable.ic_marker;
+        } else if (objectType == 3) {
+            resId = R.drawable.ic_photo;
+        } else if (objectType == 4) {
+            resId = R.drawable.ic_heart;
         }
 
+        if(map!=null){
+            Marker m = map.addMarker(new MarkerOptions()
+                    .position(loc)
+                    .icon(BitmapDescriptorFactory.fromResource(resId))
+            );
+
+            m.setTag(mapObject);
+
+            map.moveCamera(CameraUpdateFactory.newLatLng(loc));
+            map.animateCamera(CameraUpdateFactory.newLatLngZoom(loc,10f));
+        }
     }
 
     @Override
@@ -251,7 +243,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
         googleMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
         this.map=googleMap;
 
-
+        map.setOnMarkerClickListener(this);
     }
 
     @Override
@@ -327,6 +319,73 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
         }
     }
 
+    @Override
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.notifications: {
+                Intent intent = new Intent(getApplicationContext(), NotificationsActivity.class);
+                startActivity(intent);
+                overridePendingTransition(0, 0);
+                return true;
+            }
+            case R.id.friends: {
+                Intent intent = new Intent(getApplicationContext(), FriendslistActivity.class);
+                startActivity(intent);
+                overridePendingTransition(0, 0);
+                return true;
+            }
+            case R.id.completed_routes: {
+                Intent intent = new Intent(getApplicationContext(), CompletedRoutesActivity.class);
+                startActivity(intent);
+                overridePendingTransition(0, 0);
+                return true;
+            }
+            case R.id.leaderboard: {
+                Intent intent = new Intent(getApplicationContext(), LeaderboardsActivity.class);
+                startActivity(intent);
+                overridePendingTransition(0, 0);
+                return true;
+            }
 
+            //finish everywhere
+        }
+        return false;
+    }
 
+    @Override
+    public boolean onMarkerClick(Marker marker) {
+
+        if (lastSelected == null || !lastSelected.equals(marker)) {
+
+            info_window_container.setVisibility(View.VISIBLE);
+
+            MapObject randomDataTag = (MapObject) marker.getTag();
+
+            String lat = randomDataTag.position.latitude;
+            String lon = randomDataTag.position.longitude;
+
+            int objectType = randomDataTag.objectType;
+
+            if (objectType == 1) {
+                info_window_icon.setImageResource(R.drawable.ic_message);
+            } else if (objectType == 2) {
+                info_window_icon.setImageResource(R.drawable.ic_marker);
+            } else if (objectType == 3) {
+                info_window_icon.setImageResource(R.drawable.ic_photo);
+            } else if (objectType == 4) {
+                info_window_icon.setImageResource(R.drawable.ic_heart);
+            }
+
+            info_window_username.setText("Some user");
+            info_window_lat.setText(lat);
+            info_window_lon.setText(lon);
+
+            lastSelected = marker;
+        } else {
+            info_window_container.setVisibility(View.GONE);
+            lastSelected = null;
+        }
+
+        return false;
+    }
 }
