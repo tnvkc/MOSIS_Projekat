@@ -88,8 +88,11 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
     TextView info_window_username;
     TextView info_window_lat;
     TextView info_window_lon;
+    TextView info_window_see_details;
 
     Marker lastSelected;
+
+    User loggedUser;
 
     @Override
     protected void onStart()
@@ -131,11 +134,15 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
         addNewFloating.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                info_window_container.setVisibility(View.GONE);
+
                 Intent intent=new Intent(getApplicationContext(), AddNewObjectActivity.class);
                 Bundle bundle = new Bundle();
                 bundle.putDouble("lat", location.getLatitude());
                 bundle.putDouble("lon", location.getLongitude());
+                bundle.putSerializable("user", loggedUser);
                 intent.putExtras(bundle);
+
                 startActivityForResult(intent, 1);
             }
         });
@@ -165,6 +172,8 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
         info_window_username = findViewById(R.id.info_window_username);
         info_window_lat = findViewById(R.id.info_window_lat);
         info_window_lon = findViewById(R.id.info_window_lon);
+        info_window_see_details = findViewById(R.id.info_window_see_details);
+        info_window_see_details.setOnClickListener(this);
 
         lastSelected = null;
     }
@@ -239,6 +248,13 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
 
 
         Toast.makeText(getApplicationContext(), "Welcome " + username + ", " + email + "!", Toast.LENGTH_SHORT).show();
+
+        if(indexx != -1) {
+            loggedUser = userData.getInstance().getUser(indexx);
+            if (loggedUser.email.compareTo(email) == 0)
+                Toast.makeText(getApplicationContext(), "Welcome " + username + ", " + email + "!", Toast.LENGTH_SHORT).show();
+        }
+
         /*User u;
         if(indexx != -1) {
             u = userData.getInstance().getUser(indexx);
@@ -435,6 +451,15 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
                 startedService = false;
             }
 
+        } else if (v.getId() == R.id.info_window_see_details) {
+
+            MapObject objectTag = (MapObject) v.getTag();
+
+            String lat = objectTag.position.latitude;
+            String lon = objectTag.position.longitude;
+
+            Toast.makeText(this, "lat: " + lat + " lon: " + lon, Toast.LENGTH_SHORT).show();
+
         }
        
     }
@@ -446,12 +471,12 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
 
             info_window_container.setVisibility(View.VISIBLE);
 
-            MapObject randomDataTag = (MapObject) marker.getTag();
+            MapObject objectTag = (MapObject) marker.getTag();
 
-            String lat = randomDataTag.position.latitude;
-            String lon = randomDataTag.position.longitude;
+            String lat = objectTag.position.latitude;
+            String lon = objectTag.position.longitude;
 
-            int objectType = randomDataTag.objectType;
+            int objectType = objectTag.objectType;
 
             if (objectType == 1) {
                 info_window_icon.setImageResource(R.drawable.ic_message);
@@ -463,9 +488,10 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
                 info_window_icon.setImageResource(R.drawable.ic_heart);
             }
 
-            info_window_username.setText("Some user");
-            info_window_lat.setText(lat);
-            info_window_lon.setText(lon);
+            info_window_username.setText(String.format("Left on %s by\n%s", objectTag.date, objectTag.createdBy.username));
+            info_window_lat.setText("lat: " + lat);
+            info_window_lon.setText("lon: " + lon);
+            info_window_see_details.setTag(objectTag);
 
             lastSelected = marker;
         } else {

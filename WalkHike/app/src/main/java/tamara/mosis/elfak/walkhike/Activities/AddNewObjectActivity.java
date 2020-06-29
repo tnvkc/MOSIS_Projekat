@@ -13,6 +13,9 @@ import android.widget.Toast;
 
 import com.google.android.gms.maps.model.LatLng;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+
 import tamara.mosis.elfak.walkhike.Fragments.AddObject_EditDesc;
 import tamara.mosis.elfak.walkhike.Fragments.AddObject_InsertPhoto;
 import tamara.mosis.elfak.walkhike.Fragments.AddObject_SelectType;
@@ -23,6 +26,7 @@ import tamara.mosis.elfak.walkhike.R;
 import tamara.mosis.elfak.walkhike.modeldata.MapObject;
 import tamara.mosis.elfak.walkhike.modeldata.MapObjectData;
 import tamara.mosis.elfak.walkhike.modeldata.Position;
+import tamara.mosis.elfak.walkhike.modeldata.User;
 
 public class AddNewObjectActivity extends FragmentActivity implements View.OnClickListener {
 
@@ -35,6 +39,7 @@ public class AddNewObjectActivity extends FragmentActivity implements View.OnCli
     boolean isPublic;
     String desc;
     Position position;
+    User loggedUser;
 
     AddObject_EditDesc secondFragment;
 
@@ -78,6 +83,9 @@ public class AddNewObjectActivity extends FragmentActivity implements View.OnCli
         position = new Position();
         position.latitude = String.valueOf(lat);
         position.longitude = String.valueOf(lon);
+        loggedUser = (User) args.getSerializable("user");
+
+        Toast.makeText(this, loggedUser.email, Toast.LENGTH_SHORT).show();
 
         progressBar = findViewById(R.id.progressBar);
         progressBar.setMax(300);
@@ -190,13 +198,15 @@ public class AddNewObjectActivity extends FragmentActivity implements View.OnCli
                     progressBar.setProgress(300);
                 } else if (state == 3) {
                     MapObject newMapObject = new MapObject();
-                    //newMapObject.createdBy = this user
+                    newMapObject.createdBy = loggedUser;
                     newMapObject.objectType = objectType;
                     newMapObject.isPublic = false; //isPublic;
                     //newMapObject.shareWithUser = user to share with or null (if isPublic = true)
                     newMapObject.desc = desc;
                     //newMapObject.photo = inserted photo if objectType = 3 or null
                     newMapObject.position = position;
+                    newMapObject.datetime = new SimpleDateFormat("ddMMyyyyhhmmss").format(Calendar.getInstance().getTime());
+                    newMapObject.date = new SimpleDateFormat("dd/MM/yyyy").format(Calendar.getInstance().getTime());
                     md.getInstance().AddMapObject(newMapObject);
 
                     Toast.makeText(this, "Object added", Toast.LENGTH_SHORT).show();

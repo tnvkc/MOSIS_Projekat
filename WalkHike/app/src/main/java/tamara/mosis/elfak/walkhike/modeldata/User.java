@@ -2,7 +2,9 @@ package tamara.mosis.elfak.walkhike.modeldata;
 
 import com.google.firebase.database.Exclude;
 
-public class User {
+import java.io.Serializable;
+
+public class User implements Serializable {
 
     public String username;
     public String email;

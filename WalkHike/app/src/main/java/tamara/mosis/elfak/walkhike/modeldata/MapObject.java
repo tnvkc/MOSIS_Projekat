@@ -12,6 +12,11 @@ public class MapObject implements Serializable {
     public int objectType;
     public String desc;
     public boolean isPublic;
+    public String datetime;
+    public String date;
+    public User createdBy;
+    public User sharedWith;
+    public String photo;
 
     @Exclude
     public String key;
