@@ -2,6 +2,7 @@ package tamara.mosis.elfak.walkhike.modeldata;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.navigation.NavGraph;
 
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;

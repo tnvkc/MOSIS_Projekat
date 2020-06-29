@@ -72,7 +72,7 @@ public class FriendsFragment extends Fragment {
 
         usersListView=view.findViewById(R.id.friends_list_rv) ;
         usersList= friendshipData.getInstance().GetUserFriends(email);//new ArrayList<>();
-        usersRecyclerAdapter=new UsersRecyclerAdapter(getContext(),usersList);
+        usersRecyclerAdapter=new UsersRecyclerAdapter(getContext(),usersList, email);
 
         usersListView.setHasFixedSize(true);
         usersListView.setLayoutManager(new LinearLayoutManager(getContext()));
@@ -80,8 +80,8 @@ public class FriendsFragment extends Fragment {
 
 
         //usersList = new ArrayList<>();
-        buttonAddFriend=view.findViewById(R.id.friends_requests_item);
-        prikaz = (TextView) view.findViewById(R.id.friendsfrag_textview);
+        //buttonAddFriend=view.findViewById(R.id.friends_requests_item);
+        //prikaz = (TextView) view.findViewById(R.id.friendsfrag_textview);
         //showFriendships();
         return view;
     }
