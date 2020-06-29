@@ -48,7 +48,6 @@ public class UsersRecyclerAdapter extends RecyclerView.Adapter<UsersRecyclerAdap
         final String username=usersList.get(position).username;
         final String email=usersList.get(position).email;
         holder.username_view.setText(username +", " + email);
-        //final String user_id=usersList.get(position).userId;
 
         holder.removeFriendButton.setOnClickListener(new View.OnClickListener()
         {
