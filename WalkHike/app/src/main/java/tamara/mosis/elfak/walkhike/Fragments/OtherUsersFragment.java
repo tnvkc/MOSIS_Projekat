@@ -91,8 +91,8 @@ public class OtherUsersFragment extends Fragment {
 
 
 
-        ArrayList<User> usersList1 = new ArrayList<>();
-        for (int i = 0; i < probepos.size(); i++) {
+        ArrayList<User> usersList1 = friendshipData.getInstance().GetUserFriends(u.email); //new ArrayList<>();
+        /*for (int i = 0; i < probepos.size(); i++) {
             String a = probepos.get(i).toUser.email;
             String b = probepos.get(i).fromUser.email;
             if (a.compareTo(u.email) == 0) {
@@ -102,7 +102,7 @@ public class OtherUsersFragment extends Fragment {
                     usersList1.add(probepos.get(i).toUser);
 
             }
-        }
+        }*/
 
         boolean nema= false;
         ArrayList<User> listaa = userdata.getInstance().getUsers();
