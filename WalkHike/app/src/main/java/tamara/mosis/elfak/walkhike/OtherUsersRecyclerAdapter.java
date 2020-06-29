@@ -100,7 +100,7 @@ public class OtherUsersRecyclerAdapter extends RecyclerView.Adapter<OtherUsersRe
     private void removeItem(int position) {
         //usersList.remove(position);
         notifyItemRemoved(position);
-        //notifyItemRangeChanged(position, usersList.size());
+        notifyItemRangeChanged(position, usersList.size());
     }
 
 

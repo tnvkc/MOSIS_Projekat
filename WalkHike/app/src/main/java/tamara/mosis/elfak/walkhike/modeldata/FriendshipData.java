@@ -141,7 +141,35 @@ public class FriendshipData {
         p.key = key;
     }
 
+    public ArrayList<User> GetUserFriends(String userEmail)
+    {
+        ArrayList<Friendship> probepos;
+        probepos =  this.Friendships;
 
+        ArrayList<User> friendss = new ArrayList<>();
+
+
+
+        for (int i = 0; i < probepos.size(); i++) {
+            String a = probepos.get(i).toUser.email;
+            String b = probepos.get(i).fromUser.email;
+            if (a.compareTo(userEmail) == 0 )
+            {
+                if(probepos.get(i).accepted == true) {
+
+                    friendss.add(probepos.get(i).fromUser);
+                }
+            }
+            if(b.compareTo(userEmail) == 0 )
+            {
+                if(probepos.get(i).accepted == true) {
+                    friendss.add(probepos.get(i).toUser);
+                }
+            }
+        }
+
+        return friendss;
+    }
 
     public Friendship getFriendship(int index) {
         return Friendships.get(index);
@@ -152,6 +180,24 @@ public class FriendshipData {
         db.child(FIREBASE_CHILD).child(Friendships.get(index).key).removeValue();
         Friendships.remove(index);
         recreateKeyIndexMapping();
+    }
+
+    public void deleteFriendship(String mailFrom, String mailTo) {
+
+        int indexx = -1;
+        for(int i =0; i< Friendships.size(); i++)
+        {
+
+            if (mailFrom.compareTo(Friendships.get(i).fromUser.email) == 0
+                    && mailTo.compareTo(Friendships.get(i).toUser.email) == 0)
+                indexx = i;
+        }
+
+        if(indexx != -1) {
+            db.child(FIREBASE_CHILD).child(Friendships.get(indexx).key).removeValue();
+            Friendships.remove(indexx);
+            recreateKeyIndexMapping();
+        }
     }
 
     public void updateFriendship(int index,  Friendship u)

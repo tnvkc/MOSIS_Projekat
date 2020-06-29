@@ -59,10 +59,19 @@ public class FriendsFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view= inflater.inflate(R.layout.fragment_friends, container, false);
-        friendshipData.getInstance().getFriendships();
+        //friendshipData.getInstance().getFriendships();
         firebaseFirestore=firebaseFirestore.getInstance();
+
+        SharedPreferences sharedPref = getContext().getSharedPreferences( "Userdata", Context.MODE_PRIVATE);
+        String username = sharedPref.getString(getString(R.string.loggedUser_username), "EMPTY");
+        String email = sharedPref.getString(getString(R.string.loggedUser_email), "EMPTY");
+        int indexx  = sharedPref.getInt(getString(R.string.loggedUser_index), -1);
+
+        String index1 = email; //"email1@email.com";
+
+
         usersListView=view.findViewById(R.id.friends_list_rv) ;
-        usersList=new ArrayList<>();
+        usersList= friendshipData.getInstance().GetUserFriends(email);//new ArrayList<>();
         usersRecyclerAdapter=new UsersRecyclerAdapter(getContext(),usersList);
 
         usersListView.setHasFixedSize(true);
@@ -73,7 +82,7 @@ public class FriendsFragment extends Fragment {
         //usersList = new ArrayList<>();
         buttonAddFriend=view.findViewById(R.id.friends_requests_item);
         prikaz = (TextView) view.findViewById(R.id.friendsfrag_textview);
-        showFriendships();
+        //showFriendships();
         return view;
     }
 
@@ -85,44 +94,17 @@ public class FriendsFragment extends Fragment {
 
 
 
-        SharedPreferences sharedPref = getContext().getSharedPreferences( "Userdata", Context.MODE_PRIVATE);
-        String username = sharedPref.getString(getString(R.string.loggedUser_username), "EMPTY");
-        String email = sharedPref.getString(getString(R.string.loggedUser_email), "EMPTY");
-        int indexx  = sharedPref.getInt(getString(R.string.loggedUser_index), -1);
-        ArrayList<Friendship> probepos = new ArrayList<>();
-        String index1 = email; //"email1@email.com";
-
-        probepos = friendshipData.getInstance().getFriendships();
-
-        String prikaziii = "";
 
 
 
-        for (int i = 0; i < probepos.size(); i++) {
-            String a = probepos.get(i).toUser.email;
-            String b = probepos.get(i).fromUser.email;
-            if (a.compareTo(index1) == 0 )
-            {
-                if(probepos.get(i).accepted == true) {
 
-                    usersList.add(probepos.get(i).fromUser);
-                }
-            }
-            if(b.compareTo(index1) == 0 )
-            {
-                if(probepos.get(i).accepted == true) {
-                    usersList.add(probepos.get(i).toUser);
-                }
-            }
-        }
+        //for(int i = 0; i< usersList.size(); i++)
+        //{
+         //   prikaziii += usersList.get(i).toString() + " ";
+          //  prikaziii += "\n";
+       // }
 
-        for(int i = 0; i< usersList.size(); i++)
-        {
-            prikaziii += usersList.get(i).toString() + " ";
-            prikaziii += "\n";
-        }
-
-        prikaz.setText(prikaziii);
+        //prikaz.setText(prikaziii);
     }
 
     @Override
