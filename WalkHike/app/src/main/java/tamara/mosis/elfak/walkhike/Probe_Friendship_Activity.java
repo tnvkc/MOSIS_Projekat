@@ -214,8 +214,9 @@ public class Probe_Friendship_Activity extends AppCompatActivity  {
                 User u = userdata.getInstance().getUser(scoreUser.getText().toString());
                 if(u != null)
                 {
-                    scoresData.getInstance().updateScoreActivity(133, u);
-                    scoresData.getInstance().updateScoreDistance(12, u);
+                   // scoresData.getInstance().updateScoreActivity(133, u);
+                   // scoresData.getInstance().updateScoreDistance(12, u);
+                    scoresData.getInstance().updateResetScoresWeekly();
                 }
 
             }

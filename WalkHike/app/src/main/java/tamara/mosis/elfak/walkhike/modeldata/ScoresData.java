@@ -193,6 +193,34 @@ public class ScoresData {
 
     }
 
+    public void updateResetScoresWeekly()
+    {
+        Scores uu =null;
+        for(int i =0; i< this.Scores.size(); i++)
+        {
+            uu = this.Scores.get(i);
+            uu.weeklyActivity =0;
+            uu.weeklyDistance = 0;
+            db.child(FIREBASE_CHILD).child(uu.key).setValue(uu);
+
+        }
+
+    }
+
+    public void updateResetScoresMonthly()
+    {
+        Scores uu =null;
+        for(int i =0; i< this.Scores.size(); i++)
+        {
+            uu = this.Scores.get(i);
+            uu.monthlyActivity =0;
+            uu.monthlyDistance = 0;
+            db.child(FIREBASE_CHILD).child(uu.key).setValue(uu);
+
+        }
+
+    }
+
     public void updateScoreDistance(int additionalScoreDistance, User u)
     {
         Scores uu = null;
