@@ -37,9 +37,8 @@
             android:value="required" />
 
         <activity android:name=".ShowArObjectActivity" />
-        <activity android:name=".Probe">
 
-        </activity>
+        <activity android:name=".Probe" />
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"
@@ -55,13 +54,11 @@
         <activity android:name=".Activities.NewProfilePictureActivity" />
         <activity android:name=".Activities.SignUpActivity" />
         <activity android:name=".Activities.LoginActivity">
-
             <intent-filter>
-            <action android:name="android.intent.action.MAIN" />
+				<action android:name="android.intent.action.MAIN" />
 
-            <category android:name="android.intent.category.LAUNCHER" />
-        </intent-filter>
-
+				<category android:name="android.intent.category.LAUNCHER" />
+			</intent-filter>
         </activity>
         <activity android:name=".Activities.FriendslistActivity" />
         <activity android:name=".Activities.AddNewObjectActivity" />

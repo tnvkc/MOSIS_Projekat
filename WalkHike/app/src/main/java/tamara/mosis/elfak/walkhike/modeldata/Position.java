@@ -3,8 +3,10 @@ package tamara.mosis.elfak.walkhike.modeldata;
 import com.google.firebase.database.Exclude;
 import com.google.firebase.database.IgnoreExtraProperties;
 
+import java.io.Serializable;
+
 @IgnoreExtraProperties
-public class Position {
+public class Position implements Serializable {
 
     public String latitude;
     public String longitude;

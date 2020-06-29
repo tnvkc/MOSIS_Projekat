@@ -20,6 +20,9 @@ import android.view.MenuItem;
 import android.view.View;
 import android.location.Location;
 import android.location.LocationManager;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 
@@ -32,8 +35,10 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -47,11 +52,16 @@ import tamara.mosis.elfak.walkhike.NotificationService;
 import tamara.mosis.elfak.walkhike.Probe;
 import tamara.mosis.elfak.walkhike.R;
 import tamara.mosis.elfak.walkhike.ShowArObjectActivity;
+
 import tamara.mosis.elfak.walkhike.modeldata.FriendshipData;
 import tamara.mosis.elfak.walkhike.modeldata.User;
 import tamara.mosis.elfak.walkhike.modeldata.UserData;
+import tamara.mosis.elfak.walkhike.modeldata.MapObject;
+import tamara.mosis.elfak.walkhike.modeldata.Position;
 
-public class MainActivity extends AppCompatActivity implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener, OnMapReadyCallback, View.OnClickListener {
+public class MainActivity extends AppCompatActivity implements GoogleApiClient.ConnectionCallbacks,
+        GoogleApiClient.OnConnectionFailedListener, LocationListener, OnMapReadyCallback, View.OnClickListener, 
+        BottomNavigationView.OnNavigationItemSelectedListener, GoogleMap.OnMarkerClickListener {
 
     private FirebaseAuth mfirebaseAuth;
     private static final int PERMISSION_CODE = 1;
@@ -69,18 +79,22 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
     Toolbar toolbar;
     MenuItem profileItem;
 
-
     boolean startedService = false;
     UserData userData;
     FriendshipData friendshipData;
+
+    LinearLayout info_window_container;
+    ImageView info_window_icon;
+    TextView info_window_username;
+    TextView info_window_lat;
+    TextView info_window_lon;
+
+    Marker lastSelected;
 
     @Override
     protected void onStart()
     {
         super.onStart();
-
-
-
     }
 
     @Override
@@ -90,8 +104,6 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
             setTheme(R.style.AppThemeDark);
         else
             setTheme(R.style.AppThemeLight);
-
-
 
         setContentView(R.layout.activity_main);
         mfirebaseAuth=FirebaseAuth.getInstance();
@@ -104,15 +116,11 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, PERMISSION_CODE);
         } else {
             //map.setMyLocationEnabled(true);
-
-
         }
 
         getDeviceLocation();
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.main_map_fragment);
         mapFragment.getMapAsync(this);
-
-
 
         toolbar = (Toolbar)findViewById(R.id.main_toolbar);
         setSupportActionBar(toolbar);
@@ -124,7 +132,11 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
             @Override
             public void onClick(View v) {
                 Intent intent=new Intent(getApplicationContext(), AddNewObjectActivity.class);
-                startActivity(intent);
+                Bundle bundle = new Bundle();
+                bundle.putDouble("lat", location.getLatitude());
+                bundle.putDouble("lon", location.getLongitude());
+                intent.putExtras(bundle);
+                startActivityForResult(intent, 1);
             }
         });
         objectInteraction = (FloatingActionButton) findViewById(R.id.main_showArObject);
@@ -142,48 +154,67 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
         startServiceButton = findViewById(R.id.main_startService);
         startServiceButton.setOnClickListener(this);
 
-
         bottom_navigation_menu = findViewById(R.id.bottom_navigation_menu);
         bottom_navigation_menu.setSelectedItemId(R.id.map);
-        bottom_navigation_menu.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
-            @Override
-            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                switch (item.getItemId()) {
-                    case R.id.notifications: {
-                        Intent intent=new Intent(getApplicationContext(), NotificationsActivity.class);
-                        startActivity(intent);
-                        overridePendingTransition(0, 0);
-                        return true;
-                    }
-                    case R.id.friends: {
-                        Intent intent=new Intent(getApplicationContext(), FriendslistActivity.class);
-                        startActivity(intent);
-                        overridePendingTransition(0, 0);
-                        return true;
-                    }
-                    case R.id.completed_routes: {
-                        Intent intent=new Intent(getApplicationContext(), CompletedRoutesActivity.class);
-                        startActivity(intent);
-                        overridePendingTransition(0, 0);
-                        return true;
-                    }
-                    case R.id.leaderboard: {
-                        Intent intent=new Intent(getApplicationContext(), LeaderboardsActivity.class);
-                        startActivity(intent);
-                        overridePendingTransition(0, 0);
-                        return true;
-                    }
-                }
-                return false;
-            }
-        });
+        bottom_navigation_menu.setOnNavigationItemSelectedListener(this);
 
+        info_window_container = findViewById(R.id.info_window_container);
+        info_window_container.setVisibility(View.GONE);
 
+        info_window_icon = findViewById(R.id.info_window_icon);
+        info_window_username = findViewById(R.id.info_window_username);
+        info_window_lat = findViewById(R.id.info_window_lat);
+        info_window_lon = findViewById(R.id.info_window_lon);
 
+        lastSelected = null;
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        if (requestCode == 1) {
+            //vracanje iz AddNewObjectActivity-ja
+            if (resultCode == RESULT_OK) {
+                MapObject result = (MapObject) data.getSerializableExtra("map_object");
+                AddMarkerObject(result);
+            }
+        }
+        super.onActivityResult(requestCode, resultCode, data);
+    }
 
+    protected void AddMarkerObject(MapObject mapObject) {
 
+        double lat, lon;
+
+        Position position = mapObject.position;
+        lat = Double.parseDouble(position.latitude);
+        lon = Double.parseDouble(position.longitude);
+
+        LatLng loc = new LatLng(lat, lon);
+
+        int objectType = mapObject.objectType;
+        int resId = 0;
+
+        if (objectType == 1) {
+            resId = R.drawable.ic_message;
+        } else if (objectType == 2) {
+            resId = R.drawable.ic_marker;
+        } else if (objectType == 3) {
+            resId = R.drawable.ic_photo;
+        } else if (objectType == 4) {
+            resId = R.drawable.ic_heart;
+        }
+
+        if(map!=null){
+            Marker m = map.addMarker(new MarkerOptions()
+                    .position(loc)
+                    .icon(BitmapDescriptorFactory.fromResource(resId))
+            );
+
+            m.setTag(mapObject);
+            map.moveCamera(CameraUpdateFactory.newLatLng(loc));
+            map.animateCamera(CameraUpdateFactory.newLatLngZoom(loc,10f));
+        }
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -238,9 +269,6 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
 
     }
 
-
-
-
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
 
@@ -273,7 +301,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
         googleMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
         this.map=googleMap;
 
-
+        map.setOnMarkerClickListener(this);
     }
 
     @Override
@@ -319,7 +347,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
             Toast.makeText(MainActivity.this, "Lat : "+location.getLatitude()+" Lng "+location.getLongitude(), Toast.LENGTH_SHORT).show();
             if(map!=null){
                 LatLng latLng=new LatLng(location.getLatitude(),location.getLongitude());
-                map.addMarker(new MarkerOptions().position(latLng).title("Current Location"));
+                //map.addMarker(new MarkerOptions().position(latLng).title("Current Location"));
                map.moveCamera(CameraUpdateFactory.newLatLng(latLng));
                map.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng,10f));
                 //Toast.makeText(this, "Usao u latlong", Toast.LENGTH_SHORT );
@@ -362,12 +390,43 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
         if(map!=null){
             LatLng latLng=new LatLng(location.getLatitude(),location.getLongitude());
             map.clear();
-            map.addMarker(new MarkerOptions().position(latLng).title("Current Location"));
+            //map.addMarker(new MarkerOptions().position(latLng).title("Current Location"));
             map.moveCamera(CameraUpdateFactory.newLatLng(latLng));
             //map.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng,10f));
         }
     }
 
+    @Override
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.notifications: {
+                Intent intent = new Intent(getApplicationContext(), NotificationsActivity.class);
+                startActivity(intent);
+                overridePendingTransition(0, 0);
+                return true;
+            }
+            case R.id.friends: {
+                Intent intent = new Intent(getApplicationContext(), FriendslistActivity.class);
+                startActivity(intent);
+                overridePendingTransition(0, 0);
+                return true;
+            }
+            case R.id.completed_routes: {
+                Intent intent = new Intent(getApplicationContext(), CompletedRoutesActivity.class);
+                startActivity(intent);
+                overridePendingTransition(0, 0);
+                return true;
+            }
+            case R.id.leaderboard: {
+                Intent intent = new Intent(getApplicationContext(), LeaderboardsActivity.class);
+                startActivity(intent);
+                overridePendingTransition(0, 0);
+                return true;
+            }
+		//finish everywhere
+        }
+        return false;
+	}		
 
     @Override
     public void onClick(View v) {
@@ -376,7 +435,6 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
 
             if(!startedService) {
                 Toast.makeText(getApplicationContext(), "Start service", Toast.LENGTH_SHORT).show();
-
 
                 Intent i = new Intent(getApplicationContext(), NotificationService.class);
                 i.putExtra("timer", 10);
@@ -394,5 +452,43 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
             }
 
         }
+       
+    }
+
+    @Override
+    public boolean onMarkerClick(Marker marker) {
+
+        if (lastSelected == null || !lastSelected.equals(marker)) {
+
+            info_window_container.setVisibility(View.VISIBLE);
+
+            MapObject randomDataTag = (MapObject) marker.getTag();
+
+            String lat = randomDataTag.position.latitude;
+            String lon = randomDataTag.position.longitude;
+
+            int objectType = randomDataTag.objectType;
+
+            if (objectType == 1) {
+                info_window_icon.setImageResource(R.drawable.ic_message);
+            } else if (objectType == 2) {
+                info_window_icon.setImageResource(R.drawable.ic_marker);
+            } else if (objectType == 3) {
+                info_window_icon.setImageResource(R.drawable.ic_photo);
+            } else if (objectType == 4) {
+                info_window_icon.setImageResource(R.drawable.ic_heart);
+            }
+
+            info_window_username.setText("Some user");
+            info_window_lat.setText(lat);
+            info_window_lon.setText(lon);
+
+            lastSelected = marker;
+        } else {
+            info_window_container.setVisibility(View.GONE);
+            lastSelected = null;
+        }
+
+        return false;
     }
 }

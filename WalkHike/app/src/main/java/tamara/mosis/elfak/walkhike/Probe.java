@@ -127,6 +127,8 @@ public class Probe extends AppCompatActivity {
 
 
                 MapObject m = new MapObject();
+                m.objectType = 1;
+                m.isPublic = true;
                 m.desc = descc.getText().toString();
                 m.position = p;
                 md.getInstance().AddMapObject(m);
