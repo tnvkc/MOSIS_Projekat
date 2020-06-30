@@ -31,7 +31,9 @@ public class AddFriendActivity extends AppCompatActivity {
         toolbar = (Toolbar) findViewById(R.id.add_friend_toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle("Add friend");
-
+        getSupportActionBar().setDisplayShowTitleEnabled(true);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
 
     }
 }

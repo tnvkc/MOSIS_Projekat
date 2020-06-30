@@ -59,6 +59,7 @@
 
     <string name="loggedUser_username">userName</string>
     <string name="loggedUser_email">userEmail</string>
+    <string name="loggedUser_image">userImage</string>
     <string name="loggedUser_index">userIndex</string>
 
 

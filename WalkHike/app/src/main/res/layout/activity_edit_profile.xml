@@ -16,14 +16,19 @@
         tools:layout_editor_absoluteX="0dp">
     </androidx.appcompat.widget.Toolbar>
 
-    <ImageView
-        android:id="@+id/imageView11"
+    <com.mikhaellopez.circularimageview.CircularImageView
+        android:id="@+id/imageViewProfPic"
         android:layout_width="187dp"
         android:layout_height="175dp"
+        android:src="@drawable/girl_1"
+        app:civ_border_color="#FFFFFF"
+        app:civ_border_width="1dp"
+        app:civ_shadow="true"
+        app:civ_shadow_radius="0dp"
+        app:civ_shadow_color="#3f51b5"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="30dp"
-        android:layout_below="@+id/edit_profile_toolbar"
-        app:srcCompat="@drawable/girl_1" />
+        android:layout_below="@+id/edit_profile_toolbar"/>
 
     <EditText
         android:id="@+id/editText10"
@@ -45,7 +50,7 @@
         android:inputType="textPersonName"
         android:layout_centerHorizontal="true"
         android:text="name"
-        android:layout_below="@+id/imageView11" />
+        android:layout_below="@+id/imageViewProfPic" />
 
     <ImageView
         android:id="@+id/imageViewEditPicture"
@@ -53,7 +58,7 @@
         android:layout_height="31dp"
         android:layout_marginTop="-20dp"
         android:layout_marginRight="80dp"
-        android:layout_below="@id/imageView11"
+        android:layout_below="@id/imageViewProfPic"
         android:layout_alignParentRight="true"
         app:srcCompat="@drawable/ic_edit_black_24dp" />
 
@@ -68,7 +73,7 @@
         />
 
     <Button
-        android:id="@+id/button7"
+        android:id="@+id/buttonDoneEdit"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"

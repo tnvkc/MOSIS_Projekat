@@ -59,11 +59,13 @@ public class FriendslistActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle("Friends");
         getSupportActionBar().setDisplayShowTitleEnabled(true);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
 
         buttonAddFriend=findViewById(R.id.floating_ab_add_friend);
         buttonAddFriend.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {//treba addfriendactivity da se pozove,proba samo
+            public void onClick(View v) {
                 Intent intent=new Intent(getApplicationContext(), AddFriendActivity.class);
                 startActivity(intent);
             }

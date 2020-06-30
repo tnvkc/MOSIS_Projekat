@@ -17,6 +17,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.List;
 
+import tamara.mosis.elfak.walkhike.Activities.FriendProfileActivity;
 import tamara.mosis.elfak.walkhike.modeldata.Friendship;
 import tamara.mosis.elfak.walkhike.modeldata.FriendshipData;
 import tamara.mosis.elfak.walkhike.modeldata.User;
@@ -79,18 +80,17 @@ public class UsersRecyclerAdapter extends RecyclerView.Adapter<UsersRecyclerAdap
 
             }
         });
-       /* holder.vie.setOnClickListener(new View.OnClickListener()
+
+        holder.vie.setOnClickListener(new View.OnClickListener()
         {
             @Override
             public  void onClick(View view)
             {
-                Intent sendIntent=new Intent(context,SendActivity.class);
-                sendIntent.putExtra("user_id",user_id);
-                sendIntent.putExtra("username",username);
-
-                context.startActivity(sendIntent);
+                Intent intent=new Intent(context, FriendProfileActivity.class);
+                //intent.putExtra("","");//proslediti odgovarajuceg prijatelja
+                context.startActivity(intent);
             }
-        });*/
+        });
     }
 
     private void removeItem(int adapterPosition) {

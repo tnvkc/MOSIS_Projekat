@@ -31,7 +31,9 @@ public class FriendRequestsActivity extends AppCompatActivity {
         toolbar = (Toolbar) findViewById(R.id.friend_requests_toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle("Friend requests");
-
+        getSupportActionBar().setDisplayShowTitleEnabled(true);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
 
         buttonDone = findViewById(R.id.buttonDone);
         buttonDone.setOnClickListener(new View.OnClickListener() {

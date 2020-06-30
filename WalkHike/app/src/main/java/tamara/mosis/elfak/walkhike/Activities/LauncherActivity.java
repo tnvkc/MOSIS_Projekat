@@ -11,10 +11,12 @@ import android.os.Bundle;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
+
 import tamara.mosis.elfak.walkhike.R;
 import tamara.mosis.elfak.walkhike.modeldata.Scores;
 import tamara.mosis.elfak.walkhike.modeldata.User;
 import tamara.mosis.elfak.walkhike.modeldata.UserData;
+import android.os.Handler;
 
 public class LauncherActivity extends AppCompatActivity {
 
@@ -36,6 +38,7 @@ public class LauncherActivity extends AppCompatActivity {
         SharedPreferences sharedPref = getApplicationContext().getSharedPreferences( "Userdata", Context.MODE_PRIVATE);
         String username = sharedPref.getString(getString(R.string.loggedUser_username), "EMPTY");
         String emaill = sharedPref.getString(getString(R.string.loggedUser_email), "EMPTY");
+        String image = sharedPref.getString(getString(R.string.loggedUser_image), "EMPTY");
         int indexx  = sharedPref.getInt(getString(R.string.loggedUser_index), -1);
 
         Scores s = null;
@@ -51,20 +54,17 @@ public class LauncherActivity extends AppCompatActivity {
             startActivity(loginIntent);
             finish();
         }
-        else
-        {
-           /* SharedPreferences.Editor editor = sharedPref.edit();
+        else {
+            new Handler().postDelayed(new Runnable() {
 
-            editor.remove(getString(R.string.loggedUser_email));
-            editor.remove(getString(R.string.loggedUser_username));
+                @Override
+                public void run() {
+                    Intent intent = new Intent(LauncherActivity.this, LoginActivity.class);
+                    startActivity(intent);
 
-            editor.remove(getString(R.string.loggedUser_index));
-            editor.commit();
-
-            firebaseAuth.signOut();*/
-
-            Intent loginIntent=new Intent(getApplicationContext(),LoginActivity.class);
-            startActivity(loginIntent);
+                    finish();
+                }
+            }, 1500);
         }
     }
 }

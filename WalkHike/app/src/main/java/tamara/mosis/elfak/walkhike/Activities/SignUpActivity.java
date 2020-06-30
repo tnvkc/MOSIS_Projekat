@@ -134,26 +134,6 @@ public class SignUpActivity extends AppCompatActivity {
                             s.useer = email;
                             scoresData.getInstance().AddScore(s);
 
-
-
-                       /* String user_id = firebaseAuth.getCurrentUser().getUid();
-
-                        String token_id = FirebaseInstanceId.getInstance().getToken();
-                        Map<String, Object> userMap = new HashMap<>();
-                        userMap.put("name", name);
-                        userMap.put("token_id", token_id);
-                        firestore.collection("Users").document(user_id).set(userMap).addOnSuccessListener(new OnSuccessListener<Void>() {
-                            @Override
-                            public void onSuccess(Void aVoid) {
-                                progress.dismiss();
-
-                                Toast.makeText(getApplicationContext(), "created account! " + txtEmail.getText() + txtPassword.getText(), Toast.LENGTH_SHORT).show();
-                                Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-                                startActivity(intent);
-                                finish();
-                            }
-                        });*/
-
                     }
                     else
                     {
@@ -188,6 +168,7 @@ public class SignUpActivity extends AppCompatActivity {
                         SharedPreferences.Editor editor = sharedPref.edit();
                         editor.putString(getString(R.string.loggedUser_email), uu.email);
                         editor.putString(getString(R.string.loggedUser_username), uu.username);
+                        editor.putString(getString(R.string.loggedUser_image), uu.image);
 
                         editor.putInt(getString(R.string.loggedUser_index), indexx);
                         editor.commit();

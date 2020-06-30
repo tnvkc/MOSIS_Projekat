@@ -65,6 +65,7 @@ public class FriendsFragment extends Fragment {
         SharedPreferences sharedPref = getContext().getSharedPreferences( "Userdata", Context.MODE_PRIVATE);
         String username = sharedPref.getString(getString(R.string.loggedUser_username), "EMPTY");
         String email = sharedPref.getString(getString(R.string.loggedUser_email), "EMPTY");
+
         int indexx  = sharedPref.getInt(getString(R.string.loggedUser_index), -1);
 
         String index1 = email; //"email1@email.com";

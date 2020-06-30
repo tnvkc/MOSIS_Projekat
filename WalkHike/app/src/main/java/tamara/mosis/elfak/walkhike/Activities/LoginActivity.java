@@ -150,6 +150,8 @@ public class LoginActivity extends AppCompatActivity {
                         SharedPreferences.Editor editor = sharedPref.edit();
                         editor.putString(getString(R.string.loggedUser_email), uu.email);
                         editor.putString(getString(R.string.loggedUser_username), uu.username);
+                        editor.putString(getString(R.string.loggedUser_image), uu.image);
+
 
                         editor.putInt(getString(R.string.loggedUser_index), indexx);
                         editor.commit();

@@ -128,6 +128,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
         SharedPreferences sharedPref = getApplicationContext().getSharedPreferences( "Userdata", Context.MODE_PRIVATE);
         String username = sharedPref.getString(getString(R.string.loggedUser_username), "EMPTY");
         String emaill = sharedPref.getString(getString(R.string.loggedUser_email), "EMPTY");
+        String image = sharedPref.getString(getString(R.string.loggedUser_image), "EMPTY");
 
         getDeviceLocation();
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.main_map_fragment);

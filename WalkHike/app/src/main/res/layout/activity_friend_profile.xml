@@ -5,7 +5,24 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".Activities.FriendProfileActivity">
-<!--za prepravku-->
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/friend_profile_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:layout_alignParentTop="true"
+        android:background="?attr/toolbarColor"
+        android:minHeight="?attr/actionBarSize">
+    </androidx.appcompat.widget.Toolbar>
+
+    <ImageView
+        android:id="@+id/imageView13"
+        android:layout_width="187dp"
+        android:layout_height="175dp"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="10dp"
+        app:srcCompat="@drawable/girl_1"
+        android:layout_below="@id/friend_profile_toolbar"
+        />
     <LinearLayout
         android:id="@+id/llabout"
         android:layout_width="146dp"
@@ -73,13 +90,7 @@
 
 
 
-    <ImageView
-        android:id="@+id/imageView13"
-        android:layout_width="187dp"
-        android:layout_height="175dp"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="10dp"
-        app:srcCompat="@drawable/girl_1" />
+
 
     <TextView
         android:id="@+id/textViewName"

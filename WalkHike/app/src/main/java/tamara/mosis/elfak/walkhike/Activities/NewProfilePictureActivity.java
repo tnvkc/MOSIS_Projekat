@@ -10,6 +10,7 @@ import androidx.core.content.ContextCompat;
 import androidx.core.content.FileProvider;
 
 import android.Manifest;
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
@@ -50,19 +51,19 @@ import tamara.mosis.elfak.walkhike.modeldata.UserData;
 
 public class NewProfilePictureActivity extends AppCompatActivity {
 
-    Integer[] imgid={R.drawable.ic_photo_camera_black_24dp,R.drawable.ic_image_black_24dp};
+    Integer[] imgid = {R.drawable.ic_photo_camera_black_24dp, R.drawable.ic_image_black_24dp};
     ListView list;
     CustomListView adapter;
-    static final int REQUEST_TAKE_PHOTO=1;
-    static final int GALLERY_REQUEST_CODE=2;
+    static final int REQUEST_TAKE_PHOTO = 1234;
+    static final int GALLERY_REQUEST_CODE = 12345;
 
     FirebaseStorage storage;
     StorageReference storageReference;
 
     UserData userData;
     Uri imageUri;
-    String firestorageUri=null;
-    String currentPhotoPath;
+    String firestorageUri = null;
+    //String imageID;
     ImageView imageView;
     Toolbar toolbar;
     Button btnSave;
@@ -78,18 +79,21 @@ public class NewProfilePictureActivity extends AppCompatActivity {
             setTheme(R.style.AppThemeLight);
         setContentView(R.layout.activity_new_profile_picture);
 
-        storage = FirebaseStorage.getInstance();
-        storageReference = storage.getReference();
-
-        btnSave=findViewById(R.id.buttonSave);
-        imageView=findViewById(R.id.imageViewChosen);
         toolbar = (Toolbar) findViewById(R.id.new_profile_picture_toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle("Insert profile picture");
+        getSupportActionBar().setDisplayShowTitleEnabled(true);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
 
-        if(ContextCompat.checkSelfPermission(NewProfilePictureActivity.this, Manifest.permission.CAMERA)!= PackageManager.PERMISSION_GRANTED)
-        {
-            ActivityCompat.requestPermissions(NewProfilePictureActivity.this,new String[]{Manifest.permission.CAMERA},REQUEST_TAKE_PHOTO);
+        storage = FirebaseStorage.getInstance();
+        storageReference = storage.getReference();
+
+        btnSave = findViewById(R.id.buttonSave);
+        imageView = findViewById(R.id.imageViewChosen);
+
+        if (ContextCompat.checkSelfPermission(NewProfilePictureActivity.this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(NewProfilePictureActivity.this, new String[]{Manifest.permission.CAMERA}, REQUEST_TAKE_PHOTO);
         }
 
         list = (ListView) findViewById(android.R.id.list);
@@ -103,12 +107,11 @@ public class NewProfilePictureActivity extends AppCompatActivity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 if (position == 0) {
                     openCameraTocaptureImage();
-                } else
-                {
+                } else {
                     Intent intent = new Intent();
                     intent.setType("image/*");
                     intent.setAction(Intent.ACTION_GET_CONTENT);
-                    startActivityForResult(Intent.createChooser(intent,"Choose an image"),GALLERY_REQUEST_CODE);
+                    startActivityForResult(Intent.createChooser(intent, "Choose an image"), GALLERY_REQUEST_CODE);
                     Toast.makeText(NewProfilePictureActivity.this, "gallery", Toast.LENGTH_LONG).show();
                 }
             }
@@ -120,21 +123,23 @@ public class NewProfilePictureActivity extends AppCompatActivity {
                 SharedPreferences sharedPref = getApplicationContext().getSharedPreferences("Userdata", Context.MODE_PRIVATE);
                 String username = sharedPref.getString(getString(R.string.loggedUser_username), "EMPTY");
                 String email = sharedPref.getString(getString(R.string.loggedUser_email), "EMPTY");
+                String image = sharedPref.getString(getString(R.string.loggedUser_image), "EMPTY");
+
                 int indexx = sharedPref.getInt(getString(R.string.loggedUser_index), -1);
                 LoggedUser = new User();
                 LoggedUser.username = username;
                 LoggedUser.email = email;
+                LoggedUser.image = image;
 
                 uploadImage(indexx);
 
-                finish();
             }
         });
 
     }
 
     private void uploadImage(int index) {
-        if(imageUri != null)
+        if (imageUri != null)//image uploaded
         {
             // Code for showing progressDialog while uploading
             ProgressDialog progressDialog
@@ -162,9 +167,21 @@ public class NewProfilePictureActivity extends AppCompatActivity {
                                     ref.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                                         @Override
                                         public void onSuccess(Uri uri) {
-                                            firestorageUri=String.valueOf(uri);
-                                            LoggedUser.image=firestorageUri;
-                                            userData.getInstance().updateUser(index,LoggedUser);
+                                            firestorageUri = String.valueOf(uri);
+                                            LoggedUser.image = firestorageUri;
+                                            userData.getInstance().updateUser(index, LoggedUser);
+
+                                            Context context = getApplicationContext();
+                                            SharedPreferences sharedPref = context.getSharedPreferences(
+                                                    "Userdata", Context.MODE_PRIVATE);
+                                            SharedPreferences.Editor editor = sharedPref.edit();
+                                            editor.putString(getString(R.string.loggedUser_image), LoggedUser.image);
+
+                                            Intent resultIntent = new Intent();
+                                            resultIntent.putExtra("img", LoggedUser.image);
+                                            setResult(Activity.RESULT_OK, resultIntent);
+                                            finish();
+
                                         }
                                     });
                                     // Image uploaded successfully
@@ -212,6 +229,94 @@ public class NewProfilePictureActivity extends AppCompatActivity {
 
 
         }
+        /*else//photo taken
+        {
+            // Code for showing progressDialog while uploading
+            ProgressDialog progressDialog
+                    = new ProgressDialog(this);
+            progressDialog.setTitle("Uploading...");
+            progressDialog.show();
+
+            // Defining the child of storageReference
+            StorageReference ref
+                    = storageReference
+                    .child(
+                            "images/"
+                                    + UUID.randomUUID().toString());
+
+            // adding listeners on upload
+            // or failure of image
+            ref.putFile(imageID)
+                    .addOnSuccessListener(
+                            new OnSuccessListener<UploadTask.TaskSnapshot>() {
+
+                                @Override
+                                public void onSuccess(
+                                        UploadTask.TaskSnapshot taskSnapshot) {
+
+                                    ref.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                                        @Override
+                                        public void onSuccess(Uri uri) {
+                                            firestorageUri=String.valueOf(uri);
+                                            LoggedUser.image=firestorageUri;
+                                            userData.getInstance().updateUser(index,LoggedUser);
+
+                                            Context context = getApplicationContext();
+                                            SharedPreferences sharedPref = context.getSharedPreferences(
+                                                    "Userdata", Context.MODE_PRIVATE);
+                                            SharedPreferences.Editor editor = sharedPref.edit();
+                                            editor.putString(getString(R.string.loggedUser_image), LoggedUser.image);
+
+                                            Intent resultIntent = new Intent();
+                                            resultIntent.putExtra("img", LoggedUser.image);
+                                            setResult(Activity.RESULT_OK, resultIntent);
+                                            finish();
+
+                                        }
+                                    });
+                                    // Image uploaded successfully
+                                    // Dismiss dialog
+                                    progressDialog.dismiss();
+                                    Toast
+                                            .makeText(NewProfilePictureActivity.this,
+                                                    "Image Uploaded!!",
+                                                    Toast.LENGTH_SHORT)
+                                            .show();
+
+                                }
+                            })
+
+                    .addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+
+                            // Error, Image not uploaded
+                            progressDialog.dismiss();
+                            Toast
+                                    .makeText(NewProfilePictureActivity.this,
+                                            "Failed " + e.getMessage(),
+                                            Toast.LENGTH_SHORT)
+                                    .show();
+                        }
+                    })
+                    .addOnProgressListener(
+                            new OnProgressListener<UploadTask.TaskSnapshot>() {
+
+                                // Progress Listener for loading
+                                // percentage on the dialog box
+                                @Override
+                                public void onProgress(
+                                        UploadTask.TaskSnapshot taskSnapshot) {
+                                    double progress
+                                            = (100.0
+                                            * taskSnapshot.getBytesTransferred()
+                                            / taskSnapshot.getTotalByteCount());
+                                    progressDialog.setMessage(
+                                            "Uploaded "
+                                                    + (int) progress + "%");
+                                }
+                            });*/
+
     }
 
 
@@ -219,10 +324,12 @@ public class NewProfilePictureActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if(requestCode==REQUEST_TAKE_PHOTO)
+        if(requestCode==REQUEST_TAKE_PHOTO && resultCode==RESULT_OK )
         {
             Bitmap bmp=(Bitmap)data.getExtras().get("data");
             imageView.setImageBitmap(bmp);
+            //imageUri=data.getData();
+            imageUri = null;
         }
         else if(requestCode==GALLERY_REQUEST_CODE && resultCode==RESULT_OK && data!=null && data.getData() != null)
             imageUri=data.getData();

@@ -5,6 +5,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.appcompat.widget.Toolbar;
 
+import android.app.Activity;
+import android.app.Instrumentation;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
@@ -19,6 +21,8 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -26,12 +30,14 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.gson.internal.$Gson$Preconditions;
+import com.mikhaellopez.circularimageview.CircularImageView;
 
 import java.util.HashMap;
 import java.util.Map;
 
 import tamara.mosis.elfak.walkhike.CustomListView;
 import tamara.mosis.elfak.walkhike.R;
+import java.lang.Object;
 
 public class ProfileActivity extends AppCompatActivity {
 
@@ -40,15 +46,15 @@ public class ProfileActivity extends AppCompatActivity {
     ListView list;
     Toolbar toolbar;
     TextView textViewName;
-    ImageView profilePicture;
-
+    CircularImageView profilePic;
     Button Logout;
+
+    SharedPreferences sharedPref;
 
     private ProgressDialog progress;
     private FirebaseAuth mfirebaseAuth;
     private FirebaseFirestore firestore;//yt
     private String userID;//yt
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,30 +65,23 @@ public class ProfileActivity extends AppCompatActivity {
             setTheme(R.style.AppThemeLight);
         setContentView(R.layout.activity_profile);
 
-       textViewName=findViewById(R.id.textViewName);
-       profilePicture=findViewById(R.id.imageViewProfilePic);
 
-        mfirebaseAuth = FirebaseAuth.getInstance();//i yt
-        firestore=FirebaseFirestore.getInstance();//yt
-        //Donsfl2GlXYkLvPvrhsWSAZAzvg2
-        userID=mfirebaseAuth.getCurrentUser().getUid();//yt
-        firestore.collection("Users").document(userID).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-            @Override
-              public void onSuccess(DocumentSnapshot documentSnapshot) {
-                    String username=documentSnapshot.getString("name");
-                    textViewName.setText(username);
-                    //profilePicture.setImageURI(documentSnapshot.getString("image"));
-              }
-           }
-        );
+        toolbar = (Toolbar) findViewById(R.id.profile_toolbar);
+        setSupportActionBar(toolbar);
 
-       final FirebaseUser firebaseUser = mfirebaseAuth.getCurrentUser();
-
-       toolbar = (Toolbar) findViewById(R.id.profile_toolbar);
-       setSupportActionBar(toolbar);
-       getSupportActionBar().setTitle("Profile");
+        getSupportActionBar().setTitle("Profile");
 
         getSupportActionBar().setDisplayShowTitleEnabled(true);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+
+       textViewName=findViewById(R.id.textViewName);
+        profilePic = findViewById(R.id.imageViewProfilePic);
+
+
+       mfirebaseAuth=FirebaseAuth.getInstance();
+       final FirebaseUser firebaseUser = mfirebaseAuth.getCurrentUser();
+
        list = (ListView) findViewById(R.id.listview_profile_options);
         Context context = getApplicationContext();
        CustomListView adapter = new CustomListView(this, context.getResources().getStringArray(R.array.profile_options), imgid, false);
@@ -94,8 +93,8 @@ public class ProfileActivity extends AppCompatActivity {
                 Intent intent;
                 switch (position) {
                     case 0:
-                        intent = new Intent(getApplicationContext(), EditProfileActivity.class);
-                        startActivity(intent);
+                        Intent editProf =new Intent(getApplicationContext(),EditProfileActivity.class);
+                        startActivityForResult(editProf,123);
                         break;
                     case 1:
                         intent = new Intent(getApplicationContext(), SettingsActivity.class);
@@ -120,7 +119,7 @@ public class ProfileActivity extends AppCompatActivity {
                         });*/
                         if(firebaseUser != null)
                         {
-                            SharedPreferences sharedPref = getApplicationContext().getSharedPreferences( "Userdata", Context.MODE_PRIVATE);
+                             sharedPref = getApplicationContext().getSharedPreferences( "Userdata", Context.MODE_PRIVATE);
 
 
                             SharedPreferences.Editor editor = sharedPref.edit();
@@ -151,5 +150,21 @@ public class ProfileActivity extends AppCompatActivity {
         });
 
 
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        switch(requestCode) {
+            case (123) : {
+                if (resultCode == Activity.RESULT_OK) {
+                    String imgUrl = data.getStringExtra("img");
+                    RequestOptions placeholderOpt = new RequestOptions();
+                    placeholderOpt.placeholder(R.drawable.girl_1);
+                    Glide.with(getApplicationContext()).setDefaultRequestOptions(placeholderOpt).load(imgUrl).into(profilePic);
+                }
+                break;
+            }
+        }
     }
 }
