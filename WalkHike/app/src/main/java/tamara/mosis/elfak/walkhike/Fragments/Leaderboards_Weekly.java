@@ -17,12 +17,14 @@ import tamara.mosis.elfak.walkhike.Activities.Leaderboard_Entry_Activity;
 import tamara.mosis.elfak.walkhike.Leaderboard_Entry_Distance;
 import tamara.mosis.elfak.walkhike.LeaderboardsListAdapter;
 import tamara.mosis.elfak.walkhike.R;
+import tamara.mosis.elfak.walkhike.modeldata.Scores;
 
 public class Leaderboards_Weekly extends Fragment {
 
     ListView leaderboard_list;
     View view;
     private int activity_or_distance;
+    private ArrayList<Scores> skorovi;
 
     public int getActivity_or_distance() {
         return activity_or_distance;
@@ -34,8 +36,9 @@ public class Leaderboards_Weekly extends Fragment {
 
     public Leaderboards_Weekly() {}
 
-    public Leaderboards_Weekly(int activ_dist) {
+    public Leaderboards_Weekly(int activ_dist, ArrayList<Scores> skorovi) {
         this.activity_or_distance = activ_dist;
+        this.skorovi = skorovi;
     }
 
     @Nullable
@@ -56,7 +59,7 @@ public class Leaderboards_Weekly extends Fragment {
 
     private ArrayList<Leaderboard_Entry> prepareTestData() {
 
-        Leaderboard_Entry entry1;
+        /*Leaderboard_Entry entry1;
         Leaderboard_Entry entry2;
         Leaderboard_Entry entry3;
         Leaderboard_Entry entry4;
@@ -104,7 +107,20 @@ public class Leaderboards_Weekly extends Fragment {
         entries.add(entry8);
         entries.add(entry9);
         entries.add(entry10);
+*/
+        ArrayList<Leaderboard_Entry> entries = new ArrayList<>();
 
+        for(int i =0; i<skorovi.size(); i++)
+        {
+            if(activity_or_distance == 1)
+            {
+                entries.add(new Leaderboard_Entry_Activity(skorovi.get(i).useer, skorovi.get(i).weeklyActivity));
+            }
+            else
+            {
+                entries.add(new Leaderboard_Entry_Distance(skorovi.get(i).useer, skorovi.get(i).weeklyDistance));
+            }
+        }
         return entries;
     }
 

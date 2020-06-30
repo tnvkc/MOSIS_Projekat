@@ -1,5 +1,7 @@
 package tamara.mosis.elfak.walkhike.Fragments;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,11 +19,18 @@ import tamara.mosis.elfak.walkhike.Activities.Leaderboard_Entry_Activity;
 import tamara.mosis.elfak.walkhike.Leaderboard_Entry_Distance;
 import tamara.mosis.elfak.walkhike.LeaderboardsListAdapter;
 import tamara.mosis.elfak.walkhike.R;
+import tamara.mosis.elfak.walkhike.modeldata.Friendship;
+import tamara.mosis.elfak.walkhike.modeldata.FriendshipData;
+import tamara.mosis.elfak.walkhike.modeldata.Scores;
+import tamara.mosis.elfak.walkhike.modeldata.ScoresData;
 
 public class Leaderboards_AllTime extends Fragment {
 
     ListView leaderboard_list;
     View view;
+
+    private ArrayList<Scores> skorovi;
+
 
     private int activity_or_distance;
 
@@ -35,8 +44,9 @@ public class Leaderboards_AllTime extends Fragment {
 
     public Leaderboards_AllTime() {}
 
-    public Leaderboards_AllTime(int activ_or_dist) {
+    public Leaderboards_AllTime(int activ_or_dist, ArrayList<Scores> skorovi) {
         this.activity_or_distance = activ_or_dist;
+        this.skorovi = skorovi;
     }
 
     @Nullable
@@ -47,7 +57,7 @@ public class Leaderboards_AllTime extends Fragment {
         //podesavanje liste
         leaderboard_list = view.findViewById(R.id.leaderboard_list);
 
-        ArrayList<Leaderboard_Entry> entries = prepareTestData();
+        ArrayList<Leaderboard_Entry> entries =  prepareTestData();
 
         LeaderboardsListAdapter listAdapter = new LeaderboardsListAdapter(getContext(), R.layout.leaderboard_entry_view, entries);
         leaderboard_list.setAdapter(listAdapter);
@@ -58,7 +68,10 @@ public class Leaderboards_AllTime extends Fragment {
 
     private ArrayList<Leaderboard_Entry> prepareTestData() {
 
-        Leaderboard_Entry entry1;
+
+
+
+     /*   Leaderboard_Entry entry1;
         Leaderboard_Entry entry2;
         Leaderboard_Entry entry3;
         Leaderboard_Entry entry4;
@@ -67,11 +80,11 @@ public class Leaderboards_AllTime extends Fragment {
         Leaderboard_Entry entry7;
         Leaderboard_Entry entry8;
         Leaderboard_Entry entry9;
-        Leaderboard_Entry entry10;
+        Leaderboard_Entry entry10;*/
 
         if (activity_or_distance == 1) {
             //activity tab
-            entry1 = new Leaderboard_Entry_Activity("Marko Rakic", 2226580);
+            /*entry1 = new Leaderboard_Entry_Activity("Marko Rakic", 2226580);
             entry2 = new Leaderboard_Entry_Activity("Nina Velickovic", 2106002);
             entry3 = new Leaderboard_Entry_Activity("Jovan Milic", 592220);
             entry4 = new Leaderboard_Entry_Activity("Dusica Nikolic", 311890);
@@ -80,10 +93,10 @@ public class Leaderboards_AllTime extends Fragment {
             entry7 = new Leaderboard_Entry_Activity("Dragan Dragic", 8814);
             entry8 = new Leaderboard_Entry_Activity("Sara Minic", 1532);
             entry9 = new Leaderboard_Entry_Activity("Luka Vukic",  1222);
-            entry10 = new Leaderboard_Entry_Activity("Petar Nakic", 10);
+            entry10 = new Leaderboard_Entry_Activity("Petar Nakic", 10);*/
         } else {
             //distance tab
-            entry1 = new Leaderboard_Entry_Distance("Milica Vukic", 2223580.0);
+           /* entry1 = new Leaderboard_Entry_Distance("Milica Vukic", 2223580.0);
             entry2 = new Leaderboard_Entry_Distance("Jovan Milic", 1112390.2);
             entry3 = new Leaderboard_Entry_Distance("Nina Velickovic",  222222.93);
             entry4 = new Leaderboard_Entry_Distance("Dusica Nikolic",  121005.0);
@@ -92,11 +105,23 @@ public class Leaderboards_AllTime extends Fragment {
             entry7 = new Leaderboard_Entry_Distance("Dusan Jovic", 1507.0);
             entry8 = new Leaderboard_Entry_Distance("Sandra Nikolic", 1444.4);
             entry9 = new Leaderboard_Entry_Distance("Lela Rakic", 1340.9);
-            entry10 = new Leaderboard_Entry_Distance("Petar Nakic", 10);
+            entry10 = new Leaderboard_Entry_Distance("Petar Nakic", 10);*/
         }
 
         ArrayList<Leaderboard_Entry> entries = new ArrayList<>();
-        entries.add(entry1);
+
+        for(int i =0; i<skorovi.size(); i++)
+        {
+            if(activity_or_distance == 1)
+            {
+                entries.add(new Leaderboard_Entry_Activity(skorovi.get(i).useer, skorovi.get(i).alltimeActivity));
+            }
+            else
+            {
+                entries.add(new Leaderboard_Entry_Distance(skorovi.get(i).useer, skorovi.get(i).alltimeDistance));
+            }
+        }
+        /*entries.add(entry1);
         entries.add(entry2);
         entries.add(entry3);
         entries.add(entry4);
@@ -105,7 +130,7 @@ public class Leaderboards_AllTime extends Fragment {
         entries.add(entry7);
         entries.add(entry8);
         entries.add(entry9);
-        entries.add(entry10);
+        entries.add(entry10);*/
 
         return entries;
     }
