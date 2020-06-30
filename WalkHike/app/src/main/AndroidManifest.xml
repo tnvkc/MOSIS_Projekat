@@ -6,7 +6,9 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.CAMERA" />
-    <uses-feature android:name="android.hardware.camera2"
+
+    <uses-feature
+        android:name="android.hardware.camera2"
         android:required="true" />
     <uses-feature
         android:glEsVersion="0x00030000"
@@ -22,7 +24,10 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppThemeLight">
-        <activity android:name=".Probe_Friendship_Activity"></activity>
+        <activity android:name=".Activities.LauncherActivity">
+
+        </activity>
+        <activity android:name=".Probe_Friendship_Activity" />
         <activity android:name=".Activities.NotificationActivity">
             <intent-filter>
                 <action android:name="tamara.mosis.elfak.walknhike.TARGETNOTIFICATION" />
@@ -38,7 +43,6 @@
             android:value="required" />
 
         <activity android:name=".ShowArObjectActivity" />
-
         <activity android:name=".Probe" />
 
         <meta-data
@@ -67,10 +71,7 @@
         <activity android:name=".Activities.LeaderboardsActivity" />
         <activity android:name=".Activities.NotificationsActivity" />
         <activity android:name=".Activities.ProfileActivity" />
-        <activity android:name=".Activities.MainActivity" >
-
-        </activity>
-
+        <activity android:name=".Activities.MainActivity"></activity>
 
         <service android:name=".FirebaseMessagingService">
             <intent-filter>

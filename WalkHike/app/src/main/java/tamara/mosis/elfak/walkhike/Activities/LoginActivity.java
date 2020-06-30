@@ -209,26 +209,6 @@ public class LoginActivity extends AppCompatActivity {
                         startActivity(intent);
                         finish();
                     }
-                    // Toast.makeText(getApplicationContext(), "loged in! " + txtEmail.getText() +  txtPassword.getText(), Toast.LENGTH_SHORT).show();
-                   /* firebaseAuth.getCurrentUser().getIdToken(true).addOnSuccessListener(new OnSuccessListener<GetTokenResult>() {
-                        @Override
-                        public void onSuccess(GetTokenResult getTokenResult) {
-                            String token_id= FirebaseInstanceId.getInstance().getToken();
-                            String currentId= firebaseAuth.getCurrentUser().getUid();
-                            Map<String,Object> tokenMap=new HashMap<>();
-                            tokenMap.put("token_id", token_id);
-
-                            firestore.collection("Users").document(currentId).update(tokenMap).addOnSuccessListener(new OnSuccessListener<Void>() {
-                                @Override
-                                public void onSuccess(Void aVoid) {
-                                    Intent intent=new Intent(getApplicationContext(), MainActivity.class);
-                                    startActivity(intent);
-                                    finish();
-                                }
-                            });
-
-                        }
-                    });*/
 
 
                 }
