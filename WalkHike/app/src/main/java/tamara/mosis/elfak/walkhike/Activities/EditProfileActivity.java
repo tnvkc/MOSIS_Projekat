@@ -7,6 +7,7 @@ import androidx.appcompat.widget.Toolbar;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -78,5 +79,14 @@ public class EditProfileActivity extends AppCompatActivity {
                 break;
             }
         }
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem menuItem) {
+        if (menuItem.getItemId() == android.R.id.home) {
+
+            finish();
+        }
+        return super.onOptionsItemSelected(menuItem);
     }
 }

@@ -30,6 +30,7 @@ public class FriendslistActivity extends AppCompatActivity {
         //return false;
     }
 
+
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
 
@@ -42,6 +43,10 @@ public class FriendslistActivity extends AppCompatActivity {
         }
         Toast.makeText(getApplicationContext(), "klik na menu", Toast.LENGTH_SHORT);
 
+        if (item.getItemId() == android.R.id.home) {
+
+            finish();
+        }
 
         return super.onOptionsItemSelected(item);
     }
@@ -105,5 +110,9 @@ public class FriendslistActivity extends AppCompatActivity {
                 return false;
             }
         });
+
+
     }
+
+
 }
