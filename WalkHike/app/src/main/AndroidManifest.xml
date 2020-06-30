@@ -25,7 +25,11 @@
         android:supportsRtl="true"
         android:theme="@style/AppThemeLight">
         <activity android:name=".Activities.LauncherActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
 
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
         </activity>
         <activity android:name=".Probe_Friendship_Activity" />
         <activity android:name=".Activities.NotificationActivity">
@@ -59,18 +63,17 @@
         <activity android:name=".Activities.NewProfilePictureActivity" />
         <activity android:name=".Activities.SignUpActivity" />
         <activity android:name=".Activities.LoginActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
         <activity android:name=".Activities.FriendslistActivity" />
         <activity android:name=".Activities.AddNewObjectActivity" />
         <activity android:name=".Activities.CompletedRoutesActivity" />
         <activity android:name=".Activities.LeaderboardsActivity" />
         <activity android:name=".Activities.NotificationsActivity" />
-        <activity android:name=".Activities.ProfileActivity" />
+        <activity android:name=".Activities.ProfileActivity" >
+
+        </activity>
+
         <activity android:name=".Activities.MainActivity"></activity>
 
         <service android:name=".FirebaseMessagingService">

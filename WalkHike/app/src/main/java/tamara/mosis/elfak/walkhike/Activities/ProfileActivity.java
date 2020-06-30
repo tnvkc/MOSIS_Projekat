@@ -14,6 +14,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -39,6 +40,7 @@ public class ProfileActivity extends AppCompatActivity {
     ListView list;
     Toolbar toolbar;
     TextView textViewName;
+    ImageView profilePicture;
 
     Button Logout;
 
@@ -58,6 +60,8 @@ public class ProfileActivity extends AppCompatActivity {
         setContentView(R.layout.activity_profile);
 
        textViewName=findViewById(R.id.textViewName);
+       profilePicture=findViewById(R.id.imageViewProfilePic);
+
         mfirebaseAuth = FirebaseAuth.getInstance();//i yt
         firestore=FirebaseFirestore.getInstance();//yt
         //Donsfl2GlXYkLvPvrhsWSAZAzvg2
@@ -67,6 +71,7 @@ public class ProfileActivity extends AppCompatActivity {
               public void onSuccess(DocumentSnapshot documentSnapshot) {
                     String username=documentSnapshot.getString("name");
                     textViewName.setText(username);
+                    //profilePicture.setImageURI(documentSnapshot.getString("image"));
               }
            }
         );
