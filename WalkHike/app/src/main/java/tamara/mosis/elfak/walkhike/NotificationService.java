@@ -70,6 +70,8 @@ public class NotificationService extends IntentService implements MapObjectData.
     int numberOfFriendNotis;
     int numberOfObjectNotis;
 
+    float meters;
+
 
     MapObjectData MoD;
     PositionsData PD;
@@ -109,7 +111,7 @@ public class NotificationService extends IntentService implements MapObjectData.
         friendshipData.getInstance().setNewItemEventListener(this);
 
         Log.v("timer", "service started");
-
+        meters = 0;
 
         SharedPreferences sharedPref = getApplicationContext().getSharedPreferences("Userdata", Context.MODE_PRIVATE);
         String username = sharedPref.getString(getString(R.string.loggedUser_username), "EMPTY");
@@ -272,10 +274,12 @@ public class NotificationService extends IntentService implements MapObjectData.
             float dist[] = new float[5];
             Location.distanceBetween(latLng.latitude, latLng.longitude, lastPos.latitude, lastPos.longitude, dist);
            // dist[0] *= 0.000621371192f;
-            int diiist = (int) dist[0];
-            if(diiist > 0) {
+
+            meters +=dist[0];
+            if(meters > 10) {
                 userData.getInstance().updateUserPosition(LoggedUser.email, p);
-                scoresData.getInstance().updateScoreDistance(diiist, LoggedUser);
+                scoresData.getInstance().updateScoreDistance((int)meters, LoggedUser);
+                meters = 0;
             }
 
             //findNearbyUsers();
