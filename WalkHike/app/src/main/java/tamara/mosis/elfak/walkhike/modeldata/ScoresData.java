@@ -50,14 +50,25 @@ public class ScoresData {
         updateListener = listener;
     }
     public interface ListUpdatedEventListener {
-        void onListUpdated();
+        void onScoreUpdated(Scores ss);
+    }
+
+    ReadyEventListener probaList;
+    public void setReadyList(ReadyEventListener listener) {
+        probaList = listener;
+    }
+    public interface ReadyEventListener {
+        void onReady();
     }
 
     ValueEventListener parentEventListener = new ValueEventListener() {
         @Override
         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-            if (updateListener != null)
-                updateListener.onListUpdated();
+            //if (updateListener != null)
+               // updateListener.onScoreUpdated();
+
+            if(probaList != null)
+                probaList.onReady();
         }
 
         @Override
@@ -76,8 +87,8 @@ public class ScoresData {
                 myScore.key = myScoreKey;
                 Scores.add(myScore);
                 ScoresMapping.put(myScoreKey, Scores.size() - 1);
-                if (updateListener != null)
-                    updateListener.onListUpdated();
+                //if (updateListener != null)
+                  //  updateListener.onScoreUpdated();
             }
         }
 
@@ -94,7 +105,7 @@ public class ScoresData {
                 ScoresMapping.put(myScoreKey, Scores.size() - 1);
             }
             if (updateListener != null)
-                updateListener.onListUpdated();
+                updateListener.onScoreUpdated(myScore);
         }
 
         @Override
@@ -105,8 +116,8 @@ public class ScoresData {
                 Scores.remove(index);
                 recreateKeyIndexMapping();
             }
-            if (updateListener != null)
-                updateListener.onListUpdated();
+           // if (updateListener != null)
+               // updateListener.onScoreUpdated();
         }
 
         @Override

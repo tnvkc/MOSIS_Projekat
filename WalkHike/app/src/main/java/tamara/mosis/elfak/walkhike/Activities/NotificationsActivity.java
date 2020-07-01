@@ -15,6 +15,7 @@ import android.widget.ListView;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 
 import tamara.mosis.elfak.walkhike.Fragments.FriendRequestsFragment;
 import tamara.mosis.elfak.walkhike.Notification;
@@ -22,7 +23,7 @@ import tamara.mosis.elfak.walkhike.NotificationService;
 import tamara.mosis.elfak.walkhike.NotificationsListAdapter;
 import tamara.mosis.elfak.walkhike.R;
 
-public class NotificationsActivity extends AppCompatActivity {
+public class NotificationsActivity extends AppCompatActivity implements NotificationService.ListenerForObjectNotis {
 
     ListView notification_list;
     BottomNavigationView bottom_navigation_menu;
@@ -38,6 +39,8 @@ public class NotificationsActivity extends AppCompatActivity {
             setTheme(R.style.AppThemeLight);
         setContentView(R.layout.activity_notifications);
         notification_list = findViewById(R.id.notification_list);
+
+        NotificationService.setUpListenerObjectNoti(this);
         FriendRequestsFragment.setUpListener(new FriendRequestsFragment.MyListener() {
             @Override
             public void onListUpdated() {
@@ -136,8 +139,35 @@ public class NotificationsActivity extends AppCompatActivity {
             notifications.add(notification1);
         }
 
+        SharedPreferences sharedPref2 = getApplicationContext().getSharedPreferences(
+                getString(R.string.NotiObjects), Context.MODE_PRIVATE);
+        numOfNotis = sharedPref.getInt(getString(R.string.NotiObjectsNumber), 0);
+
+        for(int i = 0; i< numOfNotis; i++)
+        {
+
+            String emailFromUser = sharedPref.getString(getString(R.string.NotiObjectsFromUser) + i, "EMPTY");
+            String dateNoti = sharedPref.getString(getString(R.string.NotiObjectsDate) + i, "EMPTY");
+            Notification notification1 = new Notification(2, "User " + emailFromUser+
+                    " left an object near you!", dateNoti);
+            notifications.add(notification1);
+        }
+
+
+        /////////////
+        notifications.sort(new Comparator<Notification>() {
+            @Override
+            public int compare(Notification o1, Notification o2) {
+                return o1.getNotification_time().compareTo(o2.getNotification_time());
+            }
+        });
+
         return notifications;
     }
 
 
+    @Override
+    public void onNewObject() {
+        notifications = prepareNotificationTestData();
+    }
 }

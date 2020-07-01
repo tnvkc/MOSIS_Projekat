@@ -13,15 +13,31 @@ import com.google.firebase.auth.FirebaseUser;
 
 
 import tamara.mosis.elfak.walkhike.R;
+import tamara.mosis.elfak.walkhike.modeldata.Friendship;
+import tamara.mosis.elfak.walkhike.modeldata.FriendshipData;
+import tamara.mosis.elfak.walkhike.modeldata.MapObjectData;
+import tamara.mosis.elfak.walkhike.modeldata.PositionsData;
 import tamara.mosis.elfak.walkhike.modeldata.Scores;
+import tamara.mosis.elfak.walkhike.modeldata.ScoresData;
 import tamara.mosis.elfak.walkhike.modeldata.User;
 import tamara.mosis.elfak.walkhike.modeldata.UserData;
 import android.os.Handler;
+import android.util.Log;
 
-public class LauncherActivity extends AppCompatActivity {
+import java.util.ArrayList;
+
+public class LauncherActivity extends AppCompatActivity implements
+        PositionsData.ReadyEventListener, UserData.ReadyEventListener, ScoresData.ReadyEventListener, MapObjectData.ReadyEventListener, FriendshipData.ReadyEventListener {
 
     FirebaseAuth firebaseAuth;
     UserData userData;
+    MapObjectData mapObjectData;
+    ScoresData scoresData;
+    PositionsData positionsData;
+
+    ArrayList<Scores> skorovi;
+    boolean nesto = true;
+    int sviDataok = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,7 +49,24 @@ public class LauncherActivity extends AppCompatActivity {
         setContentView(R.layout.activity_launcher);
 
         firebaseAuth = FirebaseAuth.getInstance();
-        userData.getInstance().getUsers();
+
+
+
+        PositionsData.getInstance().setReadyList(this);
+        UserData.getInstance().setReadyList(this);
+        FriendshipData.getInstance().setReadyList(this);
+        MapObjectData.getInstance().setReadyList(this);
+        ScoresData.getInstance().setReadyList(this);
+
+
+
+
+
+
+    }
+
+    void go()
+    {
 
         SharedPreferences sharedPref = getApplicationContext().getSharedPreferences( "Userdata", Context.MODE_PRIVATE);
         String username = sharedPref.getString(getString(R.string.loggedUser_username), "EMPTY");
@@ -42,6 +75,15 @@ public class LauncherActivity extends AppCompatActivity {
         int indexx  = sharedPref.getInt(getString(R.string.loggedUser_index), -1);
 
         Scores s = null;
+
+        userData.getInstance().getUsers();
+        skorovi = scoresData.getInstance().getScores();
+        MapObjectData.getInstance().getMapObjects();
+        skorovi = scoresData.getInstance().getScores();
+        if(positionsData.getInstance().getPositions().size() != 0 && userData.getInstance().getUsers() != null)
+            Log.v("uspeh", "all");
+        else
+            Log.v("uspeh", "nema");
 
         FirebaseUser currentUser=firebaseAuth.getCurrentUser();
         if(currentUser!=null && emaill.compareTo("EMPTY") != 0)
@@ -66,5 +108,21 @@ public class LauncherActivity extends AppCompatActivity {
                 }
             }, 1500);
         }
+
+        userData.getInstance().getUsers();
+
+        MapObjectData.getInstance().getMapObjects();
+
+
+    }
+
+    @Override
+    public void onReady() {
+            sviDataok++;
+
+            if(sviDataok == 5)
+            {
+                go();
+            }
     }
 }

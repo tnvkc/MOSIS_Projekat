@@ -44,12 +44,13 @@ import tamara.mosis.elfak.walkhike.modeldata.MapObject;
 import tamara.mosis.elfak.walkhike.modeldata.MapObjectData;
 import tamara.mosis.elfak.walkhike.modeldata.Position;
 import tamara.mosis.elfak.walkhike.modeldata.PositionsData;
+import tamara.mosis.elfak.walkhike.modeldata.Scores;
 import tamara.mosis.elfak.walkhike.modeldata.ScoresData;
 import tamara.mosis.elfak.walkhike.modeldata.User;
 import tamara.mosis.elfak.walkhike.modeldata.UserData;
 
-public class NotificationService extends IntentService implements MapObjectData.ListUpdatedEventListener,FriendshipData.NewItemListUpdatedEventListener,
-        GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener {
+public class NotificationService extends IntentService implements MapObjectData.MapObjectAddedListener,FriendshipData.NewItemListUpdatedEventListener,
+        ScoresData.ListUpdatedEventListener,    GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener {
 
     boolean running = false;
     int timeee = 5;
@@ -61,6 +62,7 @@ public class NotificationService extends IntentService implements MapObjectData.
 
 
     User LoggedUser;
+    Scores scoreLoggedUser;
     Location location;
     LatLng latLng;
     LatLng lastPos;
@@ -107,8 +109,9 @@ public class NotificationService extends IntentService implements MapObjectData.
         super.onCreate();
         running = true;
         latLng = new LatLng(1, 1);
-        MoD.getInstance().setEventListener(this);
+        MoD.getInstance().setNewObejctListener(this);
         friendshipData.getInstance().setNewItemEventListener(this);
+        scoresData.getInstance().setEventListener(this);
 
         Log.v("timer", "service started");
         meters = 0;
@@ -122,6 +125,15 @@ public class NotificationService extends IntentService implements MapObjectData.
                 getString(R.string.NotificationsFriend), Context.MODE_PRIVATE);
         int numOfNotis = sharedPref1.getInt(getString(R.string.NotificationsNumber), 0);
         numberOfFriendNotis = numOfNotis;
+
+
+
+        SharedPreferences sharedPref2 = getApplicationContext().getSharedPreferences(
+                getString(R.string.NotiObjects), Context.MODE_PRIVATE);
+        numOfNotis = sharedPref2.getInt(getString(R.string.NotiObjectsNumber), 0);
+        numberOfObjectNotis = numOfNotis;
+
+
 
         LoggedUser = new User();
         LoggedUser.username = username;
@@ -243,7 +255,7 @@ public class NotificationService extends IntentService implements MapObjectData.
 
 
 
-    @Override
+   /* @Override
     public void onListUpdated() {
         promena = "Stigla ";
 
@@ -251,7 +263,7 @@ public class NotificationService extends IntentService implements MapObjectData.
         MapObject m = MoD.getInstance().getMapObjects().get(sizee);
         promena += m.toString();
 
-    }
+    }*/
 
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
@@ -317,41 +329,11 @@ public class NotificationService extends IntentService implements MapObjectData.
                 editor.commit();
 
 
+                sendNotif("notify_"+"newfriend" , "walkhikwe_friends",200 , "Someone wants to be your friend",
+                        "Request", "friend request", "friend request",
+                        new Intent(getApplicationContext(), FriendRequestsActivity.class));
 
 
-                NotificationCompat.Builder mBuilder =
-                        new NotificationCompat.Builder(getApplicationContext(), "notify_001");
-                Intent ii = new Intent(getApplicationContext(), FriendRequestsActivity.class);
-                PendingIntent pendingIntent = PendingIntent.getActivity(getApplicationContext().getApplicationContext(), 0, ii, 0);
-
-
-                NotificationCompat.BigTextStyle bigText = new NotificationCompat.BigTextStyle();
-                bigText.bigText("Someone wants to be your friend");
-                bigText.setBigContentTitle("New friend request");
-
-                mBuilder.setContentIntent(pendingIntent);
-                mBuilder.setSmallIcon(R.mipmap.ic_launcher_round);
-                mBuilder.setContentTitle("Request");
-                mBuilder.setContentText("friend request");
-                mBuilder.setPriority(android.app.Notification.PRIORITY_MAX);
-                mBuilder.setStyle(bigText);
-
-                mNotificationManager =
-                        (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-
-                // === Removed some obsoletes
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
-                {
-                    String channelId = "walkhikw_friends";
-                    NotificationChannel channel = new NotificationChannel(
-                            channelId,
-                            "walkhikw_friends",
-                            NotificationManager.IMPORTANCE_HIGH);
-                    mNotificationManager.createNotificationChannel(channel);
-                    mBuilder.setChannelId(channelId);
-                }
-
-                mNotificationManager.notify(0, mBuilder.build());
 
                 if(myListener != null)
                     doWork();
@@ -382,38 +364,11 @@ public class NotificationService extends IntentService implements MapObjectData.
                         Log.v("Position", users.get(i).UserPosition.toString() + " !");
 
 
-                        NotificationCompat.Builder mBuilder =
-                                new NotificationCompat.Builder(getApplicationContext(), "notify_"+ users.get(i).username);
-                        Intent ii = new Intent(getApplicationContext(), MainActivity.class);
-                        PendingIntent pendingIntent = PendingIntent.getActivity(getApplicationContext().getApplicationContext(), 0, ii, 0);
+                        sendNotif("notify_" + users.get(i).username, "usersnear",numberOfFriendNotis , "User near you!",
+                                "User near you!", "Near you", "User " +users.get(i).username+ " near you!",
+                                new Intent(getApplicationContext(), MainActivity.class));
 
 
-                        NotificationCompat.BigTextStyle bigText = new NotificationCompat.BigTextStyle();
-                        bigText.bigText("User near you!");
-                        bigText.setBigContentTitle("User " +users.get(i).username+ " near you!");
-
-                        mBuilder.setContentIntent(pendingIntent);
-                        mBuilder.setSmallIcon(R.mipmap.ic_launcher_round);
-                        mBuilder.setContentTitle("Near you");
-                        mBuilder.setContentText("User " +users.get(i).username+ " near you!");
-                        mBuilder.setPriority(android.app.Notification.PRIORITY_MAX);
-                        mBuilder.setStyle(bigText);
-
-                        mNotificationManager =
-                                (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-
-                        // === Removed some obsoletes
-                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                            String channelId = "walkhikw_usersnear";
-                            NotificationChannel channel = new NotificationChannel(
-                                    channelId,
-                                    "walkhikw_usersnear",
-                                    NotificationManager.IMPORTANCE_HIGH);
-                            mNotificationManager.createNotificationChannel(channel);
-                            mBuilder.setChannelId(channelId);
-                        }
-
-                        mNotificationManager.notify(numberOfObjectNotis, mBuilder.build());
                         numberOfObjectNotis++;
                         users.remove(i);
                     }
@@ -443,41 +398,10 @@ public class NotificationService extends IntentService implements MapObjectData.
 
 
 
+                sendNotif("notify_" , "walkhikw_usersnear",100 , "Positon near you!",
+                        "Positon near you!", "Near you", "Positon near you!", new Intent(getApplicationContext(), MainActivity.class));
 
 
-                NotificationCompat.Builder mBuilder =
-                        new NotificationCompat.Builder(getApplicationContext(), "notify_");
-                Intent ii = new Intent(getApplicationContext(), MainActivity.class);
-                PendingIntent pendingIntent = PendingIntent.getActivity(getApplicationContext().getApplicationContext(), 0, ii, 0);
-
-
-                NotificationCompat.BigTextStyle bigText = new NotificationCompat.BigTextStyle();
-                bigText.bigText("Positon near you!");
-                bigText.setBigContentTitle("Positon near you!");
-
-                mBuilder.setContentIntent(pendingIntent);
-                mBuilder.setSmallIcon(R.mipmap.ic_launcher_round);
-                mBuilder.setContentTitle("Near you");
-                mBuilder.setContentText("Positon near you!");
-                mBuilder.setPriority(android.app.Notification.PRIORITY_MAX);
-                mBuilder.setStyle(bigText);
-
-                mNotificationManager =
-                        (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-
-                // === Removed some obsoletes
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
-                {
-                    String channelId = "walkhikw_usersnear";
-                    NotificationChannel channel = new NotificationChannel(
-                            channelId,
-                            "walkhikw_usersnear",
-                            NotificationManager.IMPORTANCE_HIGH);
-                    mNotificationManager.createNotificationChannel(channel);
-                    mBuilder.setChannelId(channelId);
-                }
-
-                mNotificationManager.notify(100, mBuilder.build());
 
             }
 
@@ -488,6 +412,95 @@ public class NotificationService extends IntentService implements MapObjectData.
         }
 
     }
+
+
+
+    private void sendNotif(String chanelid, String andr8ID, int iid, String bigTextt, String bigTitle, String cTitle, String cText, Intent whereNext )
+    {
+        NotificationCompat.Builder mBuilder =
+                new NotificationCompat.Builder(getApplicationContext(), chanelid);
+        //Intent ii = ;
+        PendingIntent pendingIntent = PendingIntent.getActivity(getApplicationContext().getApplicationContext(), 0, whereNext, 0);
+
+
+        NotificationCompat.BigTextStyle bigText = new NotificationCompat.BigTextStyle();
+        bigText.bigText(bigTextt);
+        bigText.setBigContentTitle(bigTitle);
+
+        mBuilder.setContentIntent(pendingIntent);
+        mBuilder.setSmallIcon(R.mipmap.ic_launcher_round);
+        mBuilder.setContentTitle(cTitle);
+        mBuilder.setContentText(cText);
+        mBuilder.setPriority(android.app.Notification.PRIORITY_MAX);
+        mBuilder.setStyle(bigText);
+
+        mNotificationManager =
+                (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+
+        // === Removed some obsoletes
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
+        {
+            String channelId = andr8ID;
+            NotificationChannel channel = new NotificationChannel(
+                    channelId,
+                    "walkhike_"+andr8ID,
+                    NotificationManager.IMPORTANCE_HIGH);
+            mNotificationManager.createNotificationChannel(channel);
+            mBuilder.setChannelId(channelId);
+        }
+
+        mNotificationManager.notify(iid, mBuilder.build());
+    }
+
+
+
+
+
+
+    @Override
+    public void onScoreUpdated(Scores ss) {
+        if(friendshipData.getInstance().areUsersFriedns(LoggedUser.email, ss.useer))
+            Log.v("updateScore", "User " + ss.useer + " score " + ss.weeklyDistance );
+    }
+
+    @Override
+    public void onMapObejctAdded(MapObject obj) {
+
+       // numberOfObjectNotis++;
+        Position p = obj.position;
+
+        float res[] = new float[5];
+        Location.distanceBetween(latLng.latitude, latLng.longitude, Double.parseDouble(obj.position.latitude), Double.parseDouble(obj.position.longitude), res);
+
+        if (res[0] < 1000)
+        {
+
+            SharedPreferences sharedPref = getApplicationContext().getSharedPreferences(
+                    getString(R.string.NotiObjects), Context.MODE_PRIVATE);
+            int numOfNotis = sharedPref.getInt(getString(R.string.NotiObjectsNumber), 0);
+
+            SharedPreferences.Editor editor = sharedPref.edit();
+
+
+             //editor.putString(getString(R.string.NotiObjectsFromUser) + numOfNotis, );
+            editor.putString(getString(R.string.NotiObjectsDate) + numOfNotis, Calendar.getInstance().getTime().toString());
+
+            numOfNotis++;
+            editor.putInt(getString(R.string.NotiObjectsNumber), numOfNotis);
+
+            editor.commit();
+            
+            if(myObjectListener != null)
+                notifyObjectNoti();
+
+            sendNotif("notify_"+"mapobjects" , "walkhikw_mapobjects",500 , "Someone added an object near you!",
+                    "Obejct near you!", "Near you", "Object near you!", new Intent(getApplicationContext(), MainActivity.class));
+
+        }
+    }
+
+
+
 
 
 
@@ -514,12 +527,16 @@ public class NotificationService extends IntentService implements MapObjectData.
         myObjectListener = Listener;
     }
 
-    public void notifyObjectNoti() { //View view
-        myListener.onNewFriendship();
+
+
+    public void notifyObjectNoti()
+    { //View view
+        if(myObjectListener != null)
+            myObjectListener.onNewObject();
     }
 
     public interface ListenerForObjectNotis{
-        void onNewFriendship();
+        void onNewObject();
     }
 
 

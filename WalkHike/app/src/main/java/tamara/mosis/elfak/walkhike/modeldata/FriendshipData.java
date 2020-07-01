@@ -60,6 +60,14 @@ public class FriendshipData {
     public interface NewItemListUpdatedEventListener {
         void onListUpdatedNewFriends(Friendship newF);
     }
+
+    ReadyEventListener probaList;
+    public void setReadyList(ReadyEventListener listener) {
+        probaList = listener;
+    }
+    public interface ReadyEventListener {
+        void onReady();
+    }
 //////////////////////////
 
     ValueEventListener parentEventListener = new ValueEventListener() {
@@ -67,6 +75,11 @@ public class FriendshipData {
         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
             if (updateListener != null)
                 updateListener.onListUpdatedFreidns();
+
+            if(probaList != null)
+            {
+                probaList.onReady();
+            }
         }
 
         @Override
@@ -181,6 +194,26 @@ public class FriendshipData {
         db.child(FIREBASE_CHILD).child(Friendships.get(index).key).removeValue();
         Friendships.remove(index);
         recreateKeyIndexMapping();
+    }
+
+    public boolean areUsersFriedns(String user1, String user2)
+    {
+        int indexx = -1;
+        for(int i =0; i< Friendships.size(); i++)
+        {
+
+            if (user1.compareTo(Friendships.get(i).fromUser.email) == 0
+                    && user2.compareTo(Friendships.get(i).toUser.email) == 0)
+                indexx = i;
+            else if (user2.compareTo(Friendships.get(i).fromUser.email) == 0
+                    && user1.compareTo(Friendships.get(i).toUser.email) == 0)
+                indexx = i;
+        }
+
+        if(indexx != -1)
+            return true;
+        return false;
+
     }
 
     public void deleteFriendship(String mailFrom, String mailTo) {

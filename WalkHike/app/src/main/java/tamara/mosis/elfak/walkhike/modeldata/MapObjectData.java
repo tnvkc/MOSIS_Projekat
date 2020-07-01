@@ -50,11 +50,33 @@ public class MapObjectData {
         void onListUpdated();
     }
 
+    MapObjectAddedListener liistener;
+    public void setNewObejctListener (MapObjectAddedListener lis)
+    {
+        this.liistener = lis;
+    }
+    public interface MapObjectAddedListener{
+        void onMapObejctAdded(MapObject obj);
+    }
+
+    ReadyEventListener probaList;
+    public void setReadyList(ReadyEventListener listener) {
+        probaList = listener;
+    }
+    public interface ReadyEventListener {
+        void onReady();
+    }
+
     ValueEventListener parentEventListener = new ValueEventListener() {
         @Override
         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
             if (updateListener != null)
                 updateListener.onListUpdated();
+
+            if(probaList != null)
+            {
+                probaList.onReady();
+            }
         }
 
         @Override
@@ -75,6 +97,11 @@ public class MapObjectData {
                 PositionsMapping.put(myMapObjectKey, objects.size() - 1);
                 if (updateListener != null)
                     updateListener.onListUpdated();
+
+                if(liistener != null)
+                {
+                    liistener.onMapObejctAdded(myMapObject);
+                }
             }
         }
 

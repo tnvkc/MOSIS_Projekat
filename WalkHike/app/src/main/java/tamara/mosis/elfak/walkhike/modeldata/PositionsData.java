@@ -53,11 +53,22 @@ public class PositionsData {
         void onListUpdated();
     }
 
+    ReadyEventListener probaList;
+    public void setReadyList(ReadyEventListener listener) {
+        probaList = listener;
+    }
+    public interface ReadyEventListener {
+        void onReady();
+    }
+
     ValueEventListener parentEventListener = new ValueEventListener() {
         @Override
         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
             if (updateListener != null)
                 updateListener.onListUpdated();
+
+            if(probaList != null)
+                probaList.onReady();
         }
 
         @Override

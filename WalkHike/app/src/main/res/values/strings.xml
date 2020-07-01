@@ -68,4 +68,10 @@
     <string name="NotificationsFromUser">fromUserNoti</string>
     <string name="NotificationsDate">NotiDate</string>
 
+
+    <string name="NotiObjects">Object_notifications</string>
+    <string name="NotiObjectsNumber">Object_notificationsNotis</string>
+    <string name="NotiObjectsFromUser">Object_notificationsfromUser</string>
+    <string name="NotiObjectsDate">Object_notificationsDate</string>
+
 </resources>
