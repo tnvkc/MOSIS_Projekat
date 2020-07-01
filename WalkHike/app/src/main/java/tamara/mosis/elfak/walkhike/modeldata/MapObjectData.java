@@ -15,23 +15,24 @@ import java.util.HashMap;
 
 public class MapObjectData {
 
-    private ArrayList<MapObject> objects;
-    private HashMap<String, Integer> PositionsMapping;
+    private ArrayList<MapObject> MapObjects;
+    private HashMap<String, Integer> MapObjectsMapping;
     public DatabaseReference db;
     private static final String FIREBASE_CHILD= "MapObjects";
 
 
     private MapObjectData()
     {
-        objects = new ArrayList<>();
-        PositionsMapping  = new HashMap<String, Integer>();
+        MapObjects = new ArrayList<>();
+        MapObjectsMapping  = new HashMap<String, Integer>();
+
         db = FirebaseDatabase.getInstance().getReference();
         db.child(FIREBASE_CHILD).addChildEventListener(childEventListener);
         db.child(FIREBASE_CHILD).addListenerForSingleValueEvent(parentEventListener);
     }
 
     private static class SingletonHolder {
-        public static final MapObjectData instance = new MapObjectData();
+        public static final tamara.mosis.elfak.walkhike.modeldata.MapObjectData instance = new tamara.mosis.elfak.walkhike.modeldata.MapObjectData();
     }
 
     public static MapObjectData getInstance() {
@@ -39,11 +40,17 @@ public class MapObjectData {
     }
 
     public ArrayList<MapObject> getMapObjects() {
-        return objects;
+        return MapObjects;
     }
 
-    ListUpdatedEventListener updateListener;
-    public void setEventListener(ListUpdatedEventListener listener) {
+    public ArrayList<MapObject> getFriendsMapObjects() {
+
+        //override to return objects added by user or his friends
+        return MapObjects;
+    }
+
+    MapObjectData.ListUpdatedEventListener updateListener;
+    public void setEventListener(MapObjectData.ListUpdatedEventListener listener) {
         updateListener = listener;
     }
     public interface ListUpdatedEventListener {
@@ -90,11 +97,11 @@ public class MapObjectData {
         public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
             String myMapObjectKey = dataSnapshot.getKey();
 
-            if (!PositionsMapping.containsKey(myMapObjectKey)) {
+            if (!MapObjectsMapping.containsKey(myMapObjectKey)) {
                 MapObject myMapObject = dataSnapshot.getValue(MapObject.class);
                 myMapObject.key = myMapObjectKey;
-                objects.add(myMapObject);
-                PositionsMapping.put(myMapObjectKey, objects.size() - 1);
+                MapObjects.add(myMapObject);
+                MapObjectsMapping.put(myMapObjectKey, MapObjects.size() - 1);
                 if (updateListener != null)
                     updateListener.onListUpdated();
 
@@ -129,8 +136,8 @@ public class MapObjectData {
     public void AddMapObject(MapObject m)
     {
         String key = db.push().getKey();
-        objects.add(m);
-        PositionsMapping.put(key, objects.size() - 1);
+        MapObjects.add(m);
+        MapObjectsMapping.put(key, MapObjects.size() - 1);
         db.child(FIREBASE_CHILD).child(key).setValue(m);
         m.key = key;
         if (updateListener != null)

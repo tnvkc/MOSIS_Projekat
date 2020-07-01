@@ -52,26 +52,39 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="username"
+                android:text="Left on dd/MM/yyyy by\nusername"
                 android:id="@+id/info_window_username"
                 android:gravity="center"
-                android:layout_marginBottom="20dp"
+                android:layout_marginBottom="20dp"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="lat: latitude"
+                android:id="@+id/info_window_lat"
+                android:gravity="start"
+                android:layout_marginStart="20dp"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="lon: longitude"
+                android:id="@+id/info_window_lon"
+                android:gravity="start"
+                android:layout_marginStart="20dp"
                 />
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="latitude"
-                android:id="@+id/info_window_lat"
-                android:gravity="center"/>
+                android:id="@+id/info_window_see_details"
+                android:text="see details"
+                android:clickable="true"
+                android:gravity="end"
+                android:layout_marginEnd="20dp"
+                android:layout_marginTop="20dp"
+                />
 
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="longitude"
-                android:id="@+id/info_window_lon"
-                android:gravity="center"
-                android:layout_marginTop="20dp"/>
         </LinearLayout>
     </LinearLayout>
 

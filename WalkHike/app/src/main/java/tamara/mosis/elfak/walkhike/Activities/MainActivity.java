@@ -35,6 +35,7 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 
@@ -45,8 +46,14 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.Map;
 
 import tamara.mosis.elfak.walkhike.NotificationService;
 import tamara.mosis.elfak.walkhike.Probe;
@@ -54,8 +61,12 @@ import tamara.mosis.elfak.walkhike.R;
 import tamara.mosis.elfak.walkhike.ShowArObjectActivity;
 
 import tamara.mosis.elfak.walkhike.modeldata.FriendshipData;
+
 import tamara.mosis.elfak.walkhike.modeldata.Scores;
 import tamara.mosis.elfak.walkhike.modeldata.ScoresData;
+
+import tamara.mosis.elfak.walkhike.modeldata.MapObjectData;
+
 import tamara.mosis.elfak.walkhike.modeldata.User;
 import tamara.mosis.elfak.walkhike.modeldata.UserData;
 import tamara.mosis.elfak.walkhike.modeldata.MapObject;
@@ -84,15 +95,23 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
     boolean startedService = false;
     UserData userData;
     FriendshipData friendshipData;
+
     ScoresData scoresData;
+
+    /*static*/ MapObjectData mapObjectData;
+
 
     LinearLayout info_window_container;
     ImageView info_window_icon;
     TextView info_window_username;
     TextView info_window_lat;
     TextView info_window_lon;
+    TextView info_window_see_details;
 
     Marker lastSelected;
+    Marker userMarker;
+
+    User loggedUser;
 
     ArrayList<Scores> skorovi;
 
@@ -114,9 +133,8 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
         mfirebaseAuth=FirebaseAuth.getInstance();
         userData.getInstance().getUsers();
         friendshipData.getInstance().getFriendships();
+        mapObjectData.getInstance().getMapObjects();
         skorovi =  scoresData.getInstance().getScores();
-
-
 
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
                 && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
@@ -143,11 +161,15 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
         addNewFloating.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                info_window_container.setVisibility(View.GONE);
+
                 Intent intent=new Intent(getApplicationContext(), AddNewObjectActivity.class);
                 Bundle bundle = new Bundle();
                 bundle.putDouble("lat", location.getLatitude());
                 bundle.putDouble("lon", location.getLongitude());
+                bundle.putSerializable("user", loggedUser);
                 intent.putExtras(bundle);
+
                 startActivityForResult(intent, 1);
             }
         });
@@ -177,6 +199,8 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
         info_window_username = findViewById(R.id.info_window_username);
         info_window_lat = findViewById(R.id.info_window_lat);
         info_window_lon = findViewById(R.id.info_window_lon);
+        info_window_see_details = findViewById(R.id.info_window_see_details);
+        info_window_see_details.setOnClickListener(this);
 
         lastSelected = null;
         /*if(!startedService) {
@@ -233,8 +257,8 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
             );
 
             m.setTag(mapObject);
-            map.moveCamera(CameraUpdateFactory.newLatLng(loc));
-            map.animateCamera(CameraUpdateFactory.newLatLngZoom(loc,10f));
+            //map.moveCamera(CameraUpdateFactory.newLatLng(loc));
+            //map.animateCamera(CameraUpdateFactory.newLatLngZoom(loc,10f));
         }
 
 
@@ -264,6 +288,13 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
 
 
         Toast.makeText(getApplicationContext(), "Welcome " + username + ", " + email + "!", Toast.LENGTH_SHORT).show();
+
+        if(indexx != -1) {
+            loggedUser = userData.getInstance().getUser(indexx);
+            if (loggedUser.email.compareTo(email) == 0)
+                Toast.makeText(getApplicationContext(), "Welcome " + username + ", " + email + "!", Toast.LENGTH_SHORT).show();
+        }
+
         /*User u;
         if(indexx != -1) {
             u = userData.getInstance().getUser(indexx);
@@ -305,10 +336,13 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
         //if you need to disable zooming
         //googleMap.getUiSettings().setZoomGesturesEnabled(false);
 
-
-
         googleMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
         this.map=googleMap;
+
+        /*ArrayList<MapObject> friendsObjects = mapObjectData.getInstance().getFriendsMapObjects();
+        for (int i = 0; i < friendsObjects.size(); i++) {
+            AddMarkerObject(friendsObjects.get(i));
+        }*/
 
         map.setOnMarkerClickListener(this);
     }
@@ -398,10 +432,23 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
     //Toast.makeText(MapWithPlayServiceLocationActivity.this, "Lat : "+location.getLatitude()+" Lng "+location.getLongitude(), Toast.LENGTH_SHORT).show();
         if(map!=null){
             LatLng latLng=new LatLng(location.getLatitude(),location.getLongitude());
-            map.clear();
-            map.addMarker(new MarkerOptions().position(latLng).title("Current Location"));
-            map.moveCamera(CameraUpdateFactory.newLatLng(latLng));
-            map.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng,15f));
+			
+            //map.clear();
+            //map.addMarker(new MarkerOptions().position(latLng).title("Current Location"));
+            //map.moveCamera(CameraUpdateFactory.newLatLng(latLng));
+            //map.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng,15f));
+
+            this.location = location;
+
+            /*Marker m1 = map.addMarker(new MarkerOptions().position(latLng).alpha(0.5f));
+            Marker m = map.addMarker(new MarkerOptions().position(latLng));
+            m.setDraggable(true);
+            m.setPosition(new LatLng(location.getLatitude() + 20, location.getLongitude() + 20));*/
+
+            //map.clear();
+            //map.addMarker(new MarkerOptions().position(latLng).title("Current Location"));
+            //map.moveCamera(CameraUpdateFactory.newLatLng(latLng));
+            //map.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng,10f));
         }
     }
 
@@ -460,6 +507,15 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
                 startedService = false;
             }
 
+        } else if (v.getId() == R.id.info_window_see_details) {
+
+            MapObject objectTag = (MapObject) v.getTag();
+
+            String lat = objectTag.position.latitude;
+            String lon = objectTag.position.longitude;
+
+            Toast.makeText(this, "lat: " + lat + " lon: " + lon, Toast.LENGTH_SHORT).show();
+
         }
        
     }
@@ -471,12 +527,12 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
 
             info_window_container.setVisibility(View.VISIBLE);
 
-            MapObject randomDataTag = (MapObject) marker.getTag();
+            MapObject objectTag = (MapObject) marker.getTag();
 
-            String lat = randomDataTag.position.latitude;
-            String lon = randomDataTag.position.longitude;
+            String lat = objectTag.position.latitude;
+            String lon = objectTag.position.longitude;
 
-            int objectType = randomDataTag.objectType;
+            int objectType = objectTag.objectType;
 
             if (objectType == 1) {
                 info_window_icon.setImageResource(R.drawable.ic_message);
@@ -488,9 +544,10 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
                 info_window_icon.setImageResource(R.drawable.ic_heart);
             }
 
-            info_window_username.setText("Some user");
-            info_window_lat.setText(lat);
-            info_window_lon.setText(lon);
+            info_window_username.setText(String.format("Left on %s by\n%s", objectTag.date, objectTag.createdBy.username));
+            info_window_lat.setText("lat: " + lat);
+            info_window_lon.setText("lon: " + lon);
+            info_window_see_details.setTag(objectTag);
 
             lastSelected = marker;
         } else {

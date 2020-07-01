@@ -154,6 +154,21 @@ public class UserData {
             if(this.users.get(i).email.compareTo(email) == 0)
             {
                 u = this.users.get(i);
+                break;
+            }
+        }
+
+        return u;
+    }
+
+    public User getUserByUsername(String username) {
+        User u = null;
+        for(int i = 0; i< this.users.size(); i++)
+        {
+            if(this.users.get(i).username.compareTo(username) == 0)
+            {
+                u = this.users.get(i);
+                break;
             }
         }
 
