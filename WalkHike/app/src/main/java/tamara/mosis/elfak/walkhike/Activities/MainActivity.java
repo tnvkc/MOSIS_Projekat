@@ -46,8 +46,14 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.Map;
 
 import tamara.mosis.elfak.walkhike.NotificationService;
 import tamara.mosis.elfak.walkhike.Probe;
@@ -55,6 +61,7 @@ import tamara.mosis.elfak.walkhike.R;
 import tamara.mosis.elfak.walkhike.ShowArObjectActivity;
 
 import tamara.mosis.elfak.walkhike.modeldata.FriendshipData;
+import tamara.mosis.elfak.walkhike.modeldata.MapObjectData;
 import tamara.mosis.elfak.walkhike.modeldata.User;
 import tamara.mosis.elfak.walkhike.modeldata.UserData;
 import tamara.mosis.elfak.walkhike.modeldata.MapObject;
@@ -83,6 +90,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
     boolean startedService = false;
     UserData userData;
     FriendshipData friendshipData;
+    /*static*/ MapObjectData mapObjectData;
 
     LinearLayout info_window_container;
     ImageView info_window_icon;
@@ -92,7 +100,6 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
     TextView info_window_see_details;
 
     Marker lastSelected;
-
     Marker userMarker;
 
     User loggedUser;
@@ -115,7 +122,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
         mfirebaseAuth=FirebaseAuth.getInstance();
         userData.getInstance().getUsers();
         friendshipData.getInstance().getFriendships();
-
+        mapObjectData.getInstance().getMapObjects();
 
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
                 && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
@@ -223,8 +230,8 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
             );
 
             m.setTag(mapObject);
-            map.moveCamera(CameraUpdateFactory.newLatLng(loc));
-            map.animateCamera(CameraUpdateFactory.newLatLngZoom(loc,10f));
+            //map.moveCamera(CameraUpdateFactory.newLatLng(loc));
+            //map.animateCamera(CameraUpdateFactory.newLatLngZoom(loc,10f));
         }
     }
 
@@ -299,10 +306,13 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
         //if you need to disable zooming
         //googleMap.getUiSettings().setZoomGesturesEnabled(false);
 
-
-
         googleMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
         this.map=googleMap;
+
+        /*ArrayList<MapObject> friendsObjects = mapObjectData.getInstance().getFriendsMapObjects();
+        for (int i = 0; i < friendsObjects.size(); i++) {
+            AddMarkerObject(friendsObjects.get(i));
+        }*/
 
         map.setOnMarkerClickListener(this);
     }
