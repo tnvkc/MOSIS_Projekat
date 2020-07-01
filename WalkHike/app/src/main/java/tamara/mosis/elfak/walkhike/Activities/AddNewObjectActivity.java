@@ -27,6 +27,7 @@ import tamara.mosis.elfak.walkhike.modeldata.MapObject;
 import tamara.mosis.elfak.walkhike.modeldata.MapObjectData;
 import tamara.mosis.elfak.walkhike.modeldata.Position;
 import tamara.mosis.elfak.walkhike.modeldata.User;
+import tamara.mosis.elfak.walkhike.modeldata.UserData;
 
 public class AddNewObjectActivity extends FragmentActivity implements View.OnClickListener {
 
@@ -40,8 +41,11 @@ public class AddNewObjectActivity extends FragmentActivity implements View.OnCli
     String desc;
     Position position;
     User loggedUser;
+    User sharedWith;
+    String sharedWithUsername;
 
     AddObject_EditDesc secondFragment;
+    AddObject_SetDetails thirdFragment;
 
     public int getObjectType() {
         return objectType;
@@ -67,6 +71,14 @@ public class AddNewObjectActivity extends FragmentActivity implements View.OnCli
         this.desc = desc;
     }
 
+    public String getSharedWithUsername() {
+        return sharedWithUsername;
+    }
+
+    public void setSharedWithUsername(String sharedWithUsername) {
+        this.sharedWithUsername = sharedWithUsername;
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -84,6 +96,7 @@ public class AddNewObjectActivity extends FragmentActivity implements View.OnCli
         position.latitude = String.valueOf(lat);
         position.longitude = String.valueOf(lon);
         loggedUser = (User) args.getSerializable("user");
+        sharedWith = null;
 
         Toast.makeText(this, loggedUser.email, Toast.LENGTH_SHORT).show();
 
@@ -114,6 +127,8 @@ public class AddNewObjectActivity extends FragmentActivity implements View.OnCli
                 if (state == 0) {
                     btnPrev.setEnabled(false);
 
+                    desc = secondFragment.getDesc();
+
                     AddObject_SelectType firstFragment = new AddObject_SelectType();
                     getSupportFragmentManager().beginTransaction()
                             .replace(R.id.fragment_container, firstFragment)
@@ -123,6 +138,9 @@ public class AddNewObjectActivity extends FragmentActivity implements View.OnCli
                 } else if (state == 1) {
                     secondFragment = new AddObject_EditDesc();
 
+                    isPublic = thirdFragment.getIsPublic();
+                    sharedWithUsername = thirdFragment.getSharedWithUsername();
+
                     getSupportFragmentManager().beginTransaction()
                             .replace(R.id.fragment_container, secondFragment)
                             .addToBackStack(null).commit();
@@ -130,7 +148,7 @@ public class AddNewObjectActivity extends FragmentActivity implements View.OnCli
                     btnNext.setText("Next");
                     progressBar.setProgress(100);
                 } else if (state == 2) {
-                    AddObject_SetDetails thirdFragment = new AddObject_SetDetails();
+                    thirdFragment = new AddObject_SetDetails();
 
                     getSupportFragmentManager().beginTransaction()
                             .replace(R.id.fragment_container, thirdFragment)
@@ -165,7 +183,7 @@ public class AddNewObjectActivity extends FragmentActivity implements View.OnCli
                     desc = secondFragment.getDesc();
                     Toast.makeText(this, desc, Toast.LENGTH_SHORT).show();
 
-                    AddObject_SetDetails thirdFragment = new AddObject_SetDetails();
+                    thirdFragment = new AddObject_SetDetails();
 
                     getSupportFragmentManager().beginTransaction()
                             .replace(R.id.fragment_container, thirdFragment)
@@ -180,6 +198,9 @@ public class AddNewObjectActivity extends FragmentActivity implements View.OnCli
 
                 } else if (state == 2) {
                     state = 3;
+
+                    isPublic = thirdFragment.getIsPublic();
+                    sharedWithUsername = thirdFragment.getSharedWithUsername();
 
                     if (objectType == 3) {
                         AddObject_InsertPhoto fourthFragment = new AddObject_InsertPhoto();
@@ -197,16 +218,29 @@ public class AddNewObjectActivity extends FragmentActivity implements View.OnCli
                     btnNext.setText("Done");
                     progressBar.setProgress(300);
                 } else if (state == 3) {
+
+                    if (objectType == 1) {
+                        //message
+                        isPublic = thirdFragment.getIsPublic();
+                        sharedWithUsername = thirdFragment.getSharedWithUsername();
+                    }
+
                     MapObject newMapObject = new MapObject();
                     newMapObject.createdBy = loggedUser;
                     newMapObject.objectType = objectType;
-                    newMapObject.isPublic = false; //isPublic;
-                    //newMapObject.shareWithUser = user to share with or null (if isPublic = true)
+                    if (!isPublic) {
+                        sharedWith = UserData.getInstance().getUserByUsername(sharedWithUsername);
+                        newMapObject.isPublic = false;
+                    } else {
+                        this.sharedWith = new User(); //ili null?
+                        newMapObject.isPublic = true;
+                    }
+                    newMapObject.sharedWith = sharedWith;
                     newMapObject.desc = desc;
-                    //newMapObject.photo = inserted photo if objectType = 3 or null
+                    //newMapObject.photo = inserted photo if objectType = 3 or empty string
                     newMapObject.position = position;
                     newMapObject.datetime = new SimpleDateFormat("ddMMyyyyhhmmss").format(Calendar.getInstance().getTime());
-                    newMapObject.date = new SimpleDateFormat("dd/MM/yyyy").format(Calendar.getInstance().getTime());
+                    newMapObject.date = new SimpleDateFormat("dd-MM-yyyy").format(Calendar.getInstance().getTime());
                     md.getInstance().AddMapObject(newMapObject);
 
                     Toast.makeText(this, "Object added", Toast.LENGTH_SHORT).show();

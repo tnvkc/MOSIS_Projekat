@@ -35,6 +35,7 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 
@@ -91,6 +92,8 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
     TextView info_window_see_details;
 
     Marker lastSelected;
+
+    Marker userMarker;
 
     User loggedUser;
 
@@ -389,9 +392,17 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
     //Toast.makeText(MapWithPlayServiceLocationActivity.this, "Lat : "+location.getLatitude()+" Lng "+location.getLongitude(), Toast.LENGTH_SHORT).show();
         if(map!=null){
             LatLng latLng=new LatLng(location.getLatitude(),location.getLongitude());
-            map.clear();
+
+            this.location = location;
+
+            /*Marker m1 = map.addMarker(new MarkerOptions().position(latLng).alpha(0.5f));
+            Marker m = map.addMarker(new MarkerOptions().position(latLng));
+            m.setDraggable(true);
+            m.setPosition(new LatLng(location.getLatitude() + 20, location.getLongitude() + 20));*/
+
+            //map.clear();
             //map.addMarker(new MarkerOptions().position(latLng).title("Current Location"));
-            map.moveCamera(CameraUpdateFactory.newLatLng(latLng));
+            //map.moveCamera(CameraUpdateFactory.newLatLng(latLng));
             //map.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng,10f));
         }
     }
