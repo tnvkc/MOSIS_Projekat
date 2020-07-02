@@ -56,6 +56,7 @@ public class ProfileActivity extends AppCompatActivity {
     private FirebaseAuth mfirebaseAuth;
     private FirebaseFirestore firestore;//yt
     private String userID;//yt
+    private TextView textViewEmail;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,19 +77,31 @@ public class ProfileActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
 
-       textViewName=findViewById(R.id.textViewName);
+        textViewName=findViewById(R.id.textViewName);
         profilePic = findViewById(R.id.imageViewProfilePic);
+        textViewEmail = findViewById(R.id.textViewMail);
 
+        sharedPref = getApplicationContext().getSharedPreferences( "Userdata", Context.MODE_PRIVATE);
+        String username = sharedPref.getString(getString(R.string.loggedUser_username), "EMPTY");
+        String emaill = sharedPref.getString(getString(R.string.loggedUser_email), "EMPTY");
+        String image = sharedPref.getString(getString(R.string.loggedUser_image), "EMPTY");
 
-       mfirebaseAuth=FirebaseAuth.getInstance();
-       final FirebaseUser firebaseUser = mfirebaseAuth.getCurrentUser();
+        textViewName.setText(username);
+        textViewEmail.setText(emaill);
 
-       list = (ListView) findViewById(R.id.listview_profile_options);
+        RequestOptions placeholderOpt = new RequestOptions();
+        placeholderOpt.placeholder(R.drawable.girl_1);
+        Glide.with(getApplicationContext()).setDefaultRequestOptions(placeholderOpt).load(image).into(profilePic);
+
+        mfirebaseAuth=FirebaseAuth.getInstance();
+        final FirebaseUser firebaseUser = mfirebaseAuth.getCurrentUser();
+
+        list = (ListView) findViewById(R.id.listview_profile_options);
         Context context = getApplicationContext();
-       CustomListView adapter = new CustomListView(this, context.getResources().getStringArray(R.array.profile_options), imgid, false);
-       list.setAdapter(adapter);
+        CustomListView adapter = new CustomListView(this, context.getResources().getStringArray(R.array.profile_options), imgid, false);
+        list.setAdapter(adapter);
 
-       list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Intent intent;
@@ -106,28 +119,14 @@ public class ProfileActivity extends AppCompatActivity {
                         startActivity(intent);
                         break;
                     case 3:
-                        //intent=new Intent(getApplicationContext(), EditProfileActivity.class);
-                        // startActivity(intent);
-                       /* Map<String,Object> tokenMapRemove=new HashMap<>();
-                        tokenMapRemove.put("token_id", FieldValue.delete());
-                        firestore.collection("Users").document(userID).update(tokenMapRemove).addOnSuccessListener(new OnSuccessListener<Void>() {
-                            @Override
-                            public void onSuccess(Void aVoid) {
-                                firebaseAuth.signOut();
-                                Intent intent=new Intent(getApplicationContext(), LoginActivity.class);
-                                startActivity(intent);
-                            }
-                        });*/
+
                         if(firebaseUser != null)
                         {
-                             sharedPref = getApplicationContext().getSharedPreferences( "Userdata", Context.MODE_PRIVATE);
-
-
                             SharedPreferences.Editor editor = sharedPref.edit();
 
                             editor.remove(getString(R.string.loggedUser_email));
                             editor.remove(getString(R.string.loggedUser_username));
-
+                            editor.remove("userImage");
                             editor.remove(getString(R.string.loggedUser_index));
                             editor.commit();
 

@@ -81,19 +81,6 @@ public class OtherUsersRecyclerAdapter extends RecyclerView.Adapter<OtherUsersRe
                 removeItem(holder.getAdapterPosition());
                 //friendshipData.getInstance().AddFriendship();
 
-               /* mFirestore= FirebaseFirestore.getInstance();
-                currentId= FirebaseAuth.getInstance().getUid();
-
-                Map<String,Object> notificationMessage=new HashMap<>();
-                notificationMessage.put("message", "New friend request");
-                notificationMessage.put("from", currentId);
-
-                mFirestore.collection("Users/" +user_id+"/Notifications").add(notificationMessage);/*.addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
-                    @Override
-                    public void onSuccess(DocumentReference documentReference) {
-                        Toast.makeText(view.getContext(),"message sent",Toast.LENGTH_LONG);
-                    }
-                });*/
             }
         });
     }

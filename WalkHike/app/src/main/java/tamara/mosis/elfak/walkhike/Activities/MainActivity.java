@@ -129,6 +129,11 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
         String username = sharedPref.getString(getString(R.string.loggedUser_username), "EMPTY");
         String emaill = sharedPref.getString(getString(R.string.loggedUser_email), "EMPTY");
         String image = sharedPref.getString(getString(R.string.loggedUser_image), "EMPTY");
+        Boolean sound=sharedPref.getBoolean(getString(R.string.loggedUser_sound),true);
+        Boolean notifications=sharedPref.getBoolean(getString(R.string.loggedUser_notifications),true);
+        Boolean locationSharing=sharedPref.getBoolean(getString(R.string.loggedUser_location_sharing),false);
+        // Boolean darkTheme=sharedPref.getBoolean(getString(R.string.loggedUser_dark_theme),false);//ne treba nam jer imamo proveru u startu svakog act
+        String unit=sharedPref.getString(getString(R.string.loggedUser_unit),"km");
 
         getDeviceLocation();
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.main_map_fragment);
