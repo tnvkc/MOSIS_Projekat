@@ -212,6 +212,28 @@ public class UserData {
 
     }
 
+
+    public void updateUserProfile(String email,  String newUsername, String newBio, String newImage)
+    {
+        int indexx = -1;
+        for(int i =0; i<users.size(); i++)
+        {
+            if(users.get(i).email.compareTo(email) == 0)
+                indexx = i;
+        }
+        if(indexx == -1)
+            return;
+
+        User uu =users.get(indexx);
+        uu.username = newUsername;
+        uu.desc = newBio;
+        uu.image = newImage;
+
+
+        db.child(FIREBASE_CHILD).child(uu.key).setValue(uu);
+
+    }
+
     private void recreateKeyIndexMapping()
     {
         UsersMapping.clear();

@@ -38,6 +38,11 @@ import java.util.Map;
 
 import tamara.mosis.elfak.walkhike.CustomListView;
 import tamara.mosis.elfak.walkhike.R;
+import tamara.mosis.elfak.walkhike.modeldata.Scores;
+import tamara.mosis.elfak.walkhike.modeldata.ScoresData;
+import tamara.mosis.elfak.walkhike.modeldata.User;
+import tamara.mosis.elfak.walkhike.modeldata.UserData;
+
 import java.lang.Object;
 
 public class ProfileActivity extends AppCompatActivity {
@@ -47,6 +52,11 @@ public class ProfileActivity extends AppCompatActivity {
     ListView list;
     Toolbar toolbar;
     TextView textViewName;
+    TextView textTotalDistance;
+    TextView textTotalActivity;
+    private TextView textViewEmail;
+    TextView textBio;
+
     CircularImageView profilePic;
     Button Logout;
 
@@ -56,7 +66,11 @@ public class ProfileActivity extends AppCompatActivity {
     private FirebaseAuth mfirebaseAuth;
     private FirebaseFirestore firestore;//yt
     private String userID;//yt
-    private TextView textViewEmail;
+
+    UserData userData;
+    ScoresData scoresData;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,8 +92,11 @@ public class ProfileActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayShowHomeEnabled(true);
 
         textViewName=findViewById(R.id.textViewName);
+        textTotalDistance = findViewById(R.id.profile_total_points);
+        textTotalActivity = findViewById(R.id.profile_activity_total);
         profilePic = findViewById(R.id.imageViewProfilePic);
         textViewEmail = findViewById(R.id.textViewMail);
+        textBio = findViewById(R.id.profile_bioo);
 
         sharedPref = getApplicationContext().getSharedPreferences( "Userdata", Context.MODE_PRIVATE);
         String username = sharedPref.getString(getString(R.string.loggedUser_username), "EMPTY");
@@ -88,6 +105,18 @@ public class ProfileActivity extends AppCompatActivity {
 
         textViewName.setText(username);
         textViewEmail.setText(emaill);
+
+        User u = userData.getInstance().getUser(emaill);
+        if(u != null) {
+            textBio.setText(u.desc);
+        }
+
+        Scores s = scoresData.getInstance().getScore(emaill);
+        if(s != null)
+        {
+            textTotalDistance.setText("" +s.alltimeDistance);
+            textTotalActivity.setText("" +s.alltimeActivity);
+        }
 
         RequestOptions placeholderOpt = new RequestOptions();
         placeholderOpt.placeholder(R.drawable.girl_1);

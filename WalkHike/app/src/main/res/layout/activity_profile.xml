@@ -50,9 +50,9 @@
         app:layout_constraintTop_toBottomOf="@+id/imageViewProfilePic" />
 
     <TextView
-        android:id="@+id/textView24"
-        android:layout_width="38dp"
-        android:layout_height="wrap_content"
+        android:id="@+id/profile_bioo"
+        android:layout_width="321dp"
+        android:layout_height="31dp"
         android:layout_below="@id/textView23"
         android:layout_marginLeft="32dp"
         android:text="TextView"
@@ -68,7 +68,7 @@
         android:divider="@null"
         android:dividerHeight="0dp"
         android:scrollbars="none"
-        android:layout_below="@id/textView24"
+        android:layout_below="@id/profile_bioo"
         android:layout_marginLeft="20dp"
         android:layout_marginRight="20dp"
         android:layout_marginTop="20dp"
@@ -79,7 +79,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.549"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView24"
+        app:layout_constraintTop_toBottomOf="@+id/profile_bioo"
         app:layout_constraintVertical_bias="0.0" />
 
     <LinearLayout
@@ -122,7 +122,7 @@
             tools:layout_editor_absoluteY="134dp" />
 
         <TextView
-            android:id="@+id/textView28"
+            android:id="@+id/profile_total_points"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="30 km"
@@ -130,18 +130,17 @@
             tools:layout_editor_absoluteY="161dp" />
 
         <TextView
-            android:id="@+id/textView29"
+            android:id="@+id/profile_points"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Messages:"
+            android:text="Total activity:"
             tools:layout_editor_absoluteX="246dp"
             tools:layout_editor_absoluteY="190dp" />
 
         <TextView
-            android:id="@+id/textView30"
+            android:id="@+id/profile_activity_total"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Pictures:"
             tools:layout_editor_absoluteX="246dp"
             tools:layout_editor_absoluteY="217dp" />
     </LinearLayout>

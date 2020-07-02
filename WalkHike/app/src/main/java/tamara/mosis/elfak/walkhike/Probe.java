@@ -45,6 +45,7 @@ public class Probe extends AppCompatActivity {
     Button btnStartService;
     Button btnStopService;
     Button btnClearSharedPrefs;
+    Button btnAddroute;
 
 
     TextInputEditText lon;
@@ -270,7 +271,7 @@ public class Probe extends AppCompatActivity {
                 bigText.setBigContentTitle("New friend request");
 
                 mBuilder.setContentIntent(pendingIntent);
-                mBuilder.setSmallIcon(R.mipmap.ic_launcher_round);
+                mBuilder.setSmallIcon(R.mipmap.ic_launcher);
                 mBuilder.setContentTitle("Request");
                 mBuilder.setContentText("friend request");
                 mBuilder.setPriority(android.app.Notification.PRIORITY_MAX);
@@ -287,11 +288,25 @@ public class Probe extends AppCompatActivity {
                             channelId,
                             "walkhikw_friends",
                             NotificationManager.IMPORTANCE_HIGH);
+                    channel.setSound(null,null);
                     mNotificationManager.createNotificationChannel(channel);
                     mBuilder.setChannelId(channelId);
                 }
+                else
+                {
+                    mBuilder.setSound(null);
+                }
 
                 mNotificationManager.notify(0, mBuilder.build());
+            }
+        });
+
+        btnAddroute = (Button) findViewById(R.id.probe_add_route);
+        btnAddroute.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String mapoobject =  textIndex.getText().toString();
+
             }
         });
 

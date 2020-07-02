@@ -34,6 +34,7 @@ import com.google.type.Date;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashMap;
 
 import tamara.mosis.elfak.walkhike.Activities.FriendRequestsActivity;
 import tamara.mosis.elfak.walkhike.Activities.FriendslistActivity;
@@ -82,14 +83,19 @@ public class NotificationService extends IntentService implements MapObjectData.
     ScoresData scoresData;
 
     private ArrayList<Position> positions;
+    private boolean[] poossss;
     private ArrayList<Position> DonePositions;
 
 
     private ArrayList<MapObject> objects;
 
     private ArrayList<User> users;
+    private ArrayList<String> doneUsers;
 
     private NotificationManager mNotificationManager;
+
+
+
 
     public NotificationService()
     {
@@ -141,6 +147,8 @@ public class NotificationService extends IntentService implements MapObjectData.
 
         positions = PD.getInstance().getPositions();
         users = userData.getInstance().getUsers();
+        doneUsers = new ArrayList<>();
+        doneUsers.add(email);
         //DonePositions = new ArrayList<>();
 
         numberOfObjectNotis = 100;
@@ -188,7 +196,6 @@ public class NotificationService extends IntentService implements MapObjectData.
         {
 
             time++;
-            CheckFriendNotis();
             try
             {
                 Thread.sleep(5000);
@@ -198,11 +205,7 @@ public class NotificationService extends IntentService implements MapObjectData.
             }
         }
     }
-    void CheckFriendNotis(){
 
-
-
-    }
     private void getDeviceLocation() {
         locationManager = (LocationManager) getSystemService(Service.LOCATION_SERVICE);
         isGpsProvider = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
@@ -253,18 +256,6 @@ public class NotificationService extends IntentService implements MapObjectData.
 
     }
 
-
-
-   /* @Override
-    public void onListUpdated() {
-        promena = "Stigla ";
-
-        int sizee = MoD.getInstance().getMapObjects().size() - 1;
-        MapObject m = MoD.getInstance().getMapObjects().get(sizee);
-        promena += m.toString();
-
-    }*/
-
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
 
@@ -292,6 +283,8 @@ public class NotificationService extends IntentService implements MapObjectData.
                 userData.getInstance().updateUserPosition(LoggedUser.email, p);
                 scoresData.getInstance().updateScoreDistance((int)meters, LoggedUser);
                 meters = 0;
+
+                findNearbyUsers();
             }
 
             //findNearbyUsers();
@@ -344,34 +337,42 @@ public class NotificationService extends IntentService implements MapObjectData.
 
     private void findNearbyUsers() {
         if(users.size() != 0) {
-            int removea[] = new int[users.size()];
-            int n = 0;
+            boolean close = false;
+
             for (int i = 0; i < users.size(); i++) {
 
-                if(users.get(i).email.compareTo(LoggedUser.email) != 0) {
-                    float[] res = new float[10];
-                    Location.distanceBetween(latLng.latitude, latLng.longitude, Double.parseDouble(users.get(i).UserPosition.latitude),
-                            Double.parseDouble(users.get(i).UserPosition.longitude), res);
-                    res[0] *= 0.000621371192f;
-                    if (res[0] < 1000)//res[1] < 10 && res[2] <10)
+                close = false;
+                float res[] = new float[5];
+                Location.distanceBetween(latLng.latitude, latLng.longitude, Double.parseDouble(users.get(i).UserPosition.latitude),
+                        Double.parseDouble(users.get(i).UserPosition.longitude), res);
+
+                for(int j = 0; j< doneUsers.size(); j++) {
+                    if(users.get(i).email.compareTo(doneUsers.get(j)) == 0)
                     {
-
-                        index = i;
-                        removea[n] = i;
-
-                        n++;
-
-                        Log.v("Position", users.get(i).UserPosition.toString() + " !");
-
-
-                        sendNotif("notify_" + users.get(i).username, "usersnear",numberOfFriendNotis , "User near you!",
-                                "User near you!", "Near you", "User " +users.get(i).username+ " near you!",
-                                new Intent(getApplicationContext(), MainActivity.class));
-
-
-                        numberOfObjectNotis++;
-                        users.remove(i);
+                        close = true;
+                        if (res[0] > 1000) {
+                            doneUsers.remove(j);
+                        }
                     }
+                }
+                if(!close && res[0] < 1000)
+                {
+
+
+                    index = i;
+                    doneUsers.add(users.get(i).email);
+
+                    Log.v("Position", users.get(i).UserPosition.toString() + " !");
+
+
+                    sendNotif("notify_" + users.get(i).username, "usersnear",numberOfFriendNotis , "User " + users.get(i).username+" near you!",
+                            "User " +users.get(i).username+ " near you!", "Near you", "User " +users.get(i).username+ " near you!",
+                            new Intent(getApplicationContext(), MainActivity.class));
+
+
+                    numberOfObjectNotis++;
+                    //users.remove(i);
+
                 }
             }
         }
@@ -489,7 +490,7 @@ public class NotificationService extends IntentService implements MapObjectData.
             editor.putInt(getString(R.string.NotiObjectsNumber), numOfNotis);
 
             editor.commit();
-            
+
             if(myObjectListener != null)
                 notifyObjectNoti();
 
