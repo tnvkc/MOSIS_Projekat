@@ -22,6 +22,7 @@ import android.location.Location;
 import android.location.LocationManager;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -98,9 +99,33 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
 
     ScoresData scoresData;
 
-    /*static*/ MapObjectData mapObjectData;
+    MapObjectData mapObjectData;
+    ArrayList<MapObject> mapObjects;
+
+    //filter
+
+    boolean filter_opened;
+    boolean filter_objects_opened;
+    boolean filter_timespan_opened;
+
+    byte object_filter;
+
+    ImageView filter_icon;
+    RelativeLayout layout_filter_options;
+    RelativeLayout layout_filter_object_type;
+    RelativeLayout layout_filter_timespan;
+    ImageView filter_object_type;
+    ImageView filter_timespan;
+    ImageView filter_today;
+    ImageView filter_one_week;
+    ImageView filter_one_month;
+    ImageView filter_checkpoint;
+    ImageView filter_emoji;
+    ImageView filter_photo;
+    ImageView filter_message;
 
 
+    //info_window
     LinearLayout info_window_container;
     ImageView info_window_icon;
     TextView info_window_username;
@@ -108,12 +133,21 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
     TextView info_window_lon;
     TextView info_window_see_details;
 
+    //mapObjects
     Marker lastSelected;
     Marker userMarker;
 
-    User loggedUser;
+    ArrayList<Marker> usersMarkers;
+    ArrayList<Marker> objectsMarkers;
 
+    //logged user
+    User loggedUser;
+    String loggedUsername;
+
+    //scores
     ArrayList<Scores> skorovi;
+
+
 
     @Override
     protected void onStart()
@@ -133,7 +167,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
         mfirebaseAuth=FirebaseAuth.getInstance();
         userData.getInstance().getUsers();
         friendshipData.getInstance().getFriendships();
-        mapObjectData.getInstance().getMapObjects();
+        mapObjects = mapObjectData.getInstance().getMapObjects();
         skorovi =  scoresData.getInstance().getScores();
 
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
@@ -148,6 +182,17 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
         String emaill = sharedPref.getString(getString(R.string.loggedUser_email), "EMPTY");
         String image = sharedPref.getString(getString(R.string.loggedUser_image), "EMPTY");
 
+        /////////
+        int indexx  = sharedPref.getInt(getString(R.string.loggedUser_index), -1);
+        skorovi = scoresData.getInstance().getScores();
+        if(indexx != -1) {
+            loggedUser = userData.getInstance().getUser(indexx);
+            if (loggedUser.email.compareTo(emaill) == 0)
+                Toast.makeText(getApplicationContext(), "Welcome " + username + ", " + emaill + "!", Toast.LENGTH_SHORT).show();
+        }
+
+        this.loggedUsername = username;
+
         getDeviceLocation();
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.main_map_fragment);
         mapFragment.getMapAsync(this);
@@ -158,32 +203,10 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
         getSupportActionBar().setDisplayShowTitleEnabled(true);
 
         addNewFloating = (FloatingActionButton) findViewById(R.id.main_addnewObject);
-        addNewFloating.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                info_window_container.setVisibility(View.GONE);
+        addNewFloating.setOnClickListener(this);
 
-                Intent intent=new Intent(getApplicationContext(), AddNewObjectActivity.class);
-                Bundle bundle = new Bundle();
-                bundle.putDouble("lat", location.getLatitude());
-                bundle.putDouble("lon", location.getLongitude());
-                bundle.putSerializable("user", loggedUser);
-                intent.putExtras(bundle);
-
-                startActivityForResult(intent, 1);
-            }
-        });
         objectInteraction = (FloatingActionButton) findViewById(R.id.main_showArObject);
-        objectInteraction.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent=new Intent(getApplicationContext(), ShowArObjectActivity.class);
-                Bundle bundle = new Bundle();
-                bundle.putInt("object_id", 3); //1 za trophy, 2 za emoji, 3 za marker
-                intent.putExtras(bundle);
-                startActivity(intent);
-            }
-        });
+        objectInteraction.setOnClickListener(this);
 
         startServiceButton = findViewById(R.id.main_startService);
         startServiceButton.setOnClickListener(this);
@@ -191,6 +214,37 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
         bottom_navigation_menu = findViewById(R.id.bottom_navigation_menu);
         bottom_navigation_menu.setSelectedItemId(R.id.map);
         bottom_navigation_menu.setOnNavigationItemSelectedListener(this);
+
+        filter_opened = false;
+        filter_objects_opened = false;
+        filter_timespan_opened = false;
+
+        object_filter = (byte) 0x0f;
+
+        filter_icon = findViewById(R.id.filter_icon);
+        layout_filter_options = findViewById(R.id.layout_filter);
+        layout_filter_object_type = findViewById(R.id.layout_filter_object_type);
+        layout_filter_timespan = findViewById(R.id.layout_filter_timespan);
+        filter_object_type = findViewById(R.id.filter_object_type);
+        filter_timespan = findViewById(R.id.filter_timespan);
+        filter_today = findViewById(R.id.filter_today);
+        filter_one_week = findViewById(R.id.filter_one_week);
+        filter_one_month = findViewById(R.id.filter_one_month);
+        filter_checkpoint = findViewById(R.id.filter_checkpoint);
+        filter_emoji = findViewById(R.id.filter_emoji);
+        filter_photo = findViewById(R.id.filter_photo);
+        filter_message = findViewById(R.id.filter_message);
+
+        filter_icon.setOnClickListener(this);
+        filter_object_type.setOnClickListener(this);
+        filter_timespan.setOnClickListener(this);
+        filter_today.setOnClickListener(this);
+        filter_one_week.setOnClickListener(this);
+        filter_one_month.setOnClickListener(this);
+        filter_checkpoint.setOnClickListener(this);
+        filter_emoji.setOnClickListener(this);
+        filter_photo.setOnClickListener(this);
+        filter_message.setOnClickListener(this);
 
         info_window_container = findViewById(R.id.info_window_container);
         info_window_container.setVisibility(View.GONE);
@@ -203,6 +257,10 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
         info_window_see_details.setOnClickListener(this);
 
         lastSelected = null;
+
+        usersMarkers = new ArrayList<>();
+        objectsMarkers = new ArrayList<>();
+
         /*if(!startedService) {
             Toast.makeText(getApplicationContext(), "Start service", Toast.LENGTH_SHORT).show();
 
@@ -211,7 +269,6 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
             startService(i);
             startedService = true;
         }*/
-
 
     }
 
@@ -259,6 +316,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
             m.setTag(mapObject);
             //map.moveCamera(CameraUpdateFactory.newLatLng(loc));
             //map.animateCamera(CameraUpdateFactory.newLatLngZoom(loc,10f));
+            objectsMarkers.add(m);
         }
 
 
@@ -279,7 +337,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
 
 
 //da li nam treba ovaj deo?
-        SharedPreferences sharedPref = getApplicationContext().getSharedPreferences( "Userdata", Context.MODE_PRIVATE);
+        /*SharedPreferences sharedPref = getApplicationContext().getSharedPreferences( "Userdata", Context.MODE_PRIVATE);
         String username = sharedPref.getString(getString(R.string.loggedUser_username), "EMPTY");
         String email = sharedPref.getString(getString(R.string.loggedUser_email), "EMPTY");
         int indexx  = sharedPref.getInt(getString(R.string.loggedUser_index), -1);
@@ -287,13 +345,13 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
         skorovi = scoresData.getInstance().getScores();
 
 
-        Toast.makeText(getApplicationContext(), "Welcome " + username + ", " + email + "!", Toast.LENGTH_SHORT).show();
+        //Toast.makeText(getApplicationContext(), "Welcome " + username + ", " + email + "!", Toast.LENGTH_SHORT).show();
 
         if(indexx != -1) {
             loggedUser = userData.getInstance().getUser(indexx);
             if (loggedUser.email.compareTo(email) == 0)
                 Toast.makeText(getApplicationContext(), "Welcome " + username + ", " + email + "!", Toast.LENGTH_SHORT).show();
-        }
+        }*/
 
         /*User u;
         if(indexx != -1) {
@@ -305,7 +363,6 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
         }*/
         return super.onCreateOptionsMenu(menu);
         //return false;
-
 
     }
 
@@ -339,10 +396,10 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
         googleMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
         this.map=googleMap;
 
-        /*ArrayList<MapObject> friendsObjects = mapObjectData.getInstance().getFriendsMapObjects();
+        ArrayList<MapObject> friendsObjects = mapObjectData.getInstance().getFriendsMapObjects(loggedUsername);
         for (int i = 0; i < friendsObjects.size(); i++) {
             AddMarkerObject(friendsObjects.get(i));
-        }*/
+        }
 
         map.setOnMarkerClickListener(this);
     }
@@ -516,8 +573,175 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
 
             Toast.makeText(this, "lat: " + lat + " lon: " + lon, Toast.LENGTH_SHORT).show();
 
+        } else if (v.getId() == R.id.main_addnewObject) {
+
+            info_window_container.setVisibility(View.GONE);
+
+            Intent intent=new Intent(getApplicationContext(), AddNewObjectActivity.class);
+            Bundle bundle = new Bundle();
+            bundle.putDouble("lat", location.getLatitude());
+            bundle.putDouble("lon", location.getLongitude());
+            bundle.putSerializable("user", loggedUser);
+            intent.putExtras(bundle);
+
+            startActivityForResult(intent, 1);
+
+        } else if (v.getId() == R.id.main_showArObject) {
+
+            Intent intent=new Intent(getApplicationContext(), ShowArObjectActivity.class);
+            Bundle bundle = new Bundle();
+            bundle.putInt("object_id", 3); //1 za trophy, 2 za emoji, 3 za marker
+            intent.putExtras(bundle);
+            startActivity(intent);
+
+        } else if (v.getId() == R.id.filter_icon) {
+
+            if (filter_opened) {
+                Toast.makeText(this, "Hide filter options!", Toast.LENGTH_SHORT).show();
+                layout_filter_options.setVisibility(View.GONE);
+                layout_filter_object_type.setVisibility(View.GONE);
+                layout_filter_timespan.setVisibility(View.GONE);
+                filter_opened = false;
+                filter_objects_opened = false;
+                filter_timespan_opened = false;
+            } else {
+                Toast.makeText(this, "Show filter options!", Toast.LENGTH_SHORT).show();
+                layout_filter_options.setVisibility(View.VISIBLE);
+                filter_opened = true;
+            }
+
+        } else if (v.getId() == R.id.filter_object_type) {
+
+            if (filter_objects_opened)
+            {
+                Toast.makeText(this, "Hide object filters!", Toast.LENGTH_SHORT).show();
+                layout_filter_object_type.setVisibility(View.GONE);
+                filter_objects_opened = false;
+            } else {
+                Toast.makeText(this, "Show object filters!", Toast.LENGTH_SHORT).show();
+                layout_filter_object_type.setVisibility(View.VISIBLE);
+                layout_filter_timespan.setVisibility(View.GONE);
+                filter_objects_opened = true;
+            }
+
+        } else if (v.getId() == R.id.filter_timespan) {
+
+            if (filter_timespan_opened)
+            {
+                Toast.makeText(this, "Hide timespan filters!", Toast.LENGTH_SHORT).show();
+                layout_filter_timespan.setVisibility(View.GONE);
+                filter_timespan_opened = false;
+            } else {
+                Toast.makeText(this, "Show timespan filters!", Toast.LENGTH_SHORT).show();
+                layout_filter_timespan.setVisibility(View.VISIBLE);
+                layout_filter_object_type.setVisibility(View.GONE);
+                filter_timespan_opened = true;
+            }
+
+        } else if (v.getId() == R.id.filter_today) {
+
+            Toast.makeText(this, "Show today's markers!", Toast.LENGTH_SHORT).show();
+            layout_filter_timespan.setVisibility(View.GONE);
+            filter_timespan_opened = false;
+
+            FilterMapObjectsByTimespan(1);
+
+        } else if (v.getId() == R.id.filter_one_week) {
+
+            Toast.makeText(this, "Show this week's markers!", Toast.LENGTH_SHORT).show();
+            layout_filter_timespan.setVisibility(View.GONE);
+            filter_timespan_opened = false;
+
+            FilterMapObjectsByTimespan(7);
+
+        } else if (v.getId() == R.id.filter_one_month) {
+
+            Toast.makeText(this, "Show this month's markers!", Toast.LENGTH_SHORT).show();
+            layout_filter_timespan.setVisibility(View.GONE);
+            filter_timespan_opened = false;
+
+            FilterMapObjectsByTimespan(30);
+
+        } else if (v.getId() == R.id.filter_checkpoint) {
+
+            if ((object_filter & 0x02) == 0x02) {
+                //filter je ukljucen, treba ga iskljuciti
+                object_filter &= 0x0d;
+                Toast.makeText(this, "Hide checkpoints!", Toast.LENGTH_SHORT).show();
+            } else {
+                object_filter |= 0x02;
+                Toast.makeText(this, "Show checkpoints!", Toast.LENGTH_SHORT).show();
+            }
+
+            FilterMapObjects(object_filter);
+
+        } else if (v.getId() == R.id.filter_emoji) {
+
+            if ((object_filter & 0x08) == 0x08) {
+                object_filter &= 0x07;
+                Toast.makeText(this, "Hide hearts!", Toast.LENGTH_SHORT).show();
+            } else {
+                object_filter |= 0x08;
+                Toast.makeText(this, "Show hearts!", Toast.LENGTH_SHORT).show();
+            }
+
+            FilterMapObjects(object_filter);
+
+        } else if (v.getId() == R.id.filter_photo) {
+
+            if ((object_filter & 0x04) == 0x04) {
+                object_filter &= 0x0b;
+                Toast.makeText(this, "Hide photo!", Toast.LENGTH_SHORT).show();
+            } else {
+                object_filter |= 0x04;
+                Toast.makeText(this, "Show photo!", Toast.LENGTH_SHORT).show();
+            }
+
+            FilterMapObjects(object_filter);
+
+        } else if (v.getId() == R.id.filter_message) {
+
+            if ((object_filter & 0x01) == 0x01) {
+                //filter je ukljucen, treba ga iskljuciti
+                object_filter &= 0x0e;
+                Toast.makeText(this, "Hide messages!", Toast.LENGTH_SHORT).show();
+            } else {
+                object_filter |= 0x01;
+                Toast.makeText(this, "Show messages!", Toast.LENGTH_SHORT).show();
+            }
+
+            FilterMapObjects(object_filter);
         }
-       
+    }
+
+    protected void FilterMapObjects(byte filter) {
+
+        //filter: 0000****, if * = 1 then show certain marker type
+
+        ArrayList<MapObject> filteredObjects = MapObjectData.getInstance().getFilteredMapObjects(object_filter, loggedUsername);
+
+        for (int i = 0; i < objectsMarkers.size(); i++) {
+            objectsMarkers.get(i).remove();
+        }
+
+        for (int i = 0; i < filteredObjects.size(); i++) {
+            AddMarkerObject(filteredObjects.get(i));
+        }
+    }
+
+    protected void FilterMapObjectsByTimespan(int timespan) {
+
+        //timespan: 1 - today, 7 - a week, 30 - a month
+
+        ArrayList<MapObject> filteredObjects = MapObjectData.getInstance().getMapObjectsFromTimespan(timespan, loggedUsername);
+
+        for (int i = 0; i < objectsMarkers.size(); i++) {
+            objectsMarkers.get(i).remove();
+        }
+
+        for (int i = 0; i < filteredObjects.size(); i++) {
+            AddMarkerObject(filteredObjects.get(i));
+        }
     }
 
     @Override

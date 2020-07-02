@@ -10,8 +10,15 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
+import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 public class MapObjectData {
 
@@ -43,11 +50,88 @@ public class MapObjectData {
         return MapObjects;
     }
 
-    public ArrayList<MapObject> getFriendsMapObjects() {
+    public ArrayList<MapObject> getFriendsMapObjects(String loggedUserUsername) {
 
-        //override to return objects added by user or his friends
-        return MapObjects;
+        ArrayList<MapObject> list = new ArrayList<>();
+        for(int i = 0; i< this.MapObjects.size(); i++)
+        {
+            if((this.MapObjects.get(i).createdBy.username.compareTo(loggedUserUsername) == 0) ||
+                    (this.MapObjects.get(i).sharedWith.username.compareTo(loggedUserUsername) == 0))
+            {
+                list.add(MapObjects.get(i));
+            }
+        }
+
+        return list;
     }
+
+    public ArrayList<MapObject> getMapObjectsByType(int type, String username) {
+
+        ArrayList<MapObject> usersMarkers = getFriendsMapObjects(username);
+        ArrayList<MapObject> list = new ArrayList<>();
+        for(int i = 0; i< usersMarkers.size(); i++)
+        {
+            if (usersMarkers.get(i).objectType == type)
+            {
+                list.add(usersMarkers.get(i));
+            }
+        }
+
+        return list;
+    }
+
+    public ArrayList<MapObject> getFilteredMapObjects(Byte filter, String username) {
+
+        ArrayList<MapObject> usersMarkers = getFriendsMapObjects(username);
+        ArrayList<MapObject> list = new ArrayList<>();
+        for(int i = 0; i< usersMarkers.size(); i++)
+        {
+            MapObject mo = usersMarkers.get(i);
+
+            if (
+                    ((filter & 8) == 8 && mo.objectType == 4) ||
+                    ((filter & 4) == 4 && mo.objectType == 3) ||
+                    ((filter & 2) == 2 && mo.objectType == 2) ||
+                    ((filter & 1) == 1 && mo.objectType == 1)
+            ) {
+                list.add(usersMarkers.get(i));
+            }
+        }
+
+        return list;
+    }
+
+    public ArrayList<MapObject> getMapObjectsFromTimespan(int timespan, String username) {
+
+        //1 - today, 7 - week, 30 - month
+        DateFormat format = new SimpleDateFormat("dd-MM-yyyy");
+        Date currentDate = Calendar.getInstance().getTime();
+        //Date currentDate = .format(Calendar.getInstance().getTime());
+
+        ArrayList<MapObject> usersMarkers = getFriendsMapObjects(username);
+        ArrayList<MapObject> list = new ArrayList<>();
+
+        for(int i = 0; i< usersMarkers.size(); i++)
+        {
+            MapObject mo = usersMarkers.get(i);
+            Date objectDate;
+            try {
+                objectDate = format.parse(mo.date);
+            } catch (Exception e) {
+                break;
+            }
+
+            long difference = currentDate.getTime() - objectDate.getTime();
+            long dayDifference = TimeUnit.DAYS.convert(difference, TimeUnit.MILLISECONDS);
+
+            if (dayDifference < timespan) {
+                list.add(usersMarkers.get(i));
+            }
+        }
+
+        return list;
+    }
+
 
     MapObjectData.ListUpdatedEventListener updateListener;
     public void setEventListener(MapObjectData.ListUpdatedEventListener listener) {
