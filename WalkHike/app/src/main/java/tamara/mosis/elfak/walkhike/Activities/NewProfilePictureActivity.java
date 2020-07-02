@@ -2,6 +2,7 @@ package tamara.mosis.elfak.walkhike.Activities;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.appcompat.widget.Toolbar;
@@ -11,14 +12,19 @@ import androidx.core.content.FileProvider;
 
 import android.Manifest;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.ImageDecoder;
+import android.media.MediaSession2Service;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
@@ -55,7 +61,11 @@ public class NewProfilePictureActivity extends AppCompatActivity {
     Integer[] imgid = {R.drawable.ic_photo_camera_black_24dp, R.drawable.ic_image_black_24dp};
     ListView list;
     CustomListView adapter;
-    static final int REQUEST_TAKE_PHOTO = 1234;
+    private static final int MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE = 101;//Any random number
+
+    static final int REQUEST_IMAGE_CAPTURE = 1;
+    String currentPhotoPath;
+    static final int REQUEST_TAKE_PHOTO = 1;
     static final int GALLERY_REQUEST_CODE = 12345;
 
     FirebaseStorage storage;
@@ -64,7 +74,7 @@ public class NewProfilePictureActivity extends AppCompatActivity {
     UserData userData;
     Uri imageUri;
     String firestorageUri = null;
-    //String imageID;
+
     ImageView imageView;
     Toolbar toolbar;
     Button btnSave;
@@ -107,8 +117,10 @@ public class NewProfilePictureActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 if (position == 0) {
-                    openCameraTocaptureImage();
-                } else {
+                    getImage();
+
+                }
+                else {
                     Intent intent = new Intent();
                     intent.setType("image/*");
                     intent.setAction(Intent.ACTION_GET_CONTENT);
@@ -140,23 +152,19 @@ public class NewProfilePictureActivity extends AppCompatActivity {
     }
 
     private void uploadImage(int index) {
-        if (imageUri != null)//image uploaded
+        if (imageUri != null)
         {
-            // Code for showing progressDialog while uploading
             ProgressDialog progressDialog
                     = new ProgressDialog(this);
             progressDialog.setTitle("Uploading...");
             progressDialog.show();
 
-            // Defining the child of storageReference
             StorageReference ref
                     = storageReference
                     .child(
                             "images/"
                                     + UUID.randomUUID().toString());
 
-            // adding listeners on upload
-            // or failure of image
             ref.putFile(imageUri)
                     .addOnSuccessListener(
                             new OnSuccessListener<UploadTask.TaskSnapshot>() {
@@ -185,8 +193,7 @@ public class NewProfilePictureActivity extends AppCompatActivity {
 
                                         }
                                     });
-                                    // Image uploaded successfully
-                                    // Dismiss dialog
+
                                     progressDialog.dismiss();
                                     Toast
                                             .makeText(NewProfilePictureActivity.this,
@@ -213,8 +220,6 @@ public class NewProfilePictureActivity extends AppCompatActivity {
                     .addOnProgressListener(
                             new OnProgressListener<UploadTask.TaskSnapshot>() {
 
-                                // Progress Listener for loading
-                                // percentage on the dialog box
                                 @Override
                                 public void onProgress(
                                         UploadTask.TaskSnapshot taskSnapshot) {
@@ -228,129 +233,31 @@ public class NewProfilePictureActivity extends AppCompatActivity {
                                 }
                             });
 
-
         }
-        /*else//photo taken
-        {
-            // Code for showing progressDialog while uploading
-            ProgressDialog progressDialog
-                    = new ProgressDialog(this);
-            progressDialog.setTitle("Uploading...");
-            progressDialog.show();
-
-            // Defining the child of storageReference
-            StorageReference ref
-                    = storageReference
-                    .child(
-                            "images/"
-                                    + UUID.randomUUID().toString());
-
-            // adding listeners on upload
-            // or failure of image
-            ref.putFile(imageID)
-                    .addOnSuccessListener(
-                            new OnSuccessListener<UploadTask.TaskSnapshot>() {
-
-                                @Override
-                                public void onSuccess(
-                                        UploadTask.TaskSnapshot taskSnapshot) {
-
-                                    ref.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-                                        @Override
-                                        public void onSuccess(Uri uri) {
-                                            firestorageUri=String.valueOf(uri);
-                                            LoggedUser.image=firestorageUri;
-                                            userData.getInstance().updateUser(index,LoggedUser);
-
-                                            Context context = getApplicationContext();
-                                            SharedPreferences sharedPref = context.getSharedPreferences(
-                                                    "Userdata", Context.MODE_PRIVATE);
-                                            SharedPreferences.Editor editor = sharedPref.edit();
-                                            editor.putString(getString(R.string.loggedUser_image), LoggedUser.image);
-
-                                            Intent resultIntent = new Intent();
-                                            resultIntent.putExtra("img", LoggedUser.image);
-                                            setResult(Activity.RESULT_OK, resultIntent);
-                                            finish();
-
-                                        }
-                                    });
-                                    // Image uploaded successfully
-                                    // Dismiss dialog
-                                    progressDialog.dismiss();
-                                    Toast
-                                            .makeText(NewProfilePictureActivity.this,
-                                                    "Image Uploaded!!",
-                                                    Toast.LENGTH_SHORT)
-                                            .show();
-
-                                }
-                            })
-
-                    .addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception e) {
-
-                            // Error, Image not uploaded
-                            progressDialog.dismiss();
-                            Toast
-                                    .makeText(NewProfilePictureActivity.this,
-                                            "Failed " + e.getMessage(),
-                                            Toast.LENGTH_SHORT)
-                                    .show();
-                        }
-                    })
-                    .addOnProgressListener(
-                            new OnProgressListener<UploadTask.TaskSnapshot>() {
-
-                                // Progress Listener for loading
-                                // percentage on the dialog box
-                                @Override
-                                public void onProgress(
-                                        UploadTask.TaskSnapshot taskSnapshot) {
-                                    double progress
-                                            = (100.0
-                                            * taskSnapshot.getBytesTransferred()
-                                            / taskSnapshot.getTotalByteCount());
-                                    progressDialog.setMessage(
-                                            "Uploaded "
-                                                    + (int) progress + "%");
-                                }
-                            });*/
 
     }
 
 
-
+    @RequiresApi(api = Build.VERSION_CODES.P)
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if(requestCode==REQUEST_TAKE_PHOTO && resultCode==RESULT_OK )
-        {
-            Bitmap bmp=(Bitmap)data.getExtras().get("data");
-            imageView.setImageBitmap(bmp);
-            //imageUri=data.getData();
-            imageUri = null;
+        if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
+
+            File f = new File(currentPhotoPath);
+            imageUri = Uri.fromFile(f);
+
+            Toast.makeText(this, "uri "+imageUri, Toast.LENGTH_SHORT).show();
+
+            setPic();
+
         }
         else if(requestCode==GALLERY_REQUEST_CODE && resultCode==RESULT_OK && data!=null && data.getData() != null)
+        {
             imageUri=data.getData();
+        }
         imageView.setImageURI(imageUri);
-        try {
 
-            // Setting image on image view using Bitmap
-            Bitmap bitmap = MediaStore
-                    .Images
-                    .Media
-                    .getBitmap(
-                            getContentResolver(),
-                            imageUri);
-            imageView.setImageBitmap(bitmap);
-        }
-
-        catch (IOException e) {
-            // Log the exception
-            e.printStackTrace();
-        }
     }
 
     @Override
@@ -362,12 +269,123 @@ public class NewProfilePictureActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(menuItem);
     }
 
-    private void openCameraTocaptureImage()
-    {
-        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
 
-        startActivityForResult(takePictureIntent, REQUEST_TAKE_PHOTO);
+    public void getImage()
+    {
+        checkStoragePermission();
     }
 
+    private void checkStoragePermission() {
+        if (ContextCompat.checkSelfPermission(NewProfilePictureActivity.this,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                != PackageManager.PERMISSION_GRANTED) {
+
+            if (ActivityCompat.shouldShowRequestPermissionRationale(NewProfilePictureActivity.this,
+                    Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+
+                new AlertDialog.Builder(NewProfilePictureActivity.this)
+                        .setTitle("Permission Required")
+                        .setMessage("Storage permission is required to save image")
+                        .setPositiveButton("ALLOW", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                dialogInterface.cancel();
+                                ActivityCompat.requestPermissions(NewProfilePictureActivity.this,
+                                        new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                                        MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE);
+                            }
+                        }).setNegativeButton("DENY", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        dialogInterface.cancel();
+                    }
+                }).show();
+            } else {
+                ActivityCompat.requestPermissions(NewProfilePictureActivity.this,
+                        new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                        MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE);
+
+            }
+        } else {
+
+            Toast.makeText(this, "permission Alreday grated", Toast.LENGTH_SHORT).show();
+
+            openCameraTocaptureImage();
+
+        }
+    }
+
+    private void openCameraTocaptureImage() {
+        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
+            File photoFile = null;
+            try {
+                photoFile = createImageFile();
+            } catch (IOException ex) {
+            }
+            if (photoFile != null) {
+                Uri photoURI = FileProvider.getUriForFile(this,
+                        "tamara.mosis.elfak.walkhike",
+                        photoFile);
+                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
+                startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
+            }
+        }
+    }
+
+    private File createImageFile() throws IOException {
+        // Create an image file name
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+        String imageFileName = "JPEG_" + timeStamp + "_";
+        File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+        File image = File.createTempFile(
+                imageFileName,  /* prefix */
+                ".jpg",         /* suffix */
+                storageDir      /* directory */
+        );
+
+        currentPhotoPath = image.getAbsolutePath();
+        return image;
+    }
+    @Override
+    public void onRequestPermissionsResult(int requestCode,
+                                           String[] permissions, int[] grantResults) {
+        switch (requestCode) {
+            case MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE: {
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    //Permission is granted
+                    openCameraTocaptureImage();
+                } else {
+                    Toast.makeText(this, "permission denied", Toast.LENGTH_SHORT).show();
+                }
+                return;
+            }
+
+            // other 'case' lines to check for other
+            // permissions this app might request.
+        }
+    }
+
+
+    private void setPic() {
+        int targetW = imageView.getWidth();
+        int targetH = imageView.getHeight();
+
+        BitmapFactory.Options bmOptions = new BitmapFactory.Options();
+        bmOptions.inJustDecodeBounds = true;
+
+        int photoW = bmOptions.outWidth;
+        int photoH = bmOptions.outHeight;
+
+        int scaleFactor = Math.min(photoW/targetW, photoH/targetH);
+
+        bmOptions.inJustDecodeBounds = false;
+        bmOptions.inSampleSize = scaleFactor;
+        bmOptions.inPurgeable = true;
+
+        Bitmap bitmap = BitmapFactory.decodeFile(currentPhotoPath, bmOptions);
+        imageView.setImageBitmap(bitmap);
+    }
 
 }

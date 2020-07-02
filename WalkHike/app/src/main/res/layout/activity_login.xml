@@ -12,8 +12,21 @@
         android:minHeight="?attr/actionBarSize"
         android:background="@color/colorPrimary">
     </androidx.appcompat.widget.Toolbar>
+
     <TextView
-        android:id="@+id/textView9"
+        android:id="@+id/textViewAppName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="50dp"
+        android:layout_alignParentTop="true"
+        android:text="Walk &amp; Hike"
+        android:textSize="40dp"
+        android:layout_below="@id/login_toolbar"
+        android:layout_centerHorizontal="true"
+
+        />
+    <TextView
+        android:id="@+id/txtViewforgotPass"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/forgot_password"
@@ -40,11 +53,10 @@
         android:id="@+id/textView7"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="80dp"
-        android:layout_alignParentTop="true"
+        android:layout_marginTop="10dp"
         android:text="Welcome!"
         android:textSize="24dp"
-        android:layout_below="@id/login_toolbar"
+        android:layout_below="@id/textViewAppName"
         android:layout_centerHorizontal="true"
 
         />

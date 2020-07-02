@@ -6,9 +6,10 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.CAMERA" />
-
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
     <uses-feature
-        android:name="android.hardware.camera2"
+        android:name="android.hardware.camera"
         android:required="true" />
     <uses-feature
         android:glEsVersion="0x00030000"
@@ -32,13 +33,6 @@
             </intent-filter>
         </activity>
         <activity android:name=".Probe_Friendship_Activity" />
-        <activity android:name=".Activities.NotificationActivity">
-            <intent-filter>
-                <action android:name="tamara.mosis.elfak.walknhike.TARGETNOTIFICATION" />
-
-                <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
-        </activity>
         <activity android:name=".Activities.FriendRequestsActivity" />
 
         <meta-data
@@ -58,7 +52,6 @@
         <activity android:name=".Activities.FriendProfileActivity" />
         <activity android:name=".Activities.HelpActivity" />
         <activity android:name=".Activities.NewPasswordActivity" />
-        <activity android:name=".Activities.RecoveryCodeActivity" />
         <activity android:name=".Activities.NewProfilePictureActivity" />
         <activity android:name=".Activities.SignUpActivity" />
         <activity android:name=".Activities.LoginActivity">
@@ -74,7 +67,15 @@
         </activity>
 
         <activity android:name=".Activities.MainActivity"></activity>
-
+        <provider
+            android:authorities="tamara.mosis.elfak.walkhike"
+            android:name="androidx.core.content.FileProvider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_paths"></meta-data>
+        </provider>
         <service android:name=".FirebaseMessagingService">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />

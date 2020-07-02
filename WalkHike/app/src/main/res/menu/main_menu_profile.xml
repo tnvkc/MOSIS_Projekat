@@ -9,7 +9,6 @@
         app:showAsAction="always"></item>
     <item
         android:id="@+id/main_menu_profile_item"
-        android:icon="@drawable/girl_1"
         android:title="Profile"
         app:showAsAction="always"></item>
 

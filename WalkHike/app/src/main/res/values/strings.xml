@@ -61,7 +61,11 @@
     <string name="loggedUser_email">userEmail</string>
     <string name="loggedUser_image">userImage</string>
     <string name="loggedUser_index">userIndex</string>
-
+    <string name="loggedUser_sound">userSound</string>
+    <string name="loggedUser_notifications">userNotifications</string>
+    <string name="loggedUser_location_sharing">userLocationSharing</string>
+    <string name="loggedUser_dark_theme">userDarkTheme</string>
+    <string name="loggedUser_unit">userUnit</string>
 
     <string name="NotificationsFriend">friendNotis</string>
     <string name="NotificationsNumber">friendNotis</string>

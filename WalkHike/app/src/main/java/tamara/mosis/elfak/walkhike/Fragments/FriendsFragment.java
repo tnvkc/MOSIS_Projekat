@@ -108,24 +108,4 @@ public class FriendsFragment extends Fragment {
         //prikaz.setText(prikaziii);
     }
 
-    @Override
-    public void onStart()
-    {
-        super.onStart();
-       /*firebaseFirestore.collection("Users").addSnapshotListener(new EventListener<QuerySnapshot>() {
-            @Override
-            public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
-                for(DocumentChange doc:queryDocumentSnapshots.getDocumentChanges())
-                {
-                    if(doc.getType()==DocumentChange.Type.ADDED)
-                    {
-                        String user_id=doc.getDocument().getId();
-                        Users users=doc.getDocument().toObject(Users.class).withId(user_id);
-                        usersList.add(users);
-                        usersRecyclerAdapter.notifyDataSetChanged();
-                    }
-                }
-            }
-        });*/
-    }
 }
