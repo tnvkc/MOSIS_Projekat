@@ -3,12 +3,17 @@ package tamara.mosis.elfak.walkhike.Activities;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
+import androidx.core.app.ActivityCompat;
 
+import android.Manifest;
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.text.InputType;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
@@ -44,7 +49,9 @@ public class LoginActivity extends AppCompatActivity {
     EditText txtEmail;
     EditText txtPassword;
     TextView orSignUp;
+    TextView txtForgotPass;
 
+    SharedPreferences sharedPref;
     private ProgressDialog progress;
     private FirebaseAuth firebaseAuth;
     FirebaseUser logedInUser;
@@ -71,7 +78,50 @@ public class LoginActivity extends AppCompatActivity {
         progress = new ProgressDialog(this);
         txtPassword = (EditText)   findViewById(R.id.login_edit_pass);
         txtEmail = (EditText)   findViewById(R.id.login_edit_email);
+        txtForgotPass=findViewById(R.id.txtViewforgotPass);
 
+        txtForgotPass.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                final EditText adinput = new EditText(getApplicationContext());
+                adinput.setInputType(InputType.TYPE_CLASS_TEXT );
+
+                AlertDialog.Builder builder=new AlertDialog.Builder(LoginActivity.this);
+                builder.setView(adinput);
+                builder.setTitle("Notification")
+                        .setMessage("Recovery code will be sent to your email")
+                        .setPositiveButton("Proceed", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                String emaill=adinput.getText().toString();
+                                if(emaill.equals("")) {
+                                    Toast.makeText(getApplicationContext(), "Please insert your email address", Toast.LENGTH_LONG).show();
+                                }
+                                else
+                                    {
+                                        firebaseAuth.sendPasswordResetEmail(emaill)
+                                            .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                @Override
+                                                public void onComplete(@NonNull Task<Void> task) {
+                                                    if (task.isSuccessful()) {
+                                                        Toast.makeText(getApplicationContext(), "Recovery code sent.", Toast.LENGTH_LONG).show();
+
+                                                    } else
+                                                        Toast.makeText(getApplicationContext(), task.getException().getMessage(), Toast.LENGTH_LONG).show();
+
+                                                }
+
+                                            });
+                                }
+                            }
+                        }).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                    }
+                }).show();
+            }
+        });
 
         loginB = (Button) findViewById(R.id.login_button_login);
         loginB.setOnClickListener(new View.OnClickListener() {
@@ -145,7 +195,7 @@ public class LoginActivity extends AppCompatActivity {
                         uu = probepos.get(indexx);
 
                         Context context = getApplicationContext();
-                        SharedPreferences sharedPref = context.getSharedPreferences(
+                         sharedPref = context.getSharedPreferences(
                                 "Userdata", Context.MODE_PRIVATE);
                         SharedPreferences.Editor editor = sharedPref.edit();
                         editor.putString(getString(R.string.loggedUser_email), uu.email);

@@ -52,7 +52,6 @@
         <activity android:name=".Activities.FriendProfileActivity" />
         <activity android:name=".Activities.HelpActivity" />
         <activity android:name=".Activities.NewPasswordActivity" />
-        <activity android:name=".Activities.RecoveryCodeActivity" />
         <activity android:name=".Activities.NewProfilePictureActivity" />
         <activity android:name=".Activities.SignUpActivity" />
         <activity android:name=".Activities.LoginActivity">

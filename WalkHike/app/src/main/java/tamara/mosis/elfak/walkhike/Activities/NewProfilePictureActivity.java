@@ -294,7 +294,7 @@ public class NewProfilePictureActivity extends AppCompatActivity {
                                         new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
                                         MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE);
                             }
-                        }).setNegativeButton("DENIED", new DialogInterface.OnClickListener() {
+                        }).setNegativeButton("DENY", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                         dialogInterface.cancel();
