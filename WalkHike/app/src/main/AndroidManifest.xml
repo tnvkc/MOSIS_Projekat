@@ -33,13 +33,6 @@
             </intent-filter>
         </activity>
         <activity android:name=".Probe_Friendship_Activity" />
-        <activity android:name=".Activities.NotificationActivity">
-            <intent-filter>
-                <action android:name="tamara.mosis.elfak.walknhike.TARGETNOTIFICATION" />
-
-                <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
-        </activity>
         <activity android:name=".Activities.FriendRequestsActivity" />
 
         <meta-data

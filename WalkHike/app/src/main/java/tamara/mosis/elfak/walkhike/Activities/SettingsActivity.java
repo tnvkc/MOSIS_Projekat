@@ -15,7 +15,7 @@ import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.Button;
+import android.widget.ToggleButton;
 import android.widget.CompoundButton;
 import android.widget.ListView;
 import android.widget.Switch;
@@ -28,8 +28,9 @@ public class SettingsActivity extends AppCompatActivity {
     Integer[] imgid={R.drawable.ic_music_note_black_24dp,R.drawable.ic_notifications_black_24dp,R.drawable.ic_location_on_black_24dp,
             R.drawable.ic_dark_mode_24dp,R.drawable.ic_unit_24dp};
     ListView list;
-    Button btnkm;
-    Button btnmi;
+    ToggleButton btnkm;
+    ToggleButton btnmi;
+
     SharedPreferences sharedPreferences;
     SharedPreferences.Editor editor;
 
@@ -67,30 +68,34 @@ public class SettingsActivity extends AppCompatActivity {
 
         if(sharedPreferences.getString("userUnit","km")=="km")
         {
-            btnkm.setBackgroundResource(R.drawable.btnaccent);
-            btnmi.setBackgroundResource(android.R.drawable.btn_default);
+            btnkm.setChecked(true);
+            btnmi.setChecked(false);
         }
         else//mi
         {
-            btnkm.setBackgroundResource(android.R.drawable.btn_default);
-            btnmi.setBackgroundResource(R.drawable.btnaccent);
+            btnkm.setChecked(false);
+            btnmi.setChecked(true);
         }
 
         btnkm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                editor.putString("userUnit", "km");
-                btnkm.setBackgroundResource(R.drawable.btnaccent);
-                btnmi.setBackgroundResource(android.R.drawable.btn_default);
+                if(btnkm.isChecked())
+                {
+                    editor.putString("userUnit", "km");
+                    btnmi.setChecked(false);
+                }
             }
         });
 
         btnmi.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                editor.putString("userUnit", "mi");
-                btnkm.setBackgroundResource(android.R.drawable.btn_default);
-                btnmi.setBackgroundResource(R.drawable.btnaccent);
+                if(btnmi.isChecked())
+                {
+                    editor.putString("userUnit", "mi");
+                    btnkm.setChecked(false);
+                }
             }
         });
 

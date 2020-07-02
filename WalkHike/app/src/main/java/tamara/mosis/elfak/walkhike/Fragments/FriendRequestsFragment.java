@@ -87,8 +87,6 @@ public class FriendRequestsFragment extends Fragment implements FriendshipData.L
 
        // FirebaseUser currentUser=mfirebaseAuth.getCurrentUser();
 
-
-
         //friendshipss=new ArrayList<>();
         SharedPreferences sharedPref = getContext().getSharedPreferences( "Userdata", Context.MODE_PRIVATE);
         String username = sharedPref.getString(getString(R.string.loggedUser_username), "EMPTY");
@@ -122,21 +120,7 @@ public class FriendRequestsFragment extends Fragment implements FriendshipData.L
     {
         super.onStart();
         friendshipData.getInstance().setEventListener(this);
-       /* firebaseFirestore.collection("Users").addSnapshotListener(new EventListener<QuerySnapshot>() {
-            @Override
-            public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
-                for(DocumentChange doc:queryDocumentSnapshots.getDocumentChanges())
-                {
-                    if(doc.getType()==DocumentChange.Type.ADDED)
-                    {
-                        String user_id=doc.getDocument().getId();
-                        Users users=doc.getDocument().toObject(Users.class).withId(user_id);
-                        usersList.add(users);
-                        freqRecyclerAdapter.notifyDataSetChanged();
-                    }
-                }
-            }
-        });*/
+
     }
 
     @Override

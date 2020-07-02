@@ -83,6 +83,7 @@ public class CustomListView extends ArrayAdapter<String> implements  ActivityCom
                         }
                         else
                             vh.aSwitch.setChecked(false);
+                        break;
                     }
                     case(1):
                     {
@@ -91,6 +92,7 @@ public class CustomListView extends ArrayAdapter<String> implements  ActivityCom
                         }
                         else
                             vh.aSwitch.setChecked(false);
+                        break;
                     }
                     case(2):
                     {
@@ -99,12 +101,14 @@ public class CustomListView extends ArrayAdapter<String> implements  ActivityCom
                         }
                         else
                             vh.aSwitch.setChecked(false);
+                        break;
                     }
                     default: {//3, 4 po uslovu nije
                         if (AppCompatDelegate.getDefaultNightMode() == AppCompatDelegate.MODE_NIGHT_YES)
                             vh.aSwitch.setChecked(true);
                         else
                             vh.aSwitch.setChecked(false);
+                        break;
 
                     }
                 }
@@ -282,6 +286,7 @@ public class CustomListView extends ArrayAdapter<String> implements  ActivityCom
                     break;
                 }
                 default: {
+                    break;
                 }
             }
         };
