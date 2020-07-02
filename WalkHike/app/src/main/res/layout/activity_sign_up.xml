@@ -13,7 +13,18 @@
         android:background="@color/colorPrimary">
 
     </androidx.appcompat.widget.Toolbar>
+    <TextView
+        android:id="@+id/textViewAppNameSU"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="50dp"
+        android:layout_alignParentTop="true"
+        android:text="Walk &amp; Hike"
+        android:textSize="40dp"
+        android:layout_below="@id/sign_up_toolbar"
+        android:layout_centerHorizontal="true"
 
+        />
     <EditText
         android:id="@+id/signup_pass2"
         android:layout_width="wrap_content"
@@ -28,9 +39,9 @@
         android:id="@+id/textView10"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="80dp"
+        android:layout_marginTop="10dp"
         android:text="Sign up"
-        android:layout_below="@+id/sign_up_toolbar"
+        android:layout_below="@+id/textViewAppNameSU"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="15dp"
 
@@ -42,7 +53,7 @@
         android:layout_height="wrap_content"
         android:text="Done"
         android:layout_centerHorizontal="true"
-        android:layout_below="@id/textView11"
+        android:layout_below="@id/signup_pass2"
         android:layout_marginBottom="25dp"
 
         />
@@ -50,7 +61,7 @@
     <TextView
         android:id="@+id/textViewLogin"
         android:layout_width="wrap_content"
-        android:layout_height="186dp"
+        android:layout_height="wrap_content"
         android:layout_below="@id/signup_button_done"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
@@ -97,15 +108,6 @@
         android:inputType="textEmailAddress"
         android:text="email@email.com" />
 
-    <TextView
-        android:id="@+id/textView11"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/insert_profile_picture"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="15dp"
-        android:layout_below="@id/signup_pass2"
 
-        />
 
 </RelativeLayout>

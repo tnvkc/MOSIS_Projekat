@@ -106,7 +106,7 @@ public class LauncherActivity extends AppCompatActivity implements
 
                     finish();
                 }
-            }, 1500);
+            }, 500);
         }
 
         userData.getInstance().getUsers();
