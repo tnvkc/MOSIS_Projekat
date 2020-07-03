@@ -36,7 +36,7 @@ public class OtherUsersFragment extends Fragment {
 
     private RecyclerView usersListView;
     private List<User> usersList;
-    private OtherUsersRecyclerAdapter usersRecyclerAdapter;
+    public OtherUsersRecyclerAdapter usersRecyclerAdapter;
     private FirebaseFirestore firebaseFirestore;
 
     UserData userdata;
@@ -67,6 +67,7 @@ public class OtherUsersFragment extends Fragment {
 
         if(userdata.getInstance().getUsers().get(indexx).email.compareTo(u.email) == 0)
             u = userdata.getInstance().getUsers().get(indexx);
+
 
         usersListView=view.findViewById(R.id.other_users_list_rv) ;
         usersList=new ArrayList<>();

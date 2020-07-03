@@ -35,7 +35,6 @@ public class UsersRecyclerAdapter extends RecyclerView.Adapter<UsersRecyclerAdap
     private String currentemail;
     FriendshipData friendshipData;
     ItemFilter itemFilter;
-    List<String> filteredData;
 
     public UsersRecyclerAdapter(Context context,List<User> usersList,String mail)
     {
@@ -173,7 +172,7 @@ public class UsersRecyclerAdapter extends RecyclerView.Adapter<UsersRecyclerAdap
         @SuppressWarnings("unchecked")
         @Override
         protected void publishResults(CharSequence constraint, FilterResults results) {
-            filteredData = (List<String>) results.values;
+            List<String> filteredData = (List<String>) results.values;
             List<User> temp = new ArrayList<User>(results.count);
             for (String username:filteredData
                  ) {

@@ -9,10 +9,13 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.widget.ListView;
+import android.widget.SearchView;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 
+import tamara.mosis.elfak.walkhike.Fragments.OtherUsersFragment;
+import tamara.mosis.elfak.walkhike.OtherUsersRecyclerAdapter;
 import tamara.mosis.elfak.walkhike.R;
 
 public class AddFriendActivity extends AppCompatActivity {
@@ -20,6 +23,7 @@ public class AddFriendActivity extends AppCompatActivity {
     String[] friends={"Zika","Pera","Mika"};
     ListView list;
     Toolbar toolbar;
+    SearchView searchView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,6 +41,30 @@ public class AddFriendActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
 
+        searchView=findViewById(R.id.searchView);
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener()
+        {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText)
+            {
+                if (newText!=null)
+                {
+                    OtherUsersFragment fragmentfr = (OtherUsersFragment)
+                            getSupportFragmentManager().findFragmentById(R.id.fragment_other_users);
+                    OtherUsersRecyclerAdapter ura = fragmentfr.usersRecyclerAdapter;
+                    ura.filterUsersList(newText);
+                }
+                return false;
+
+            }
+
+
+        });
     }
 
     @Override

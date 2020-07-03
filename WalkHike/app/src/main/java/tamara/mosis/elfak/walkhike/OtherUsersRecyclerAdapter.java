@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.Filter;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -18,6 +19,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -31,6 +33,9 @@ import tamara.mosis.elfak.walkhike.modeldata.UserData;
 public class OtherUsersRecyclerAdapter extends RecyclerView.Adapter<OtherUsersRecyclerAdapter.ViewHolderOther>
 {
     private List<User> usersList;
+    private List<User> fullUsersList;
+    ItemFilter itemFilter;
+
     private Context context;
 
     private String currentId;//ours
@@ -42,8 +47,10 @@ public class OtherUsersRecyclerAdapter extends RecyclerView.Adapter<OtherUsersRe
     public OtherUsersRecyclerAdapter(Context context,List<User> usersList, User u)
     {
         this.usersList=usersList;
+        fullUsersList=usersList;
         this.current = u;
         this.context=context;
+        itemFilter=new ItemFilter();
     }
     @Override
     public ViewHolderOther onCreateViewHolder(ViewGroup parent,int viewType)
@@ -96,6 +103,16 @@ public class OtherUsersRecyclerAdapter extends RecyclerView.Adapter<OtherUsersRe
         return usersList.size();
     }
 
+    public void filterUsersList(CharSequence s)
+    {
+        if(s.equals(""))
+        {
+            usersList=fullUsersList;
+            notifyDataSetChanged();
+        }
+        else
+            itemFilter.publishResults(s,itemFilter.performFiltering(s));
+    }
 
     public class ViewHolderOther extends RecyclerView.ViewHolder
     {
@@ -110,6 +127,57 @@ public class OtherUsersRecyclerAdapter extends RecyclerView.Adapter<OtherUsersRe
             addFriendButton=vie.findViewById(R.id.addFriendButton);
 
         }
+    }
+
+    private class ItemFilter extends Filter {
+
+        public ItemFilter()
+        {}
+        @Override
+        protected FilterResults performFiltering(CharSequence constraint) {
+
+
+            String filterString = constraint.toString().toLowerCase();
+
+            FilterResults results = new FilterResults();
+
+            int count = usersList.size();
+            final List<User> list = usersList;
+            final ArrayList<String> nlist = new ArrayList<String>(count);
+
+            String filterableString ;
+
+            for (int i = 0; i < count; i++) {
+                filterableString = list.get(i).username;
+                if (filterableString.toLowerCase().contains(filterString)) {
+                    nlist.add(filterableString);
+                }
+            }
+
+            results.values = nlist;
+            results.count = nlist.size();
+
+            return results;
+        }
+
+        @SuppressWarnings("unchecked")
+        @Override
+        protected void publishResults(CharSequence constraint, FilterResults results) {
+            List<String> filteredData = (List<String>) results.values;
+            List<User> temp = new ArrayList<User>(results.count);
+            for (String username:filteredData
+            ) {
+                for (User u:usersList
+                ) {
+                    if(username.equals(u.username))
+                        temp.add(u);
+                }
+
+            }
+            usersList=temp;
+            notifyDataSetChanged();
+        }
+
     }
 }
 

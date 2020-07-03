@@ -37,7 +37,7 @@
         />
 
     <fragment
-        android:id="@+id/fragment"
+        android:id="@+id/fragment_other_users"
         android:name="tamara.mosis.elfak.walkhike.Fragments.OtherUsersFragment"
         android:layout_width="340dp"
         android:layout_height="511dp"
