@@ -204,7 +204,27 @@ public class ScoresData {
 
     }
 
-    public void updateResetScoresWeekly()
+    public void updateScoresDates()
+    {
+        int additionalScoreDistance = 250;
+        Scores uu =null;
+        for(int i =0; i< this.Scores.size(); i++)
+        {
+            uu = this.Scores.get(i);
+            uu.weeklyDistance += additionalScoreDistance;
+            uu.monthlyDistance += additionalScoreDistance;
+            uu.alltimeDistance += additionalScoreDistance;
+            uu.weeklyActivity +=additionalScoreDistance;
+            uu.monthlyActivity +=additionalScoreDistance;
+            uu.alltimeActivity +=additionalScoreDistance;
+            uu.datetimeWeek = "02022020000000";
+            uu.datetimeMonth = "02022020000000";
+            db.child(FIREBASE_CHILD).child(uu.key).setValue(uu);
+
+        }
+    }
+
+    public void updateResetScoresWeekly(String date)
     {
         Scores uu =null;
         for(int i =0; i< this.Scores.size(); i++)
@@ -212,13 +232,14 @@ public class ScoresData {
             uu = this.Scores.get(i);
             uu.weeklyActivity =0;
             uu.weeklyDistance = 0;
+            uu.datetimeWeek = date;
             db.child(FIREBASE_CHILD).child(uu.key).setValue(uu);
 
         }
 
     }
 
-    public void updateResetScoresMonthly()
+    public void updateResetScoresMonthly(String date)
     {
         Scores uu =null;
         for(int i =0; i< this.Scores.size(); i++)
@@ -226,6 +247,7 @@ public class ScoresData {
             uu = this.Scores.get(i);
             uu.monthlyActivity =0;
             uu.monthlyDistance = 0;
+            uu.datetimeMonth = date;
             db.child(FIREBASE_CHILD).child(uu.key).setValue(uu);
 
         }
@@ -248,6 +270,7 @@ public class ScoresData {
             uu.weeklyDistance += additionalScoreDistance;
             uu.monthlyDistance += additionalScoreDistance;
             uu.alltimeDistance += additionalScoreDistance;
+
 
 
             db.child(FIREBASE_CHILD).child(uu.key).setValue(uu);

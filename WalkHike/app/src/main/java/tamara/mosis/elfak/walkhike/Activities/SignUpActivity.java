@@ -25,7 +25,9 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.iid.FirebaseInstanceId;
 
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -130,9 +132,15 @@ public class SignUpActivity extends AppCompatActivity {
 
                         userData.getInstance().AddUser(u);
                         Scores s ;
-                            s = new Scores();
-                            s.useer = email;
-                            scoresData.getInstance().AddScore(s);
+                        s = new Scores();
+                        s.useer = email;
+                        Scores ss = scoresData.getInstance().getScore(0);
+                        if(ss != null)
+                            s.datetimeWeek = ss.datetimeWeek;
+                        else
+                            s.datetimeWeek = new SimpleDateFormat("ddMMyyyyhhmmss").format(Calendar.getInstance().getTime());
+
+                        scoresData.getInstance().AddScore(s);
 
                     }
                     else

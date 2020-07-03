@@ -11,7 +11,12 @@ import android.widget.TextView;
 
 import com.google.android.material.textfield.TextInputEditText;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.concurrent.TimeUnit;
 
 import tamara.mosis.elfak.walkhike.modeldata.Friendship;
 import tamara.mosis.elfak.walkhike.modeldata.FriendshipData;
@@ -163,30 +168,51 @@ public class Probe_Friendship_Activity extends AppCompatActivity  {
         scoreUser =  (TextInputEditText) findViewById(R.id.probefriend_scores_user);
         //user2Index =  (TextInputEditText) findViewById(R.id.probefriend_user2_edit);
 
-        btnDodajUser = (Button) findViewById(R.id.probefriend_btn_add_scores);
-        btnDodajUser.setOnClickListener(new View.OnClickListener() {
+        btnDodajScores = (Button) findViewById(R.id.probefriend_btn_add_scores);
+        btnDodajScores.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Scores p = new Scores();
-                int index1 = Integer.parseInt( scoreNew.getText().toString());
-                String userEmail = scoreUser.getText().toString();
-
-                ArrayList<User> probepos = new ArrayList<>();
+                //Scores p = new Scores();
+                //ArrayList<User> probepos;
 
 
-                probepos = userdata.getInstance().getUsers();
-                for(int i =0; i<probepos.size(); i++)
+                //probepos = userdata.getInstance().getUsers();
+                /*for(int i =0; i<probepos.size(); i++)
                 {
-                    String a = probepos.get(i).email;
-                    if( a.compareTo(userEmail) == 0)
+                    p = scoresData.getInstance().getScore(probepos.get(i).email);
+                    if(p == null)
                     {
-                        p.useer = probepos.get(i).email;
+                        Scores s ;
+                        s = new Scores();
+                        s.useer = probepos.get(i).email;
+                        if(scoresData.getInstance().getScores().size() != 0) {
+                            Scores ss = scoresData.getInstance().getScore(0);
+                            s.datetimeWeek = ss.datetimeWeek;
+                        }
+                        else
+                            s.datetimeWeek = "02022020000000";
+                            s.datetimeMonth = "02022020000000";//new SimpleDateFormat("ddMMyyyyhhmmss").format(Calendar.getInstance().getTime());
+
+                        scoresData.getInstance().AddScore(s);
                     }
-                }
+                    else {
+                        try {
+                           // DateFormat format = new SimpleDateFormat("ddMMyyyy");
+                           // Date objectDate = null;
+                            //objectDate = format.parse("12022020");
+
+                            scoresData.getInstance().updateScoreDistance(200, probepos.get(i));
+                        }catch (Exception e)
+                        {
+
+                        }
+
+                    }
+                }*/
+
+                scoresData.getInstance().updateScoresDates();
 
 
-                p.monthlyActivity += index1;
-                scoresData.getInstance().AddScore(p);
 
             }
         });
@@ -211,12 +237,45 @@ public class Probe_Friendship_Activity extends AppCompatActivity  {
             @Override
             public void onClick(View v) {
 
-                User u = userdata.getInstance().getUser(scoreUser.getText().toString());
-                if(u != null)
-                {
-                   // scoresData.getInstance().updateScoreActivity(133, u);
-                   // scoresData.getInstance().updateScoreDistance(12, u);
-                    scoresData.getInstance().updateResetScoresWeekly();
+                Scores p = scoresData.getInstance().getScore(0);
+                DateFormat format = new SimpleDateFormat("ddMMyyyyhhmmss");
+                Date currentDate = Calendar.getInstance().getTime();
+
+
+                Date objectDate = null;
+                try {
+                    objectDate = format.parse(p.datetimeWeek);
+
+
+                    long difference = currentDate.getTime() - objectDate.getTime();
+                    long dayDifference = TimeUnit.DAYS.convert(difference, TimeUnit.MILLISECONDS);
+
+                    if (dayDifference > 7) {
+                        int dayOftheweek = Calendar.getInstance().get(Calendar.DAY_OF_WEEK);
+
+                        if(dayOftheweek == 1) //pomera se jer je kod njih prvi dan u nedelji nedelja, pa je SUNDAY = 1, MONDAY = 2 itd
+                            dayOftheweek = 7;
+                        String newDate = new SimpleDateFormat("ddMMyyyy").format(Calendar.getInstance().getTime().getTime() - (dayOftheweek - 2) * 24*60*60*1000);
+                        newDate += "000000";
+                        scoresData.getInstance().updateResetScoresWeekly(newDate);
+
+                    }
+
+                   /* objectDate = format.parse(p.datetimeMonth);
+
+
+                    difference = currentDate.getTime() - objectDate.getTime();
+                    dayDifference = TimeUnit.DAYS.convert(difference, TimeUnit.MILLISECONDS);
+
+                    if (dayDifference > 7) {
+                        String newDate = new SimpleDateFormat("ddMMyyyy").format(Calendar.getInstance().getTime());
+                        newDate += "000000";
+                        scoresData.getInstance().updateResetScoresMonthly(newDate);
+
+                    }*/
+
+                } catch (Exception e) {
+
                 }
 
             }
