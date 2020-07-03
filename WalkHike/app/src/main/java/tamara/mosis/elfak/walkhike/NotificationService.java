@@ -88,6 +88,7 @@ public class NotificationService extends IntentService implements MapObjectData.
 
 
     private ArrayList<MapObject> objects;
+    private ArrayList<String> doneObjects;
 
     private ArrayList<User> users;
     private ArrayList<String> doneUsers;
@@ -150,6 +151,9 @@ public class NotificationService extends IntentService implements MapObjectData.
         doneUsers = new ArrayList<>();
         doneUsers.add(email);
         //DonePositions = new ArrayList<>();
+
+        objects = MapObjectData.getInstance().getMapObjects();
+        doneObjects = new ArrayList<>();
 
         numberOfObjectNotis = 100;
     }
@@ -285,6 +289,7 @@ public class NotificationService extends IntentService implements MapObjectData.
                 meters = 0;
 
                 findNearbyUsers();
+                findNearbyObjects();
             }
 
             //findNearbyUsers();
@@ -370,9 +375,52 @@ public class NotificationService extends IntentService implements MapObjectData.
                             new Intent(getApplicationContext(), MainActivity.class));
 
 
-                    numberOfObjectNotis++;
+                   // numberOfObjectNotis++;
                     //users.remove(i);
 
+                }
+            }
+        }
+    }
+
+    private void findNearbyObjects() {
+        if(objects.size() != 0) {
+            boolean close = false;
+
+            for (int i = 0; i < users.size(); i++) {
+
+                close = false;
+                float res[] = new float[5];
+                Location.distanceBetween(latLng.latitude, latLng.longitude, Double.parseDouble(objects.get(i).position.latitude),
+                        Double.parseDouble(objects.get(i).position.longitude), res);
+
+                for(int j = 0; j< doneObjects.size(); j++) {
+                    if(objects.get(i).datetime.compareTo(doneObjects.get(j))== 0)
+                    {
+                        close = true;
+                        if (res[0] > 1000) {
+                            doneObjects.remove(j);
+                        }
+                    }
+                }
+                if(!close && res[0] < 1000)
+                {
+
+                    if(objects.get(i).isPublic == true || objects.get(i).sharedWith.email.compareTo(LoggedUser.email) == 0) {
+                        index = i;
+                        doneObjects.add(objects.get(i).datetime);
+
+                        Log.v("MapObject", objects.get(i).datetime + " !");
+
+
+                        sendNotif("notify_" + objects.get(i), "usersnear", numberOfFriendNotis, "Object near you!",
+                                "Object near you!", "Near you", "Object near you!",
+                                new Intent(getApplicationContext(), MainActivity.class));
+
+
+                        //numberOfObjectNotis++;
+                        //users.remove(i);
+                    }
                 }
             }
         }

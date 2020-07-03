@@ -1,5 +1,7 @@
 package tamara.mosis.elfak.walkhike.modeldata;
 
+import android.os.UserManager;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
@@ -184,12 +186,14 @@ public class UserData {
 
     public void updateUser(int index,  User u)
     {
-        User uu =users.get(index);
-        uu.desc=u.desc;
-        uu.email=u.email;
-        uu.image=u.image;
+       if(index > -1) {
+           User uu = users.get(index);
+           uu.desc = u.desc;
+           uu.email = u.email;
+           uu.image = u.image;
 
-        db.child(FIREBASE_CHILD).child(uu.key).setValue(uu);
+           db.child(FIREBASE_CHILD).child(uu.key).setValue(uu);
+       }
 
     }
 
@@ -239,6 +243,8 @@ public class UserData {
         UsersMapping.clear();
         for (int i=0;i<users.size();i++)
             UsersMapping.put(users.get(i).key,i);
+
+
     }
 }
 
