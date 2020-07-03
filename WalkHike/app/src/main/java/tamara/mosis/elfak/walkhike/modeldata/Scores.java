@@ -13,11 +13,14 @@ public class Scores {
     public int monthlyDistance;
     public int alltimeDistance;
     public String useer;
+    public String datetimeWeek;
+    public String datetimeMonth;
    // public User user;
 
     @Exclude
     public String key;
-    public Scores() {}
+    public Scores() { datetimeWeek = "";
+    datetimeMonth = "";}
 
     public Scores(User newUser)
     {
