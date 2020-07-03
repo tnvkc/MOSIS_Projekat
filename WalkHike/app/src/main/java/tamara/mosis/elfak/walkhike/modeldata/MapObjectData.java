@@ -10,6 +10,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.nio.charset.Charset;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -80,6 +81,38 @@ public class MapObjectData {
         return list;
     }
 
+    public MapObject getSearchedMapObject(String searchText, String username) {
+
+        ArrayList<MapObject> usersMarkers = getFriendsMapObjects(username);
+
+        for(int i = 0; i < usersMarkers.size(); i++)
+        {
+            if ( usersMarkers.get(i).desc.toLowerCase().compareTo(searchText.toLowerCase()) == 0) {
+                return usersMarkers.get(i);
+            }
+        }
+
+        return null;
+    }
+
+    public ArrayList<MapObject> getSearchedMapObjects(String searchText, int searchFilter, String username) {
+
+        ArrayList<MapObject> usersMarkers = getFriendsMapObjects(username);
+        ArrayList<MapObject> list = new ArrayList<>();
+        for(int i = 0; i< usersMarkers.size(); i++)
+        {
+            MapObject mo = usersMarkers.get(i);
+
+            if ((searchFilter == 0 || mo.objectType == searchFilter)
+                    && mo.desc.toLowerCase().contains(searchText.toLowerCase().subSequence(0, searchText.length())))
+            {
+                list.add(mo);
+            }
+        }
+
+        return list;
+    }
+
     public ArrayList<MapObject> getFilteredMapObjects(Byte filter, String username) {
 
         ArrayList<MapObject> usersMarkers = getFriendsMapObjects(username);
@@ -94,7 +127,7 @@ public class MapObjectData {
                     ((filter & 2) == 2 && mo.objectType == 2) ||
                     ((filter & 1) == 1 && mo.objectType == 1)
             ) {
-                list.add(usersMarkers.get(i));
+                list.add(mo);
             }
         }
 

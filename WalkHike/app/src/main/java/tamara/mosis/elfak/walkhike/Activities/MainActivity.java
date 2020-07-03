@@ -6,6 +6,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.Manifest;
 import android.app.Service;
@@ -13,13 +15,21 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.AttributeSet;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.location.Location;
 import android.location.LocationManager;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -32,12 +42,14 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 
 import com.google.android.gms.maps.model.Marker;
@@ -53,6 +65,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.security.Key;
 import java.util.ArrayList;
 import java.util.Map;
 
@@ -74,7 +87,7 @@ import tamara.mosis.elfak.walkhike.modeldata.MapObject;
 import tamara.mosis.elfak.walkhike.modeldata.Position;
 
 public class MainActivity extends AppCompatActivity implements GoogleApiClient.ConnectionCallbacks,
-        GoogleApiClient.OnConnectionFailedListener, LocationListener, OnMapReadyCallback, View.OnClickListener, 
+        GoogleApiClient.OnConnectionFailedListener, LocationListener, OnMapReadyCallback, View.OnClickListener,
         BottomNavigationView.OnNavigationItemSelectedListener, GoogleMap.OnMarkerClickListener {
 
     private FirebaseAuth mfirebaseAuth;
@@ -103,7 +116,6 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
     ArrayList<MapObject> mapObjects;
 
     //filter
-
     boolean filter_opened;
     boolean filter_objects_opened;
     boolean filter_timespan_opened;
@@ -124,6 +136,19 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
     ImageView filter_photo;
     ImageView filter_message;
 
+    //search
+
+    int search_filter_activated;
+
+    View search_fragment;
+    ImageView search_close;
+    EditText search_edit_text;
+    Button search_users_only;
+    Button search_messages_only;
+    Button search_photos_only;
+    Button search_checkpoints_only;
+    Button search_emojis_only;
+    Button search_remove_filters;
 
     //info_window
     LinearLayout info_window_container;
@@ -216,10 +241,13 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
         startServiceButton = findViewById(R.id.main_startService);
         startServiceButton.setOnClickListener(this);
 
+
+        //bottom_navigation_menu
         bottom_navigation_menu = findViewById(R.id.bottom_navigation_menu);
         bottom_navigation_menu.setSelectedItemId(R.id.map);
         bottom_navigation_menu.setOnNavigationItemSelectedListener(this);
 
+        //filter
         filter_opened = false;
         filter_objects_opened = false;
         filter_timespan_opened = false;
@@ -251,6 +279,94 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
         filter_photo.setOnClickListener(this);
         filter_message.setOnClickListener(this);
 
+        //search
+
+        search_filter_activated = 0;
+
+        search_fragment = findViewById(R.id.search_fragment);
+        search_close = findViewById(R.id.close_search);
+
+        search_edit_text = findViewById(R.id.search_edit_text);
+        search_users_only = findViewById(R.id.search_users_only);
+        search_messages_only = findViewById(R.id.search_messages_only);
+        search_photos_only = findViewById(R.id.search_photos_only);
+        search_checkpoints_only = findViewById(R.id.search_checkpoints_only);
+        search_emojis_only = findViewById(R.id.search_emojis_only);
+        search_remove_filters = findViewById(R.id.search_remove_filters);
+
+        search_close.setOnClickListener(this);
+        search_users_only.setOnClickListener(this);
+        search_messages_only.setOnClickListener(this);
+        search_photos_only.setOnClickListener(this);
+        search_checkpoints_only.setOnClickListener(this);
+        search_emojis_only.setOnClickListener(this);
+        search_remove_filters.setOnClickListener(this);
+
+        search_edit_text.setOnKeyListener(new View.OnKeyListener() {
+            @Override
+            public boolean onKey(View v, int keyCode, KeyEvent event) {
+                
+                if (keyCode == KeyEvent.KEYCODE_ENTER && event.getAction() == KeyEvent.ACTION_UP){
+
+                    Toast.makeText(MainActivity.this, "Enter pressed!", Toast.LENGTH_SHORT).show();
+
+                    String searchText = search_edit_text.getText().toString(); //change to desc from recommendations list
+
+                    search_fragment.setVisibility(View.GONE);
+                    addNewFloating.setVisibility(View.VISIBLE);
+                    objectInteraction.setVisibility(View.VISIBLE);
+                    startServiceButton.setVisibility(View.VISIBLE);
+
+                    if (search_filter_activated == 0 || search_filter_activated > 1) {
+                        MapObject obj = MapObjectData.getInstance().getSearchedMapObject(searchText, loggedUsername);
+
+                        if (obj != null) {
+
+                            double lat = Double.parseDouble(obj.position.latitude);
+                            double lon = Double.parseDouble(obj.position.longitude);
+
+                            LatLng latLng = new LatLng(lat, lon);
+
+                            map.moveCamera(CameraUpdateFactory.newLatLng(latLng));
+                            map.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng,10f));
+
+                            Marker m = FindMapMarker(obj);
+                            ShowMarkerInfoWindow(m);
+                        }
+                    }
+                }
+
+                return false;
+            }
+        });
+
+        search_edit_text.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+                String insertedText = s.toString();
+
+                ArrayList<MapObject> objs = MapObjectData.getInstance().getSearchedMapObjects(insertedText, search_filter_activated, loggedUsername);
+
+                for (int i = 0; i < objs.size(); i++) {
+                    Toast.makeText(MainActivity.this, objs.get(i).desc, Toast.LENGTH_SHORT).show();
+                }
+
+            }
+        });
+
+
+        //info window:
         info_window_container = findViewById(R.id.info_window_container);
         info_window_container.setVisibility(View.GONE);
 
@@ -384,7 +500,33 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
             Intent intent=new Intent(getApplicationContext(), ProfileActivity.class);
             //intent.putExtra("username",);
             startActivity(intent);
+        } else if(item.getItemId() == R.id.main_menu_search_item) {
+
+            Toast.makeText(this, "Search objects here!", Toast.LENGTH_SHORT).show();
+
+            addNewFloating.setVisibility(View.GONE);
+            objectInteraction.setVisibility(View.GONE);
+            startServiceButton.setVisibility(View.GONE);
+
+            search_fragment.setVisibility(View.VISIBLE);
+
+            search_users_only.setSelected(false);
+            search_messages_only.setSelected(false);
+            search_checkpoints_only.setSelected(false);
+            search_emojis_only.setSelected(false);
+            search_photos_only.setSelected(false);
+            search_remove_filters.setSelected(false);
+            search_edit_text.setText("");
+            
+            search_filter_activated = 0;
+
+            search_edit_text.requestFocus();
+            InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+            inputMethodManager.showSoftInput(search_edit_text, InputMethodManager.SHOW_IMPLICIT);
+            
         }
+
+
         return super.onOptionsItemSelected(item);
     }
 
@@ -716,8 +858,134 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
             }
 
             FilterMapObjects(object_filter);
+        } else if (v.getId() == R.id.close_search) {
+
+            Toast.makeText(MainActivity.this, "Close search", Toast.LENGTH_SHORT).show();
+            search_fragment.setVisibility(View.GONE);
+            addNewFloating.setVisibility(View.VISIBLE);
+            objectInteraction.setVisibility(View.VISIBLE);
+            startServiceButton.setVisibility(View.VISIBLE);
+
+            InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+            inputMethodManager.hideSoftInputFromWindow(search_edit_text.getWindowToken(), 0);
+
+        } else if (v.getId() == R.id.search_users_only) {
+
+            if (search_filter_activated == 1) {
+                search_filter_activated = 0;
+                search_users_only.setSelected(false);
+
+                Toast.makeText(MainActivity.this, "Remove users filter", Toast.LENGTH_SHORT).show();
+
+            } else {
+                search_filter_activated = 1; //search users
+
+                search_users_only.setSelected(true);
+                search_messages_only.setSelected(false);
+                search_photos_only.setSelected(false);
+                search_checkpoints_only.setSelected(false);
+                search_emojis_only.setSelected(false);
+
+                Toast.makeText(MainActivity.this, "Add users filter", Toast.LENGTH_SHORT).show();
+
+            }
+
+        } else if (v.getId() == R.id.search_messages_only) {
+
+            if (search_filter_activated == 2) {
+                search_filter_activated = 0;
+                search_messages_only.setSelected(false);
+
+                Toast.makeText(MainActivity.this, "Remove messages filter", Toast.LENGTH_SHORT).show();
+
+            } else {
+                search_filter_activated = 2; //search messages
+
+                search_users_only.setSelected(false);
+                search_messages_only.setSelected(true);
+                search_photos_only.setSelected(false);
+                search_checkpoints_only.setSelected(false);
+                search_emojis_only.setSelected(false);
+
+                Toast.makeText(MainActivity.this, "Add messages filter", Toast.LENGTH_SHORT).show();
+            }
+
+        } else if (v.getId() == R.id.search_photos_only) {
+
+            if (search_filter_activated == 3) {
+                search_filter_activated = 0;
+                search_photos_only.setSelected(false);
+
+                Toast.makeText(MainActivity.this, "Remove photos filter", Toast.LENGTH_SHORT).show();
+
+            } else {
+                search_filter_activated = 3; //search photos
+
+                search_users_only.setSelected(false);
+                search_messages_only.setSelected(false);
+                search_photos_only.setSelected(true);
+                search_checkpoints_only.setSelected(false);
+                search_emojis_only.setSelected(false);
+
+                Toast.makeText(MainActivity.this, "Add photos filter", Toast.LENGTH_SHORT).show();
+            }
+
+        } else if (v.getId() == R.id.search_checkpoints_only) {
+
+            if (search_filter_activated == 4) {
+                search_filter_activated = 0;
+                search_checkpoints_only.setSelected(false);
+
+                Toast.makeText(MainActivity.this, "Remove checkpoints filter", Toast.LENGTH_SHORT).show();
+
+            } else {
+                search_filter_activated = 4; //search checkpoints
+
+                search_users_only.setSelected(false);
+                search_messages_only.setSelected(false);
+                search_photos_only.setSelected(false);
+                search_checkpoints_only.setSelected(true);
+                search_emojis_only.setSelected(false);
+
+                Toast.makeText(MainActivity.this, "Add checkpoints filter", Toast.LENGTH_SHORT).show();
+
+            }
+
+        } else if (v.getId() == R.id.search_emojis_only) {
+
+            if (search_filter_activated == 5) {
+                search_filter_activated = 0;
+                search_emojis_only.setSelected(false);
+
+                Toast.makeText(MainActivity.this, "Remove emojis filter", Toast.LENGTH_SHORT).show();
+
+            } else {
+                search_filter_activated = 5; //search emojis
+
+                search_users_only.setSelected(false);
+                search_messages_only.setSelected(false);
+                search_photos_only.setSelected(false);
+                search_checkpoints_only.setSelected(false);
+                search_emojis_only.setSelected(true);
+
+                Toast.makeText(MainActivity.this, "Add emojis filter", Toast.LENGTH_SHORT).show();
+
+            }
+        } else if (v.getId() == R.id.search_remove_filters) {
+
+            Toast.makeText(MainActivity.this, "Remove all search filters", Toast.LENGTH_SHORT).show();
+
+            search_filter_activated = 0;
+
+            search_users_only.setSelected(false);
+            search_messages_only.setSelected(false);
+            search_photos_only.setSelected(false);
+            search_checkpoints_only.setSelected(false);
+            search_emojis_only.setSelected(false);
+
         }
     }
+
 
     protected void FilterMapObjects(byte filter) {
 
@@ -751,7 +1019,11 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
 
     @Override
     public boolean onMarkerClick(Marker marker) {
+        ShowMarkerInfoWindow(marker);
+        return false;
+    }
 
+    protected void ShowMarkerInfoWindow(Marker marker) {
         if (lastSelected == null || !lastSelected.equals(marker)) {
 
             info_window_container.setVisibility(View.VISIBLE);
@@ -783,7 +1055,15 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
             info_window_container.setVisibility(View.GONE);
             lastSelected = null;
         }
-
-        return false;
     }
+
+    protected Marker FindMapMarker(MapObject mapObject) {
+
+        for (int i = 0; i < objectsMarkers.size(); i++) {
+            if (((MapObject) objectsMarkers.get(i).getTag()).equals(mapObject))
+                return objectsMarkers.get(i);
+        }
+        return null;
+    }
+
 }

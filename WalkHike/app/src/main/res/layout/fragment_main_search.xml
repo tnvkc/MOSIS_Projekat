@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#ffffff">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:id="@+id/toolbar_search"
+        android:layout_height="?attr/actionBarSize"
+        android:background="?attr/toolbarColor"
+        android:orientation="horizontal"
+        android:weightSum="100"
+        >
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:src="@drawable/ic_search_black_24dp"
+            android:layout_weight="45"
+            android:layout_marginStart="15dp"
+            />
+
+        <EditText
+            android:id="@+id/search_edit_text"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:hint="@string/search_hint"
+            android:layout_weight="10"
+            android:inputType="text"
+            />
+
+        <ImageView
+            android:id="@+id/close_search"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:src="@drawable/ic_close_black_24dp"
+            android:clickable="true"
+            android:focusable="true"
+            android:layout_weight="45"
+            android:layout_marginEnd="5dp"/>
+
+
+    </LinearLayout>
+
+    <TableLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/toolbar_search"
+        android:layout_centerInParent="true"
+        android:layout_marginTop="10dp"
+        android:id="@+id/search_filters">
+
+        <TableRow
+            android:gravity="center"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:weightSum="90">
+
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:text="Users"
+                android:background="@drawable/search_selector"
+                android:layout_marginStart="15dp"
+                android:id="@+id/search_users_only"
+                android:layout_weight="30"/>
+
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:text="Messages"
+                android:background="@drawable/search_selector"
+                android:layout_marginEnd="10dp"
+                android:layout_marginStart="10dp"
+                android:id="@+id/search_messages_only"
+                android:layout_weight="30"/>
+
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:text="Photos"
+                android:background="@drawable/search_selector"
+                android:layout_marginEnd="15dp"
+                android:id="@+id/search_photos_only"
+                android:layout_weight="30"/>
+
+        </TableRow>
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="10dp"
+            android:gravity="center">
+
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:text="Places"
+                android:background="@drawable/search_selector"
+                android:layout_marginStart="15dp"
+                android:id="@+id/search_checkpoints_only"
+                android:layout_weight="30"/>
+
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:text="Emojis"
+                android:background="@drawable/search_selector"
+                android:layout_marginEnd="10dp"
+                android:layout_marginStart="10dp"
+                android:id="@+id/search_emojis_only"
+                android:layout_weight="30"/>
+
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:text="Clear"
+                android:background="@android:color/holo_green_dark"
+                android:layout_marginEnd="15dp"
+                android:id="@+id/search_remove_filters"
+                android:layout_weight="30"/>
+
+        </TableRow>
+
+    </TableLayout>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/radius_textView"
+        android:layout_marginTop="15dp"
+        android:layout_marginEnd="10dp"
+        android:layout_marginStart="10dp"
+        android:text="radius:"
+        android:layout_below="@+id/search_filters"
+        />
+
+    <SeekBar
+        android:id="@+id/search_radius_seekbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_toEndOf="@+id/radius_textView"
+        android:layout_below="@+id/search_filters"
+        android:layout_marginTop="15dp"
+        android:layout_marginEnd="10dp"
+        android:layout_marginBottom="5dp"
+        android:max="900" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/min_radius_textView"
+        android:text="100m"
+        android:layout_below="@+id/search_radius_seekbar"
+        android:layout_toEndOf="@+id/radius_textView"
+        />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/max_radius_textView"
+        android:layout_marginEnd="10dp"
+        android:text="1000m"
+        android:layout_below="@+id/search_radius_seekbar"
+        android:layout_alignParentEnd="true"
+
+
+        />
+
+</RelativeLayout>
