@@ -9,12 +9,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.Filter;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import tamara.mosis.elfak.walkhike.Activities.FriendProfileActivity;
@@ -27,15 +29,21 @@ public class UsersRecyclerAdapter extends RecyclerView.Adapter<UsersRecyclerAdap
 {
     //private List<Users> usersList;
     private List<User> usersList;
+    private List<User> fullUsersList;
+
     private Context context;
     private String currentemail;
     FriendshipData friendshipData;
+    ItemFilter itemFilter;
+    List<String> filteredData;
 
     public UsersRecyclerAdapter(Context context,List<User> usersList,String mail)
     {
         this.usersList=usersList;
+        this.fullUsersList=usersList;
         this.context=context;
         this.currentemail=mail;
+        itemFilter=new ItemFilter();
     }
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent,int viewType)
@@ -43,6 +51,7 @@ public class UsersRecyclerAdapter extends RecyclerView.Adapter<UsersRecyclerAdap
         View view= LayoutInflater.from(parent.getContext()).inflate(R.layout.list_member_add_user,parent,false);
         return new ViewHolder(view);
     }
+
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
@@ -104,6 +113,17 @@ public class UsersRecyclerAdapter extends RecyclerView.Adapter<UsersRecyclerAdap
     }
 
 
+    public void filterUsersList(CharSequence s)
+    {
+        if(s.equals(""))
+        {
+            usersList=fullUsersList;
+            notifyDataSetChanged();
+        }
+        else
+            itemFilter.publishResults(s,itemFilter.performFiltering(s));
+    }
+
     public class ViewHolder extends RecyclerView.ViewHolder
     {
         private View vie;
@@ -118,6 +138,58 @@ public class UsersRecyclerAdapter extends RecyclerView.Adapter<UsersRecyclerAdap
             removeFriendButton.setText("remove");
         }
     }
+
+    private class ItemFilter extends Filter {
+
+        public ItemFilter()
+        {}
+        @Override
+        protected FilterResults performFiltering(CharSequence constraint) {
+
+
+            String filterString = constraint.toString().toLowerCase();
+
+            FilterResults results = new FilterResults();
+
+            int count = usersList.size();
+            final List<User> list = usersList;
+            final ArrayList<String> nlist = new ArrayList<String>(count);
+
+            String filterableString ;
+
+            for (int i = 0; i < count; i++) {
+                filterableString = list.get(i).username;
+                if (filterableString.toLowerCase().contains(filterString)) {
+                    nlist.add(filterableString);
+                }
+            }
+
+            results.values = nlist;
+            results.count = nlist.size();
+
+            return results;
+        }
+
+        @SuppressWarnings("unchecked")
+        @Override
+        protected void publishResults(CharSequence constraint, FilterResults results) {
+            filteredData = (List<String>) results.values;
+            List<User> temp = new ArrayList<User>(results.count);
+            for (String username:filteredData
+                 ) {
+                for (User u:usersList
+                ) {
+                    if(username.equals(u.username))
+                        temp.add(u);
+                }
+
+            }
+            usersList=temp;
+            notifyDataSetChanged();
+        }
+
+    }
 }
+
 
 

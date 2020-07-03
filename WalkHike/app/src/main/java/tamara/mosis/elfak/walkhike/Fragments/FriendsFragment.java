@@ -38,7 +38,7 @@ public class FriendsFragment extends Fragment {
 
     private RecyclerView usersListView;
     private List<User> usersList;
-    private UsersRecyclerAdapter usersRecyclerAdapter;
+    public UsersRecyclerAdapter usersRecyclerAdapter;
     private FirebaseFirestore firebaseFirestore;
 
     MenuItem buttonAddFriend;

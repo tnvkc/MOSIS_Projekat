@@ -7,21 +7,28 @@ import androidx.appcompat.widget.Toolbar;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.RelativeLayout;
+import android.widget.SearchView;
 import android.widget.Toast;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
+import tamara.mosis.elfak.walkhike.Fragments.FriendsFragment;
 import tamara.mosis.elfak.walkhike.R;
+import tamara.mosis.elfak.walkhike.UsersRecyclerAdapter;
 
 public class FriendslistActivity extends AppCompatActivity {
 
     Toolbar toolbar;
     BottomNavigationView bottom_navigation_menu;
     FloatingActionButton buttonAddFriend;
+    SearchView searchView;
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -67,6 +74,30 @@ public class FriendslistActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
 
+        searchView=findViewById(R.id.search_bar);
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener()
+        {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                return false;
+            }
+
+            @Override
+           public boolean onQueryTextChange(String newText)
+            {
+                if (newText!=null)
+                {
+                    FriendsFragment fragmentfr = (FriendsFragment)
+                            getSupportFragmentManager().findFragmentById(R.id.fragment_friends);
+                    UsersRecyclerAdapter ura = fragmentfr.usersRecyclerAdapter;
+                    ura.filterUsersList(newText);
+                }
+                return false;
+
+            }
+
+
+        });
         buttonAddFriend=findViewById(R.id.floating_ab_add_friend);
         buttonAddFriend.setOnClickListener(new View.OnClickListener() {
             @Override
