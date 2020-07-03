@@ -157,6 +157,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
     TextView info_window_lat;
     TextView info_window_lon;
     TextView info_window_see_details;
+    Button info_add_to_route;
 
     //mapObjects
     Marker lastSelected;
@@ -376,6 +377,9 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
         info_window_lon = findViewById(R.id.info_window_lon);
         info_window_see_details = findViewById(R.id.info_window_see_details);
         info_window_see_details.setOnClickListener(this);
+        info_add_to_route = findViewById(R.id.info_add_to_savedroutes);
+        info_add_to_route.setOnClickListener(this);
+
 
         lastSelected = null;
 
@@ -984,6 +988,34 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
             search_emojis_only.setSelected(false);
 
         }
+        else if(v.getId() == R.id.info_add_to_savedroutes)
+        {
+            MapObject objectTag = (MapObject) v.getTag();
+            String imeGrupe = "Prva grupa";
+            SharedPreferences sharedPref = getApplicationContext().getSharedPreferences(
+                    getString(R.string.SavedRoutesShared), Context.MODE_PRIVATE);
+
+            SharedPreferences.Editor editor = sharedPref.edit();
+
+            int num = sharedPref.getInt(getString(R.string.NumberOfSavedTotal), 0);
+
+            //dodavanje grupe
+            if(num == 0) {
+                editor.putString(getString(R.string.SavedRoutesGroup) + num, imeGrupe);
+                editor.putInt(getString(R.string.NumberOfSavedTotal), 1);
+            }
+
+
+            num = sharedPref.getInt(getString(R.string.NumberOfSavedGroup) + imeGrupe, 0);
+
+            String id = objectTag.datetime + objectTag.createdBy.email;
+            editor.putString(getString(R.string.SavedRoute) + imeGrupe + num, id);
+            num++;
+            editor.putInt(getString(R.string.NumberOfSavedGroup) + imeGrupe, num);
+
+            editor.commit();
+        }
+
     }
 
 
@@ -1049,6 +1081,8 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
             info_window_lat.setText("lat: " + lat);
             info_window_lon.setText("lon: " + lon);
             info_window_see_details.setTag(objectTag);
+            info_add_to_route.setTag(objectTag);
+
 
             lastSelected = marker;
         } else {

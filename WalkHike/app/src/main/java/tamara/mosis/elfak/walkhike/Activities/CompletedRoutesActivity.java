@@ -4,17 +4,28 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.MenuItem;
+import android.widget.TextView;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
+import java.util.ArrayList;
+
+import tamara.mosis.elfak.walkhike.Notification;
 import tamara.mosis.elfak.walkhike.R;
+import tamara.mosis.elfak.walkhike.modeldata.MapObject;
+import tamara.mosis.elfak.walkhike.modeldata.MapObjectData;
 
 public class CompletedRoutesActivity extends AppCompatActivity {
 
     BottomNavigationView bottom_navigation_menu;
+    TextView prikaz;
+    ArrayList<MapObject> objekti;
+    MapObjectData mapObjectData;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -24,6 +35,9 @@ public class CompletedRoutesActivity extends AppCompatActivity {
         else
             setTheme(R.style.AppThemeLight);
         setContentView(R.layout.activity_completed_routes);
+
+        prikaz = findViewById(R.id.savedroutes_textview);
+        popuniObjekte();
 
         bottom_navigation_menu = findViewById(R.id.bottom_navigation_menu);
         bottom_navigation_menu.setSelectedItemId(R.id.completed_routes);
@@ -60,5 +74,37 @@ public class CompletedRoutesActivity extends AppCompatActivity {
             }
         });
 
+    }
+
+    void popuniObjekte()
+    {
+        String prikazz = "";
+        objekti = new ArrayList<>();
+        SharedPreferences sharedPref = getApplicationContext().getSharedPreferences(
+                getString(R.string.SavedRoutesShared), Context.MODE_PRIVATE);
+        int num = sharedPref.getInt(getString(R.string.NumberOfSavedTotal), 0);
+
+        for(int i = 0; i< num; i++)
+        {
+            String groupName = sharedPref.getString(getString(R.string.SavedRoutesGroup) + i, "EMPTY");
+            int numm = sharedPref.getInt(getString(R.string.NumberOfSavedGroup) + groupName, -1);
+            if(numm != -1)
+            {
+                prikazz += groupName + "\n";
+                for(int j= 0; j< numm; j++) {
+                    String objectId = sharedPref.getString(getString(R.string.SavedRoute) + groupName + j, "EMPTY");
+                    MapObject m = mapObjectData.getInstance().getObjectWithDatetimeUser(objectId) ;
+                    objekti.add(m);
+                }
+            }
+        }
+
+
+        for(int i = 0; i< objekti.size(); i++)
+        {
+            MapObject curr = objekti.get(i);
+            prikazz += curr.desc + " date: "+ curr.date + "\n";
+        }
+        prikaz.setText(prikazz);
     }
 }

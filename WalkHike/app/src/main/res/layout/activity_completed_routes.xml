@@ -1,15 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     tools:context=".Activities.CompletedRoutesActivity">
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/main_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:minHeight="?attr/actionBarSize"
+        android:background="?attr/toolbarColor">
 
+    </androidx.appcompat.widget.Toolbar>
     <TextView
-        android:id="@+id/textView3"
-        android:layout_width="260dp"
-        android:layout_height="241dp"
+        android:id="@+id/savedroutes_textview"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:text="completed routes activity" />
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
@@ -22,4 +30,4 @@
         app:menu="@menu/navigation_menu"
         android:layout_alignParentBottom="true"/>
 
-</RelativeLayout>
+</LinearLayout>

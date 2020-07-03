@@ -134,6 +134,20 @@ public class MapObjectData {
         return list;
     }
 
+    public MapObject getObjectWithDatetimeUser(String datetimePlusUser)
+    {
+        MapObject mo = null;
+        MapObject m = null;
+        for(int i = 0; i< this.MapObjects.size(); i++) {
+
+            mo = this.MapObjects.get(i);
+            String s = mo.datetime + mo.createdBy.email;
+            if(s.compareTo(datetimePlusUser) == 0)
+                m = mo;
+        }
+        return m;
+    }
+
     public ArrayList<MapObject> getMapObjectsFromTimespan(int timespan, String username) {
 
         //1 - today, 7 - week, 30 - month

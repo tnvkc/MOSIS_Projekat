@@ -79,4 +79,10 @@
     <string name="NotiObjectsDate">Object_notificationsDate</string>
     <string name="search_hint">Search objects or users</string>
 
+
+    <string name="SavedRoutesShared">Saved_routes_shared_prefs</string>
+    <string name="SavedRoutesGroup">SavedRoutes_group</string>
+    <string name="SavedRoute">Saved_route</string>
+    <string name="NumberOfSavedTotal">saved_routes_total</string>
+    <string name="NumberOfSavedGroup">saved_routes_group</string>
 </resources>
