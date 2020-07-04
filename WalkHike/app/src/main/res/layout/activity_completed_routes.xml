@@ -14,6 +14,7 @@
         android:background="?attr/toolbarColor">
 
     </androidx.appcompat.widget.Toolbar>
+
     <TextView
         android:id="@+id/savedroutes_textview"
         android:layout_width="match_parent"
@@ -28,6 +29,7 @@
         app:itemIconTint="@drawable/selector"
         app:itemTextColor="@drawable/selector"
         app:menu="@menu/navigation_menu"
+        android:layout_marginBottom="0dp"
         android:layout_alignParentBottom="true"/>
 
 </LinearLayout>

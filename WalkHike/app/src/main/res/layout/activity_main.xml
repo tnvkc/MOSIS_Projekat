@@ -98,6 +98,58 @@
 
         </LinearLayout>
     </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="150dp"
+        android:id="@+id/info_window_container_groups"
+        android:orientation="vertical"
+        android:weightSum="100"
+        android:visibility="gone"
+        android:background="@color/colorPrimary"
+        android:layout_above="@+id/bottom_navigation_menu"
+
+        >
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Save to an existing group or make a new one"
+            android:id="@+id/info_window_text"
+            android:gravity="center_horizontal"
+            android:textSize="20dp"
+            android:layout_gravity="center_vertical"
+            android:layout_marginTop="10dp"
+            />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:id="@+id/info_window_container_groups_buttons"
+            android:orientation="horizontal"
+            android:weightSum="100"
+            android:background="@color/colorPrimary"
+            android:layout_weight="70"
+            android:layout_gravity="center_vertical"
+            android:layout_marginTop="20dp"
+            >
+
+        <Button
+                    android:id="@+id/info_existing_group"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Choose existing"
+                    android:textSize="12sp"
+                    android:layout_weight="50"
+            ></Button>
+
+                <Button
+                    android:id="@+id/info_new_group"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Choose new"
+                    android:textSize="12sp"
+                    android:layout_weight="50"></Button>
+        </LinearLayout>
+
+    </LinearLayout>
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottom_navigation_menu"

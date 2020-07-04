@@ -10,14 +10,17 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.Manifest;
+import android.app.AlertDialog;
 import android.app.Service;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.Editable;
+import android.text.InputType;
 import android.text.TextWatcher;
 import android.util.AttributeSet;
 import android.view.KeyEvent;
@@ -57,6 +60,8 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
@@ -165,6 +170,8 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
 
     //info_window
     LinearLayout info_window_container;
+    LinearLayout info_window_container_groups;
+
     ImageView info_window_icon;
     TextView info_window_username;
     TextView info_window_lat;
@@ -365,6 +372,9 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
         //info window:
         info_window_container = findViewById(R.id.info_window_container);
         info_window_container.setVisibility(View.GONE);
+
+        info_window_container_groups = findViewById(R.id.info_window_container_groups);
+        info_window_container_groups.setVisibility(View.GONE);
 
         info_window_icon = findViewById(R.id.info_window_icon);
         info_window_username = findViewById(R.id.info_window_username);
@@ -715,7 +725,8 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
                 startedService = false;
             }
 
-        } else if (v.getId() == R.id.info_window_see_details) {
+        }
+        else if (v.getId() == R.id.info_window_see_details) {
 
             MapObject objectTag = (MapObject) v.getTag();
 
@@ -1123,6 +1134,57 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
 
 
             lastSelected = marker;
+
+            Button btn=info_window_container.findViewById(R.id.info_add_to_savedroutes);
+            btn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    info_window_container_groups.setVisibility(View.VISIBLE);
+                    info_window_container.setVisibility(View.GONE);
+
+                    Button btnExistingGroup=info_window_container_groups.findViewById(R.id.info_existing_group);
+                    btnExistingGroup.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            Intent intent=new Intent(getApplicationContext(),FindGroupActivity.class);
+                            startActivity(intent);
+                        }
+                    });
+                    Button btnNewGroup = info_window_container_groups.findViewById(R.id.info_new_group);
+                    btnNewGroup.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            final EditText adinput = new EditText(getApplicationContext());
+                            adinput.setInputType(InputType.TYPE_CLASS_TEXT );
+
+                            AlertDialog.Builder builder=new AlertDialog.Builder(MainActivity.this);
+                            builder.setView(adinput);
+                            builder.setTitle("Make a new group")
+                                    .setMessage("Choose group's name")
+                                    .setPositiveButton("Set", new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialogInterface, int i) {
+                                            String groupname=adinput.getText().toString();
+                                            if(groupname.equals("")) {
+                                                Toast.makeText(getApplicationContext(), "Please insert group's name", Toast.LENGTH_LONG).show();
+                                            }
+                                            else
+                                            {
+                                                Toast.makeText(getApplicationContext(), "Group created", Toast.LENGTH_SHORT).show();
+
+                                            }
+                                        }
+                                    }).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int i) {
+                                }
+                            }).show();
+                        }
+                    });
+
+                }
+            });
+
         } else {
             info_window_container.setVisibility(View.GONE);
             lastSelected = null;
