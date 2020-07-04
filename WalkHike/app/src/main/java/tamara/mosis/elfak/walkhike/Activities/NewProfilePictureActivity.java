@@ -308,7 +308,7 @@ public class NewProfilePictureActivity extends AppCompatActivity {
             }
         } else {
 
-            Toast.makeText(this, "permission Alreday grated", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "permission already grated", Toast.LENGTH_SHORT).show();
 
             openCameraTocaptureImage();
 
