@@ -25,19 +25,18 @@ import tamara.mosis.elfak.walkhike.modeldata.Friendship;
 import tamara.mosis.elfak.walkhike.modeldata.FriendshipData;
 import tamara.mosis.elfak.walkhike.modeldata.User;
 
-public class GroupsRecyclerAdapter extends RecyclerView.Adapter<GroupsRecyclerAdapter.ViewHolder>{
+public class GroupSavedRecyclerAdapter extends RecyclerView.Adapter<GroupSavedRecyclerAdapter.ViewHolder>{
 
     List<String> groupslist;
     Context context;
     String objectTag;
-   // ItemFilter itemFilter;
+    // ItemFilter itemFilter;
 
 
 
-    public GroupsRecyclerAdapter(Context context, List<String> groupslist, String objectTag) {
+    public GroupSavedRecyclerAdapter(Context context, List<String> groupslist) {
         this.groupslist=groupslist;
         this.context = context;
-        this.objectTag = objectTag;
         //itemFilter=new ItemFilter();
 
     }
@@ -45,13 +44,13 @@ public class GroupsRecyclerAdapter extends RecyclerView.Adapter<GroupsRecyclerAd
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_group_view, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_group_saved, parent, false);
         return new ViewHolder(view);
     }
 
 
     @Override
-    public void onBindViewHolder(@NonNull final GroupsRecyclerAdapter.ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull final GroupSavedRecyclerAdapter.ViewHolder holder, int position) {
 
 
         String imeGrupe = groupslist.get(position);
@@ -61,7 +60,7 @@ public class GroupsRecyclerAdapter extends RecyclerView.Adapter<GroupsRecyclerAd
                 (new View.OnClickListener() {
                     @Override
                     public void onClick(final View view) {
-                        SharedPreferences sharedPref = context.getSharedPreferences(
+                        /*SharedPreferences sharedPref = context.getSharedPreferences(
                                 context.getString(R.string.SavedRoutesShared), Context.MODE_PRIVATE);
 
                         SharedPreferences.Editor editor = sharedPref.edit();
@@ -73,10 +72,10 @@ public class GroupsRecyclerAdapter extends RecyclerView.Adapter<GroupsRecyclerAd
                         num++;
                         editor.putInt(context.getString(R.string.NumberOfSavedGroup) + imeGrupe, num);
 
-                        editor.commit();
-                        Toast.makeText(context, "Object added to group " + groupslist.get(position), Toast.LENGTH_SHORT).show();
-                       // removeItem(holder.getAdapterPosition());
-                      //  groupslist.remove(position);
+                        editor.commit();*/
+                        Toast.makeText(context, "Group " + groupslist.get(position), Toast.LENGTH_SHORT).show();
+                        // removeItem(holder.getAdapterPosition());
+                        //  groupslist.remove(position);
                     }
                 });
 
@@ -104,62 +103,13 @@ public class GroupsRecyclerAdapter extends RecyclerView.Adapter<GroupsRecyclerAd
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             vie = itemView;
-            groupname_view = (TextView) vie.findViewById(R.id.textview_groupname);
-            chooseButton = (TextView) vie.findViewById(R.id.add_group_btn);
+            groupname_view = (TextView) vie.findViewById(R.id.saved_textview_groupname);
+            chooseButton = (TextView) vie.findViewById(R.id.saved_textview_number);
 
 
         }
     }
-    /*private class ItemFilter extends Filter {
 
-        public ItemFilter()
-        {}
-        @Override
-        protected FilterResults performFiltering(CharSequence constraint) {
-
-
-            String filterString = constraint.toString().toLowerCase();
-
-            FilterResults results = new FilterResults();
-
-            int count = groupslist.size();
-            final List<> list = groupslist;
-            final ArrayList<String> nlist = new ArrayList<String>(count);
-
-            String filterableString ;
-
-            for (int i = 0; i < count; i++) {
-                filterableString = list.get(i).username;
-                if (filterableString.toLowerCase().contains(filterString)) {
-                    nlist.add(filterableString);
-                }
-            }
-
-            results.values = nlist;
-            results.count = nlist.size();
-
-            return results;
-        }
-
-        @SuppressWarnings("unchecked")
-        @Override
-        protected void publishResults(CharSequence constraint, FilterResults results) {
-            List<String> filteredData = (List<String>) results.values;
-            List<User> temp = new ArrayList<User>(results.count);
-            for (String username:filteredData
-            ) {
-                for (User u:usersList
-                ) {
-                    if(username.equals(u.username))
-                        temp.add(u);
-                }
-
-            }
-            usersList=temp;
-            notifyDataSetChanged();
-        }
-
-    }*/
 
 }
 

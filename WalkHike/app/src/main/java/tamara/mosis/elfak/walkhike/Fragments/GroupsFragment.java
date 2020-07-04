@@ -64,10 +64,7 @@ public class GroupsFragment extends Fragment {
         String email = sharedPref.getString(getString(R.string.loggedUser_email), "EMPTY");
         int indexx  = sharedPref.getInt(getString(R.string.loggedUser_index), -1);
 
-        groupsRecyclerAdapter=new GroupsRecyclerAdapter(getContext(),groupslist);
 
-        groupsListView=view.findViewById(R.id.groups_list_rv) ;
-        groupsListView.setAdapter(groupsRecyclerAdapter);
         return view;
     }
 
