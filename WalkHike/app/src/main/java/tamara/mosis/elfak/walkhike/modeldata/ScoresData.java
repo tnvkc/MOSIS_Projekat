@@ -239,17 +239,26 @@ public class ScoresData {
 
     }
 
-    public void updateResetScoresMonthly(String date)
+    public void updateResetScoresMonthly(String date, boolean resetDateTime)
     {
-        Scores uu =null;
-        for(int i =0; i< this.Scores.size(); i++)
-        {
-            uu = this.Scores.get(i);
-            uu.monthlyActivity =0;
-            uu.monthlyDistance = 0;
-            uu.datetimeMonth = date;
-            db.child(FIREBASE_CHILD).child(uu.key).setValue(uu);
-
+        if (resetDateTime) {
+            Scores uu =null;
+            for(int i =0; i< this.Scores.size(); i++)
+            {
+                uu = this.Scores.get(i);
+                uu.monthlyActivity =0;
+                uu.monthlyDistance = 0;
+                uu.datetimeMonth = date;
+                db.child(FIREBASE_CHILD).child(uu.key).setValue(uu);
+            }
+        } else {
+            Scores uu =null;
+            for(int i =0; i< this.Scores.size(); i++)
+            {
+                uu = this.Scores.get(i);
+                uu.datetimeMonth = date;
+                db.child(FIREBASE_CHILD).child(uu.key).setValue(uu);
+            }
         }
 
     }

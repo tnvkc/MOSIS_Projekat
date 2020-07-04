@@ -231,7 +231,6 @@ public class Probe_Friendship_Activity extends AppCompatActivity  {
             }
         });
 
-
         btnChangeScores = (Button) findViewById(R.id.probefriend_btn_scores_change);
         btnChangeScores.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -243,6 +242,9 @@ public class Probe_Friendship_Activity extends AppCompatActivity  {
 
 
                 Date objectDate = null;
+                Date objectDateMonth = null;
+
+
                 try {
                     objectDate = format.parse(p.datetimeWeek);
 
@@ -259,7 +261,35 @@ public class Probe_Friendship_Activity extends AppCompatActivity  {
                         newDate += "000000";
                         scoresData.getInstance().updateResetScoresWeekly(newDate);
 
+                        objectDateMonth = format.parse(p.datetimeMonth);
+
+                        int currentMonth = Calendar.getInstance().get(Calendar.MONTH);
+                        int currentYear = Calendar.getInstance().get(Calendar.YEAR);
+
+                        int lastUpdateMonth = Integer.parseInt(p.datetimeMonth.substring(2, 3));
+                        int lastUpdateYear =  Integer.parseInt(p.datetimeMonth.substring(4, 7));
+
+                        String newUpdateDate = "";
+                        boolean reset = false;
+
+                        if (currentMonth != lastUpdateMonth || currentYear != lastUpdateYear) {
+
+                            if (currentMonth < 10)
+                                newUpdateDate = "010" + String.valueOf(currentMonth) + String.valueOf(currentYear) + "000000";
+                            else
+                                newUpdateDate = "01" + String.valueOf(currentMonth) + String.valueOf(currentYear) + "000000";
+
+                            reset = true;
+
+                        } else {
+                            newUpdateDate =  new SimpleDateFormat("ddMMyyyyHHmmss").format(Calendar.getInstance().getTime());
+                            reset = false;
+                        }
+
+                        scoresData.getInstance().updateResetScoresMonthly(newUpdateDate, reset);
                     }
+
+
 
                    /* objectDate = format.parse(p.datetimeMonth);
 
