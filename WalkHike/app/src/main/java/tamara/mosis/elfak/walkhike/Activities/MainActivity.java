@@ -32,7 +32,9 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.RelativeLayout;
+import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -72,6 +74,7 @@ import java.util.Map;
 import tamara.mosis.elfak.walkhike.NotificationService;
 import tamara.mosis.elfak.walkhike.Probe;
 import tamara.mosis.elfak.walkhike.R;
+import tamara.mosis.elfak.walkhike.SearchResultsListAdapter;
 import tamara.mosis.elfak.walkhike.ShowArObjectActivity;
 
 import tamara.mosis.elfak.walkhike.modeldata.FriendshipData;
@@ -88,10 +91,15 @@ import tamara.mosis.elfak.walkhike.modeldata.Position;
 
 public class MainActivity extends AppCompatActivity implements GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener, LocationListener, OnMapReadyCallback, View.OnClickListener,
-        BottomNavigationView.OnNavigationItemSelectedListener, GoogleMap.OnMarkerClickListener {
+        BottomNavigationView.OnNavigationItemSelectedListener, GoogleMap.OnMarkerClickListener, TextWatcher {
 
     private FirebaseAuth mfirebaseAuth;
     private static final int PERMISSION_CODE = 1;
+
+    public Location getLocation() {
+        return location;
+    }
+
     Location location;
     LocationManager locationManager;
     private GoogleMap map;
@@ -139,6 +147,9 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
     //search
 
     int search_filter_activated;
+    int search_radius;
+
+    SeekBar search_radius_seekBar;
 
     View search_fragment;
     ImageView search_close;
@@ -149,6 +160,8 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
     Button search_checkpoints_only;
     Button search_emojis_only;
     Button search_remove_filters;
+
+    ListView searchResultsListView;
 
     //info_window
     LinearLayout info_window_container;
@@ -283,6 +296,9 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
         //search
 
         search_filter_activated = 0;
+        search_radius = 100;
+
+        search_radius_seekBar = findViewById(R.id.search_radius_seekbar);
 
         search_fragment = findViewById(R.id.search_fragment);
         search_close = findViewById(R.id.close_search);
@@ -295,6 +311,8 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
         search_emojis_only = findViewById(R.id.search_emojis_only);
         search_remove_filters = findViewById(R.id.search_remove_filters);
 
+        searchResultsListView = (ListView) findViewById(R.id.search_results_list);
+
         search_close.setOnClickListener(this);
         search_users_only.setOnClickListener(this);
         search_messages_only.setOnClickListener(this);
@@ -302,6 +320,28 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
         search_checkpoints_only.setOnClickListener(this);
         search_emojis_only.setOnClickListener(this);
         search_remove_filters.setOnClickListener(this);
+
+        search_radius_seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+
+                search_radius = progress + 100;
+                Toast.makeText(MainActivity.this, "current radius: " + search_radius, Toast.LENGTH_SHORT).show();
+
+                afterTextChanged(search_edit_text.getText());
+
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+
+            }
+        });
 
         search_edit_text.setOnKeyListener(new View.OnKeyListener() {
             @Override
@@ -311,61 +351,16 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
 
                     Toast.makeText(MainActivity.this, "Enter pressed!", Toast.LENGTH_SHORT).show();
 
-                    String searchText = search_edit_text.getText().toString(); //change to desc from recommendations list
+                    InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                    inputMethodManager.hideSoftInputFromWindow(search_edit_text.getWindowToken(), 0);
 
-                    search_fragment.setVisibility(View.GONE);
-                    addNewFloating.setVisibility(View.VISIBLE);
-                    objectInteraction.setVisibility(View.VISIBLE);
-                    startServiceButton.setVisibility(View.VISIBLE);
-
-                    if (search_filter_activated == 0 || search_filter_activated > 1) {
-                        MapObject obj = MapObjectData.getInstance().getSearchedMapObject(searchText, loggedUsername);
-
-                        if (obj != null) {
-
-                            double lat = Double.parseDouble(obj.position.latitude);
-                            double lon = Double.parseDouble(obj.position.longitude);
-
-                            LatLng latLng = new LatLng(lat, lon);
-
-                            map.moveCamera(CameraUpdateFactory.newLatLng(latLng));
-                            map.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng,10f));
-
-                            Marker m = FindMapMarker(obj);
-                            ShowMarkerInfoWindow(m);
-                        }
-                    }
                 }
 
                 return false;
             }
         });
 
-        search_edit_text.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-
-                String insertedText = s.toString();
-
-                ArrayList<MapObject> objs = MapObjectData.getInstance().getSearchedMapObjects(insertedText, search_filter_activated, loggedUsername);
-
-                for (int i = 0; i < objs.size(); i++) {
-                    Toast.makeText(MainActivity.this, objs.get(i).desc, Toast.LENGTH_SHORT).show();
-                }
-
-            }
-        });
-
+        search_edit_text.addTextChangedListener(this);
 
         //info window:
         info_window_container = findViewById(R.id.info_window_container);
@@ -511,6 +506,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
             addNewFloating.setVisibility(View.GONE);
             objectInteraction.setVisibility(View.GONE);
             startServiceButton.setVisibility(View.GONE);
+            bottom_navigation_menu.setVisibility(View.GONE);
 
             search_fragment.setVisibility(View.VISIBLE);
 
@@ -523,10 +519,14 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
             search_edit_text.setText("");
             
             search_filter_activated = 0;
+            search_radius_seekBar.setProgress(0);
+            search_radius = 100;
 
             search_edit_text.requestFocus();
             InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
             inputMethodManager.showSoftInput(search_edit_text, InputMethodManager.SHOW_IMPLICIT);
+
+            afterTextChanged(search_edit_text.getText());
             
         }
 
@@ -869,20 +869,21 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
             addNewFloating.setVisibility(View.VISIBLE);
             objectInteraction.setVisibility(View.VISIBLE);
             startServiceButton.setVisibility(View.VISIBLE);
+            bottom_navigation_menu.setVisibility(View.VISIBLE);
 
             InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
             inputMethodManager.hideSoftInputFromWindow(search_edit_text.getWindowToken(), 0);
 
         } else if (v.getId() == R.id.search_users_only) {
 
-            if (search_filter_activated == 1) {
+            if (search_filter_activated == 5) {
                 search_filter_activated = 0;
                 search_users_only.setSelected(false);
 
                 Toast.makeText(MainActivity.this, "Remove users filter", Toast.LENGTH_SHORT).show();
 
             } else {
-                search_filter_activated = 1; //search users
+                search_filter_activated = 5; //search users
 
                 search_users_only.setSelected(true);
                 search_messages_only.setSelected(false);
@@ -894,16 +895,18 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
 
             }
 
+            this.afterTextChanged(search_edit_text.getText());
+
         } else if (v.getId() == R.id.search_messages_only) {
 
-            if (search_filter_activated == 2) {
+            if (search_filter_activated == 1) {
                 search_filter_activated = 0;
                 search_messages_only.setSelected(false);
 
                 Toast.makeText(MainActivity.this, "Remove messages filter", Toast.LENGTH_SHORT).show();
 
             } else {
-                search_filter_activated = 2; //search messages
+                search_filter_activated = 1; //search messages
 
                 search_users_only.setSelected(false);
                 search_messages_only.setSelected(true);
@@ -914,16 +917,18 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
                 Toast.makeText(MainActivity.this, "Add messages filter", Toast.LENGTH_SHORT).show();
             }
 
+            this.afterTextChanged(search_edit_text.getText());
+
         } else if (v.getId() == R.id.search_photos_only) {
 
-            if (search_filter_activated == 3) {
+            if (search_filter_activated == 2) {
                 search_filter_activated = 0;
                 search_photos_only.setSelected(false);
 
                 Toast.makeText(MainActivity.this, "Remove photos filter", Toast.LENGTH_SHORT).show();
 
             } else {
-                search_filter_activated = 3; //search photos
+                search_filter_activated = 2; //search photos
 
                 search_users_only.setSelected(false);
                 search_messages_only.setSelected(false);
@@ -934,16 +939,18 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
                 Toast.makeText(MainActivity.this, "Add photos filter", Toast.LENGTH_SHORT).show();
             }
 
+            this.afterTextChanged(search_edit_text.getText());
+
         } else if (v.getId() == R.id.search_checkpoints_only) {
 
-            if (search_filter_activated == 4) {
+            if (search_filter_activated == 3) {
                 search_filter_activated = 0;
                 search_checkpoints_only.setSelected(false);
 
                 Toast.makeText(MainActivity.this, "Remove checkpoints filter", Toast.LENGTH_SHORT).show();
 
             } else {
-                search_filter_activated = 4; //search checkpoints
+                search_filter_activated = 3; //search checkpoints
 
                 search_users_only.setSelected(false);
                 search_messages_only.setSelected(false);
@@ -955,16 +962,18 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
 
             }
 
+            this.afterTextChanged(search_edit_text.getText());
+
         } else if (v.getId() == R.id.search_emojis_only) {
 
-            if (search_filter_activated == 5) {
+            if (search_filter_activated == 4) {
                 search_filter_activated = 0;
                 search_emojis_only.setSelected(false);
 
                 Toast.makeText(MainActivity.this, "Remove emojis filter", Toast.LENGTH_SHORT).show();
 
             } else {
-                search_filter_activated = 5; //search emojis
+                search_filter_activated = 4; //search emojis
 
                 search_users_only.setSelected(false);
                 search_messages_only.setSelected(false);
@@ -973,8 +982,10 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
                 search_emojis_only.setSelected(true);
 
                 Toast.makeText(MainActivity.this, "Add emojis filter", Toast.LENGTH_SHORT).show();
-
             }
+
+            this.afterTextChanged(search_edit_text.getText());
+
         } else if (v.getId() == R.id.search_remove_filters) {
 
             Toast.makeText(MainActivity.this, "Remove all search filters", Toast.LENGTH_SHORT).show();
@@ -986,6 +997,8 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
             search_photos_only.setSelected(false);
             search_checkpoints_only.setSelected(false);
             search_emojis_only.setSelected(false);
+
+            this.afterTextChanged(search_edit_text.getText());
 
         }
         else if(v.getId() == R.id.info_add_to_savedroutes)
@@ -1055,6 +1068,31 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
         return false;
     }
 
+    public void FindObjectOnMap(MapObject obj) {
+
+        search_fragment.setVisibility(View.GONE);
+        addNewFloating.setVisibility(View.VISIBLE);
+        objectInteraction.setVisibility(View.VISIBLE);
+        startServiceButton.setVisibility(View.VISIBLE);
+        bottom_navigation_menu.setVisibility(View.VISIBLE);
+
+        InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+        if (inputMethodManager != null)
+            inputMethodManager.hideSoftInputFromWindow(search_edit_text.getWindowToken(), 0);
+
+        double lat = Double.parseDouble(obj.position.latitude);
+        double lon = Double.parseDouble(obj.position.longitude);
+
+        LatLng latLng = new LatLng(lat, lon);
+
+        map.moveCamera(CameraUpdateFactory.newLatLng(latLng));
+        map.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng,10f));
+
+        Marker m = FindMapMarker(obj);
+        ShowMarkerInfoWindow(m);
+
+    }
+
     protected void ShowMarkerInfoWindow(Marker marker) {
         if (lastSelected == null || !lastSelected.equals(marker)) {
 
@@ -1100,4 +1138,28 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
         return null;
     }
 
+    @Override
+    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+    }
+
+    @Override
+    public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+    }
+
+    @Override
+    public void afterTextChanged(Editable s) {
+
+        String insertedText = s.toString();
+
+        ArrayList<MapObject> objs =
+                MapObjectData.getInstance().getSearchedMapObjects(insertedText, search_filter_activated, search_radius, loggedUsername);
+
+        SearchResultsListAdapter listAdapter =
+                new SearchResultsListAdapter(getApplicationContext(), R.layout.list_member_search_result, objs, MainActivity.this);
+
+        searchResultsListView.setAdapter(listAdapter);
+
+    }
 }

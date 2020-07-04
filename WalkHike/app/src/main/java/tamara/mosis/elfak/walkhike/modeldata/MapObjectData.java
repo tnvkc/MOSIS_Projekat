@@ -1,8 +1,11 @@
 package tamara.mosis.elfak.walkhike.modeldata;
 
+import android.location.Location;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.google.android.gms.maps.model.LatLng;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -81,21 +84,22 @@ public class MapObjectData {
         return list;
     }
 
+    /*
     public MapObject getSearchedMapObject(String searchText, String username) {
 
         ArrayList<MapObject> usersMarkers = getFriendsMapObjects(username);
 
         for(int i = 0; i < usersMarkers.size(); i++)
         {
-            if ( usersMarkers.get(i).desc.toLowerCase().compareTo(searchText.toLowerCase()) == 0) {
+            if (usersMarkers.get(i).desc.toLowerCase().compareTo(searchText.toLowerCase()) == 0) {
                 return usersMarkers.get(i);
             }
         }
 
         return null;
-    }
+    }*/
 
-    public ArrayList<MapObject> getSearchedMapObjects(String searchText, int searchFilter, String username) {
+    public ArrayList<MapObject> getSearchedMapObjects(String searchText, int searchFilter, int radius, String username) {
 
         ArrayList<MapObject> usersMarkers = getFriendsMapObjects(username);
         ArrayList<MapObject> list = new ArrayList<>();
@@ -104,13 +108,65 @@ public class MapObjectData {
             MapObject mo = usersMarkers.get(i);
 
             if ((searchFilter == 0 || mo.objectType == searchFilter)
-                    && mo.desc.toLowerCase().contains(searchText.toLowerCase().subSequence(0, searchText.length())))
+                    && mo.desc.toLowerCase().contains(searchText.toLowerCase().subSequence(0, searchText.length()))
+                    && isCloserThanRadius(mo.position, radius, username))
             {
                 list.add(mo);
             }
         }
 
         return list;
+    }
+
+    private boolean isCloserThanRadius(Position position, int radius, String username) {
+
+        Position currentUserPosition = UserData.getInstance().getUserByUsername(username).UserPosition;
+        double current_lat = Double.parseDouble(currentUserPosition.latitude);
+        double current_lon = Double.parseDouble(currentUserPosition.longitude);
+
+        /*
+        Position objectPosition;
+        if (mo.objectType == 5) {
+            objectPosition = UserData.getInstance().getUserByUsername(mo.desc).UserPosition;
+            //za sada, ali trebace da se update-uje pozicija i u mapobject zbog prikaza na mapi!
+        } else {
+            objectPosition = mo.position;
+        }*/
+
+        double object_lat = Double.parseDouble(position.latitude);
+        double object_lon = Double.parseDouble(position.longitude);
+
+        float dist[] = new float[1];
+        Location.distanceBetween(current_lat, current_lon,
+                object_lat, object_lon, dist);
+
+        if(dist[0] <= radius) {
+            return true;
+        } else
+            return false;
+
+
+        /*
+        preko distanceTo
+        Location startPoint = new Location("");
+        startPoint.setLatitude(current_lat);
+        startPoint.setLongitude(current_lon);
+
+        Location endPoint = new Location("");
+        endPoint.setLatitude(object_lat);
+        endPoint.setLongitude(object_lon);
+
+        float distance = startPoint.distanceTo(endPoint);
+
+        if (distance <= radius) {
+            return true;
+        } else {
+            return false;
+        }
+
+         */
+
+
     }
 
     public ArrayList<MapObject> getFilteredMapObjects(Byte filter, String username) {
