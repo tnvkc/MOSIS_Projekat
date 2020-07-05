@@ -78,6 +78,11 @@ public class AddObject_InsertPhoto extends Fragment implements View.OnClickListe
 
         inserted_photo_image_view = view.findViewById(R.id.inserted_photo_image_view);
 
+        imageUri = myParentActivity.getPhotoAsUri();
+        if (imageUri != null)
+            inserted_photo_image_view.setImageURI(imageUri);
+
+
         open_camera_button = view.findViewById(R.id.open_camera_btn);
         open_camera_button.setOnClickListener(this);
     }

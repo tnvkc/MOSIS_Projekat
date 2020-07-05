@@ -97,6 +97,13 @@ public class AddNewObjectActivity extends FragmentActivity implements View.OnCli
 
     public String getLoggedUserEmail() { return loggedUser.email; }
 
+    public Uri getPhotoAsUri() {
+        if (photo == null || photo.equals(""))
+            return null;
+        else
+            return Uri.parse(photo);
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
