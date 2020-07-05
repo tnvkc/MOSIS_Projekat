@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".Fragments.Savedroutes_group_items">
+
+    <!-- TODO: Update blank fragment layout -->
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="wqwqwqwq"
+        android:id="@+id/savedroutes_groupitems_textview"/>
+    <TextView
+
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/bottom_navigation_menu"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="55dp"
+        android:layout_marginBottom="601dp"
+        android:text="" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/saved_routes_groupitems_recView"
+        android:layout_width="match_parent"
+        android:layout_height="614dp"
+        android:layout_above="@+id/bottom_navigation_menu"
+        android:layout_below="@+id/main_toolbar"
+        android:layout_marginTop="0dp"
+        android:layout_marginBottom="0dp" />
+
+</FrameLayout>

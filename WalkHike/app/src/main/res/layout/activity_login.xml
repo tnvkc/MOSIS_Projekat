@@ -45,8 +45,8 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="5dp"
         android:ems="10"
+        android:inputType="textPassword"
         android:hint="Password"
-        android:inputType="textPersonName"
         android:text="pass1234" />
 
     <TextView

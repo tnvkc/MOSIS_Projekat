@@ -84,6 +84,8 @@ public class GroupSavedRecyclerAdapter extends RecyclerView.Adapter<GroupSavedRe
             public  void onClick(View view)
             {
                 Toast.makeText(context, "treba da vodi na drugi fragment za objekte rute", Toast.LENGTH_SHORT).show();
+                doWork(groupslist.get(position));
+
             }
         });
     }
@@ -117,6 +119,20 @@ public class GroupSavedRecyclerAdapter extends RecyclerView.Adapter<GroupSavedRe
         }
     }
 
+    private static ListenerOnGroupClick  myListener;
+
+    public static void setUpListenerOnGroupClick(ListenerOnGroupClick Listener) {
+        myListener = Listener;
+    }
+
+    public void doWork(String grouup) { //View view
+        if(myListener!= null)
+            myListener.onGroupClick(grouup);
+    }
+
+    public interface ListenerOnGroupClick{
+        void onGroupClick(String groupp);
+    }
 
 }
 
