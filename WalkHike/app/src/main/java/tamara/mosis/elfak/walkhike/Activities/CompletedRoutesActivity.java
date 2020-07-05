@@ -3,8 +3,10 @@ package tamara.mosis.elfak.walkhike.Activities;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
+import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.viewpager.widget.ViewPager;
 
 import android.content.Context;
 import android.content.Intent;
@@ -17,6 +19,10 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import java.util.ArrayList;
 
+import tamara.mosis.elfak.walkhike.Fragments.Leaderboards_Activity;
+import tamara.mosis.elfak.walkhike.Fragments.Leaderboards_Activity_Distance_ViewPagerAdapter;
+import tamara.mosis.elfak.walkhike.Fragments.SavedRoutesGroupsFragment;
+import tamara.mosis.elfak.walkhike.Fragments.Savedroutes_group_items;
 import tamara.mosis.elfak.walkhike.FriendRequestsRecyclerAdapter;
 import tamara.mosis.elfak.walkhike.GroupSavedRecyclerAdapter;
 import tamara.mosis.elfak.walkhike.GroupsRecyclerAdapter;
@@ -30,11 +36,10 @@ public class CompletedRoutesActivity extends AppCompatActivity {
     BottomNavigationView bottom_navigation_menu;
     RecyclerView rec;
     TextView prikaz;
-    ArrayList<MapObject> objekti;
-    ArrayList<String> grupe;
-    MapObjectData mapObjectData;
 
-    private GroupSavedRecyclerAdapter recAdapter;
+    private ViewPager viewvpager_groups;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,27 +50,21 @@ public class CompletedRoutesActivity extends AppCompatActivity {
             setTheme(R.style.AppThemeLight);
         setContentView(R.layout.activity_completed_routes);
 
-        prikaz = findViewById(R.id.savedroutes_textview);
-        rec = findViewById(R.id.saved_routes_recView);
+        //prikaz = findViewById(R.id.savedroutes_textview);
+        //
         //popuniObjekte();
 
-        grupe = new ArrayList<>();
-        SharedPreferences sharedPref = getApplicationContext().getSharedPreferences(
-                getString(R.string.SavedRoutesShared), Context.MODE_PRIVATE);
-        int num = sharedPref.getInt(getString(R.string.NumberOfSavedTotal), 0);
-
-        for(int i = 0; i< num; i++) {
-            String groupName = sharedPref.getString(getString(R.string.SavedRoutesGroup) + i, "EMPTY");
-            int numm = sharedPref.getInt(getString(R.string.NumberOfSavedGroup) + groupName, -1);
-            grupe.add(groupName);
-        }
-
-        recAdapter=new GroupSavedRecyclerAdapter(getApplicationContext(), grupe );
+        viewvpager_groups = (ViewPager) findViewById(R.id.savedroutes_viewpager);
+        Leaderboards_Activity_Distance_ViewPagerAdapter viewPagerAdapter = new Leaderboards_Activity_Distance_ViewPagerAdapter(getSupportFragmentManager(), FragmentPagerAdapter.BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT);
+        viewPagerAdapter.AddFragment(new SavedRoutesGroupsFragment(), "Groups");
+        viewPagerAdapter.AddFragment(new Savedroutes_group_items("Prva grupa"), "Group 1"); //ovo se pojavljuje za svaku grupu
 
 
-        rec.setHasFixedSize(true);
-        rec.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
-        rec.setAdapter(recAdapter);
+
+
+        viewvpager_groups.setAdapter(viewPagerAdapter);
+
+       /* */
 
         bottom_navigation_menu = findViewById(R.id.bottom_navigation_menu);
         bottom_navigation_menu.setSelectedItemId(R.id.completed_routes);
@@ -104,35 +103,12 @@ public class CompletedRoutesActivity extends AppCompatActivity {
 
     }
 
-    void popuniObjekte()
+
+
+    void onGroupClick()
     {
-        String prikazz = "";
-        objekti = new ArrayList<>();
-        SharedPreferences sharedPref = getApplicationContext().getSharedPreferences(
-                getString(R.string.SavedRoutesShared), Context.MODE_PRIVATE);
-        int num = sharedPref.getInt(getString(R.string.NumberOfSavedTotal), 0);
 
-        for(int i = 0; i< num; i++)
-        {
-            String groupName = sharedPref.getString(getString(R.string.SavedRoutesGroup) + i, "EMPTY");
-            int numm = sharedPref.getInt(getString(R.string.NumberOfSavedGroup) + groupName, -1);
-            if(numm != -1)
-            {
-                prikazz += groupName + "\n";
-                for(int j= 0; j< numm; j++) {
-                    String objectId = sharedPref.getString(getString(R.string.SavedRoute) + groupName + j, "EMPTY");
-                    MapObject m = mapObjectData.getInstance().getObjectWithDatetimeUser(objectId) ;
-                    objekti.add(m);
-                }
-            }
-        }
-
-
-        for(int i = 0; i< objekti.size(); i++)
-        {
-            MapObject curr = objekti.get(i);
-            prikazz += curr.desc + " date: "+ curr.date + "\n";
-        }
-        prikaz.setText(prikazz);
     }
+
+
 }
