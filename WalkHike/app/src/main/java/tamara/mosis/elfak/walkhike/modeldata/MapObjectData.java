@@ -70,30 +70,6 @@ public class MapObjectData {
         return list;
     }
 
-    public ArrayList<MapObject> getUsersMapObjects(ArrayList<User> users) {
-
-        ArrayList<MapObject> list = new ArrayList<>();
-        for(int i = 0; i< users.size(); i++)
-        {
-            MapObject userObject = getUserMapObject(users.get(i).username);
-            if (userObject != null)
-                list.add(userObject);
-        }
-
-        return list;
-    }
-
-    public MapObject getUserMapObject(String username) {
-
-        for(int i = 0; i< MapObjects.size(); i++)
-        {
-            if (MapObjects.get(i).objectType == 5 && MapObjects.get(i).desc.compareTo(username) == 0)
-                return MapObjects.get(i);
-        }
-
-        return null;
-    }
-
     /*
     public ArrayList<MapObject> getMapObjectsByType(int type, String username) {
 

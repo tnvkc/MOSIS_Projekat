@@ -5,6 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".Activities.FriendProfileActivity">
+
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/friend_profile_toolbar"
         android:layout_width="match_parent"
@@ -15,7 +16,7 @@
     </androidx.appcompat.widget.Toolbar>
 
     <ImageView
-        android:id="@+id/imageView13"
+        android:id="@+id/friend_profile_profilePhoto"
         android:layout_width="187dp"
         android:layout_height="175dp"
         android:layout_centerHorizontal="true"
@@ -23,77 +24,9 @@
         app:srcCompat="@drawable/girl_1"
         android:layout_below="@id/friend_profile_toolbar"
         />
-    <LinearLayout
-        android:id="@+id/llabout"
-        android:layout_width="146dp"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/textViewName"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="5dp"
-        android:orientation="vertical">
-
-        <TextView
-            android:id="@+id/textView25"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Total distance:"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.237"
-            app:layout_constraintStart_toEndOf="@+id/imageView6"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <TextView
-            android:id="@+id/textView27"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Messages"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.237"
-            app:layout_constraintStart_toEndOf="@+id/imageView6"
-            app:layout_constraintTop_toBottomOf="@+id/textView25" />
-
-        <TextView
-            android:id="@+id/textView26"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Pictures"
-            tools:layout_editor_absoluteX="246dp"
-            tools:layout_editor_absoluteY="134dp" />
-
-
-    </LinearLayout>
 
     <TextView
-        android:id="@+id/textView39"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="2dp"
-        android:layout_marginLeft="20dp"
-        android:text="Bio"
-        android:textSize="20dp"
-        android:textStyle="bold"
-        android:layout_below="@+id/llabout"
-        />
-
-    <TextView
-        android:id="@+id/textView40"
-        android:layout_width="144dp"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/textView39"
-        android:layout_marginStart="20dp"
-        android:layout_marginLeft="20dp"
-        android:layout_marginTop="0dp"
-        android:layout_marginEnd="20dp"
-        android:layout_marginRight="20dp"
-        android:layout_marginBottom="20dp"
-        android:text="Ljubitelj planinarenja." />
-
-
-
-
-
-    <TextView
-        android:id="@+id/textViewName"
+        android:id="@+id/friend_profile_username"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="5dp"
@@ -101,25 +34,81 @@
         android:textSize="24dp"
         android:textStyle="bold"
         android:layout_centerHorizontal="true"
-        android:layout_below="@+id/imageView13" />
+        android:layout_below="@+id/friend_profile_profilePhoto" />
+
+    <LinearLayout
+        android:id="@+id/friend_profile_about_layout"
+        android:layout_width="146dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/friend_profile_username"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="5dp"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/friend_profile_total_distance"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Total distance:"
+            android:layout_marginBottom="5dp"/>
+
+        <TextView
+            android:id="@+id/friend_profile_messages"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Messages:"
+            android:layout_marginBottom="5dp" />
+
+        <TextView
+            android:id="@+id/friend_profile_pictures"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Pictures:"
+            android:layout_marginBottom="5dp"/>
+
+    </LinearLayout>
 
     <TextView
-        android:id="@+id/textView41"
-        android:layout_width="127dp"
+        android:id="@+id/friend_profile_bio"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/textView40"
-        android:layout_marginLeft="20dp"
+        android:layout_marginTop="2dp"
+        android:layout_marginStart="20dp"
+        android:text="Bio"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:layout_below="@+id/friend_profile_about_layout"
+        />
+
+    <TextView
+        android:id="@+id/friend_profile_bio_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/friend_profile_bio"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"
+        android:layout_marginBottom="20dp"
+        android:text="Ljubitelj planinarenja." />
+
+    <TextView
+        android:id="@+id/friend_profile_checkpoints"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/friend_profile_bio_text"
+        android:layout_marginStart="20dp"
         android:layout_marginTop="9dp"
         android:text="Checkpoints"
-        android:textSize="20dp"
+        android:textSize="20sp"
         android:textStyle="bold" />
 
     <ListView
-        android:layout_width="294dp"
-        android:layout_height="211dp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginStart="30dp"
+        android:layout_marginEnd="30dp"
         android:layout_marginTop="5dp"
         android:layout_marginBottom="5dp"
-        android:layout_below="@+id/textView41"
+        android:layout_below="@+id/friend_profile_checkpoints"
         android:layout_centerHorizontal="true"
         android:layout_alignParentBottom="true"
         />

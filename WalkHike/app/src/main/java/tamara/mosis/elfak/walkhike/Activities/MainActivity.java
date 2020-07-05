@@ -225,7 +225,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
 
         setContentView(R.layout.activity_main);
         mfirebaseAuth=FirebaseAuth.getInstance();
-        userData.getInstance().getUsers();
+        ArrayList<User> users = userData.getInstance().getUsers();
         friendshipData.getInstance().getFriendships();
         mapObjects = mapObjectData.getInstance().getMapObjects();
         skorovi =  scoresData.getInstance().getScores();
@@ -429,7 +429,53 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
         super.onActivityResult(requestCode, resultCode, data);
     }
 
+    protected void AddUserMarker(String username) {
+
+        User user = UserData.getInstance().getUserByUsername(username);
+
+        LatLng loc = new LatLng(Double.parseDouble(user.UserPosition.latitude),
+                Double.parseDouble(user.UserPosition.longitude));
+
+        String profilePhotoUri = user.image;
+
+        if (!profilePhotoUri.equals("")) {
+
+            Glide.with(this).asBitmap().load(profilePhotoUri).into(new SimpleTarget<Bitmap>(128, 128) {
+                @Override
+                public void onResourceReady(Bitmap resource, Transition<? super Bitmap> transition) {
+                    Marker m = map.addMarker(new MarkerOptions()
+                            .position(loc)
+                            .icon(BitmapDescriptorFactory.fromBitmap(resource)));
+
+                    m.setTag(user.username); //////
+
+                    if (user.username.compareTo(loggedUsername) != 0)
+                        usersMarkers.add(m);
+                    else
+                        userMarker = m;
+
+                }
+            });
+
+        } else {
+            Marker m = map.addMarker(new MarkerOptions()
+                    .position(loc)
+                    .icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_user)));
+
+            m.setTag(user.username);
+
+            if (user.desc.compareTo(loggedUsername) != 0)
+                usersMarkers.add(m);
+            else
+                userMarker = m;
+        }
+
+    }
+
+
     protected void AddMarkerObject(MapObject mapObject) {
+
+        int objectType = mapObject.objectType;
 
         double lat, lon;
 
@@ -439,7 +485,6 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
 
         LatLng loc = new LatLng(lat, lon);
 
-        int objectType = mapObject.objectType;
         int resId = 0;
 
         if (objectType == 1) {
@@ -452,57 +497,13 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
             resId = R.drawable.ic_heart;
         }
 
-        if (map != null) {
+        Marker m = map.addMarker(new MarkerOptions()
+                .position(loc)
+                .icon(BitmapDescriptorFactory.fromResource(resId))
+        );
+        m.setTag(mapObject);
 
-            if (objectType == 5) {
-
-                String profilePhotoUri = UserData.getInstance().getUserByUsername(mapObject.desc).image;
-
-                if (!profilePhotoUri.equals("")) {
-
-                    Glide.with(this).asBitmap().load(profilePhotoUri).into(new SimpleTarget<Bitmap>(128, 128) {
-                        @Override
-                        public void onResourceReady(Bitmap resource, Transition<? super Bitmap> transition) {
-                            Marker m = map.addMarker(new MarkerOptions()
-                                    .position(loc)
-                                    .icon(BitmapDescriptorFactory.fromBitmap(resource)));
-
-                            m.setTag(mapObject);
-
-                            if (mapObject.desc.compareTo(loggedUsername) != 0)
-                                usersMarkers.add(m);
-                            else
-                                userMarker = m;
-
-                        }
-                    });
-
-                } else {
-                    Marker m = map.addMarker(new MarkerOptions()
-                            .position(loc)
-                            .icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_photo)));
-
-                    m.setTag(mapObject);
-
-                    if (mapObject.desc.compareTo(loggedUsername) != 0)
-                        usersMarkers.add(m);
-                    else
-                        userMarker = m;
-                }
-
-                //getApplicationContext()).setDefaultRequestOptions(placeholderOpt).load(image).into(profilePic);
-
-            } else {
-
-                Marker m = map.addMarker(new MarkerOptions()
-                        .position(loc)
-                        .icon(BitmapDescriptorFactory.fromResource(resId))
-                );
-                m.setTag(mapObject);
-
-                objectsMarkers.add(m);
-            }
-        }
+        objectsMarkers.add(m);
 
         //map.moveCamera(CameraUpdateFactory.newLatLng(loc));
         //map.animateCamera(CameraUpdateFactory.newLatLngZoom(loc,10f));
@@ -620,14 +621,12 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
         }
 
         ArrayList<User> usersFriends = FriendshipData.getInstance().GetUserFriends(loggedUser.email);
-        ArrayList<MapObject> usersObjects = mapObjectData.getInstance().getUsersMapObjects(usersFriends);
 
-        for (int i = 0; i < usersObjects.size(); i++) {
-            AddMarkerObject(usersObjects.get(i));
+        for (int i = 0; i < usersFriends.size(); i++) {
+            AddUserMarker(usersFriends.get(i).username);
         }
 
-        MapObject loggedUserObject = mapObjectData.getInstance().getUserMapObject(loggedUsername);
-        AddMarkerObject(loggedUserObject);
+        AddUserMarker(loggedUsername);
 
         map.setOnMarkerClickListener(this);
     }
@@ -795,12 +794,25 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
         }
         else if (v.getId() == R.id.info_window_see_details) {
 
-            MapObject objectTag = (MapObject) v.getTag();
+            if (v.getTag() instanceof MapObject) {
 
-            String lat = objectTag.position.latitude;
-            String lon = objectTag.position.longitude;
+                MapObject objectTag = (MapObject) v.getTag();
 
-            Toast.makeText(this, "lat: " + lat + " lon: " + lon, Toast.LENGTH_SHORT).show();
+                String lat = objectTag.position.latitude;
+                String lon = objectTag.position.longitude;
+
+                Toast.makeText(this, "lat: " + lat + " lon: " + lon, Toast.LENGTH_SHORT).show();
+
+            } else {
+
+                String username = (String) v.getTag();
+
+                Intent intent = new Intent(MainActivity.this, FriendProfileActivity.class);
+                intent.putExtra("username", username);
+                startActivity(intent);
+
+            }
+
 
         } else if (v.getId() == R.id.main_addnewObject) {
 
@@ -1252,14 +1264,15 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
 
             info_window_container.setVisibility(View.VISIBLE);
 
-            MapObject objectTag = (MapObject) marker.getTag();
+            if (marker.getTag() instanceof MapObject) {
 
-            String lat = objectTag.position.latitude;
-            String lon = objectTag.position.longitude;
+                MapObject objectTag = (MapObject) marker.getTag();
 
-            int objectType = objectTag.objectType;
+                String lat = objectTag.position.latitude;
+                String lon = objectTag.position.longitude;
 
-            if (objectType != 5) {
+                int objectType = objectTag.objectType;
+
                 if (objectType == 1) {
                     info_window_icon.setImageResource(R.drawable.ic_message);
                 } else if (objectType == 2) {
@@ -1279,7 +1292,12 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
                 info_add_to_route.setVisibility(View.VISIBLE);
 
             } else {
-                String profilePhotoUri = UserData.getInstance().getUserByUsername(objectTag.desc).image;
+
+                String username = (String) marker.getTag();
+
+                User refferingTo = UserData.getInstance().getUserByUsername(username);
+
+                String profilePhotoUri = refferingTo.image;
 
                 if (!profilePhotoUri.equals("")) {
 
@@ -1290,23 +1308,21 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
                         }
                     });
                 } else {
-                    info_window_icon.setImageResource(R.drawable.ic_photo);
+                    info_window_icon.setImageResource(R.drawable.ic_user);
                 }
 
-                info_window_username.setText(objectTag.desc);
-                info_window_lat.setText("lat: " + lat);
-                info_window_lon.setText("lon: " + lon);
+                info_window_username.setText(username);
+                info_window_lat.setText("lat: " + refferingTo.UserPosition.latitude);
+                info_window_lon.setText("lon: " + refferingTo.UserPosition.longitude);
 
-                if (objectTag.desc.compareTo(loggedUsername) == 0)
+                if (username.compareTo(loggedUsername) == 0)
                     info_window_see_details.setVisibility(View.GONE);
                 else
                     info_window_see_details.setVisibility(View.VISIBLE);
 
                 info_window_see_details.setText("go to profile");
-                info_window_see_details.setTag(objectTag);
+                info_window_see_details.setTag(username);
                 info_add_to_route.setVisibility(View.GONE);
-
-
 
             }
 
