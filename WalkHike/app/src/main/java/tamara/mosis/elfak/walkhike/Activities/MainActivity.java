@@ -17,6 +17,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.Editable;
@@ -42,6 +43,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.target.SimpleTarget;
+import com.bumptech.glide.request.transition.Transition;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationListener;
@@ -73,7 +77,9 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.security.Key;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Map;
 
 import tamara.mosis.elfak.walkhike.NotificationService;
@@ -183,6 +189,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
     Marker lastSelected;
     Marker userMarker;
 
+    Marker loggedUserMarker;
     ArrayList<Marker> usersMarkers;
     ArrayList<Marker> objectsMarkers;
 
@@ -437,18 +444,60 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
             resId = R.drawable.ic_heart;
         }
 
-        if(map!=null){
-            Marker m = map.addMarker(new MarkerOptions()
-                    .position(loc)
-                    .icon(BitmapDescriptorFactory.fromResource(resId))
-            );
+        if (map != null) {
 
-            m.setTag(mapObject);
-            //map.moveCamera(CameraUpdateFactory.newLatLng(loc));
-            //map.animateCamera(CameraUpdateFactory.newLatLngZoom(loc,10f));
-            objectsMarkers.add(m);
+            if (objectType == 5) {
+
+                String profilePhotoUri = UserData.getInstance().getUserByUsername(mapObject.desc).image;
+
+                if (!profilePhotoUri.equals("")) {
+
+                    Glide.with(this).asBitmap().load(profilePhotoUri).into(new SimpleTarget<Bitmap>(128, 128) {
+                        @Override
+                        public void onResourceReady(Bitmap resource, Transition<? super Bitmap> transition) {
+                            Marker m = map.addMarker(new MarkerOptions()
+                                    .position(loc)
+                                    .icon(BitmapDescriptorFactory.fromBitmap(resource)));
+
+                            m.setTag(mapObject);
+
+                            if (mapObject.desc.compareTo(loggedUsername) != 0)
+                                usersMarkers.add(m);
+                            else
+                                userMarker = m;
+
+                        }
+                    });
+
+                } else {
+                    Marker m = map.addMarker(new MarkerOptions()
+                            .position(loc)
+                            .icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_photo)));
+
+                    m.setTag(mapObject);
+
+                    if (mapObject.desc.compareTo(loggedUsername) != 0)
+                        usersMarkers.add(m);
+                    else
+                        userMarker = m;
+                }
+
+                //getApplicationContext()).setDefaultRequestOptions(placeholderOpt).load(image).into(profilePic);
+
+            } else {
+
+                Marker m = map.addMarker(new MarkerOptions()
+                        .position(loc)
+                        .icon(BitmapDescriptorFactory.fromResource(resId))
+                );
+                m.setTag(mapObject);
+
+                objectsMarkers.add(m);
+            }
         }
 
+        //map.moveCamera(CameraUpdateFactory.newLatLng(loc));
+        //map.animateCamera(CameraUpdateFactory.newLatLngZoom(loc,10f));
 
     }
 
@@ -561,6 +610,16 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
         for (int i = 0; i < friendsObjects.size(); i++) {
             AddMarkerObject(friendsObjects.get(i));
         }
+
+        ArrayList<User> usersFriends = FriendshipData.getInstance().GetUserFriends(loggedUser.email);
+        ArrayList<MapObject> usersObjects = mapObjectData.getInstance().getUsersMapObjects(usersFriends);
+
+        for (int i = 0; i < usersObjects.size(); i++) {
+            AddMarkerObject(usersObjects.get(i));
+        }
+
+        MapObject loggedUserObject = mapObjectData.getInstance().getUserMapObject(loggedUsername);
+        AddMarkerObject(loggedUserObject);
 
         map.setOnMarkerClickListener(this);
     }
@@ -1116,22 +1175,56 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
 
             int objectType = objectTag.objectType;
 
-            if (objectType == 1) {
-                info_window_icon.setImageResource(R.drawable.ic_message);
-            } else if (objectType == 2) {
-                info_window_icon.setImageResource(R.drawable.ic_marker);
-            } else if (objectType == 3) {
-                info_window_icon.setImageResource(R.drawable.ic_photo);
-            } else if (objectType == 4) {
-                info_window_icon.setImageResource(R.drawable.ic_heart);
+            if (objectType != 5) {
+                if (objectType == 1) {
+                    info_window_icon.setImageResource(R.drawable.ic_message);
+                } else if (objectType == 2) {
+                    info_window_icon.setImageResource(R.drawable.ic_marker);
+                } else if (objectType == 3) {
+                    info_window_icon.setImageResource(R.drawable.ic_photo);
+                } else if (objectType == 4) {
+                    info_window_icon.setImageResource(R.drawable.ic_heart);
+                }
+
+                info_window_username.setText(String.format("Left on %s by\n%s", objectTag.date, objectTag.createdBy.username));
+                info_window_lat.setText("lat: " + lat);
+                info_window_lon.setText("lon: " + lon);
+                info_window_see_details.setTag(objectTag);
+                info_window_see_details.setText("see details");
+                info_add_to_route.setTag(objectTag);
+                info_add_to_route.setVisibility(View.VISIBLE);
+
+            } else {
+                String profilePhotoUri = UserData.getInstance().getUserByUsername(objectTag.desc).image;
+
+                if (!profilePhotoUri.equals("")) {
+
+                    Glide.with(this).asBitmap().load(profilePhotoUri).into(new SimpleTarget<Bitmap>(128, 128) {
+                        @Override
+                        public void onResourceReady(Bitmap resource, Transition<? super Bitmap> transition) {
+                            info_window_icon.setImageBitmap(resource);
+                        }
+                    });
+                } else {
+                    info_window_icon.setImageResource(R.drawable.ic_photo);
+                }
+
+                info_window_username.setText(objectTag.desc);
+                info_window_lat.setText("lat: " + lat);
+                info_window_lon.setText("lon: " + lon);
+
+                if (objectTag.desc.compareTo(loggedUsername) == 0)
+                    info_window_see_details.setVisibility(View.GONE);
+                else
+                    info_window_see_details.setVisibility(View.VISIBLE);
+
+                info_window_see_details.setText("go to profile");
+                info_window_see_details.setTag(objectTag);
+                info_add_to_route.setVisibility(View.GONE);
+
+
+
             }
-
-            info_window_username.setText(String.format("Left on %s by\n%s", objectTag.date, objectTag.createdBy.username));
-            info_window_lat.setText("lat: " + lat);
-            info_window_lon.setText("lon: " + lon);
-            info_window_see_details.setTag(objectTag);
-            info_add_to_route.setTag(objectTag);
-
 
             lastSelected = marker;
 

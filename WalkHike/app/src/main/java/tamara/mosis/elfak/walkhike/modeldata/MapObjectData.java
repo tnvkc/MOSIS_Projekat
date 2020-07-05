@@ -1,5 +1,6 @@
 package tamara.mosis.elfak.walkhike.modeldata;
 
+import android.graphics.Bitmap;
 import android.location.Location;
 
 import androidx.annotation.NonNull;
@@ -59,8 +60,8 @@ public class MapObjectData {
         ArrayList<MapObject> list = new ArrayList<>();
         for(int i = 0; i< this.MapObjects.size(); i++)
         {
-            if((this.MapObjects.get(i).createdBy.username.compareTo(loggedUserUsername) == 0) ||
-                    (this.MapObjects.get(i).sharedWith.username.compareTo(loggedUserUsername) == 0))
+            if(this.MapObjects.get(i).objectType != 5 && ((this.MapObjects.get(i).createdBy.username.compareTo(loggedUserUsername) == 0) ||
+                    (this.MapObjects.get(i).sharedWith.username.compareTo(loggedUserUsername) == 0)))
             {
                 list.add(MapObjects.get(i));
             }
@@ -69,6 +70,31 @@ public class MapObjectData {
         return list;
     }
 
+    public ArrayList<MapObject> getUsersMapObjects(ArrayList<User> users) {
+
+        ArrayList<MapObject> list = new ArrayList<>();
+        for(int i = 0; i< users.size(); i++)
+        {
+            MapObject userObject = getUserMapObject(users.get(i).username);
+            if (userObject != null)
+                list.add(userObject);
+        }
+
+        return list;
+    }
+
+    public MapObject getUserMapObject(String username) {
+
+        for(int i = 0; i< MapObjects.size(); i++)
+        {
+            if (MapObjects.get(i).objectType == 5 && MapObjects.get(i).desc.compareTo(username) == 0)
+                return MapObjects.get(i);
+        }
+
+        return null;
+    }
+
+    /*
     public ArrayList<MapObject> getMapObjectsByType(int type, String username) {
 
         ArrayList<MapObject> usersMarkers = getFriendsMapObjects(username);
@@ -83,6 +109,8 @@ public class MapObjectData {
 
         return list;
     }
+
+     */
 
     /*
     public MapObject getSearchedMapObject(String searchText, String username) {

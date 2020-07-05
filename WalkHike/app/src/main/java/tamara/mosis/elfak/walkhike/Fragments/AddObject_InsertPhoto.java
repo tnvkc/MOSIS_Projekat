@@ -36,13 +36,16 @@ import tamara.mosis.elfak.walkhike.R;
 
 public class AddObject_InsertPhoto extends Fragment {
 
-    static final int REQUEST_IMAGE_CAPTURE = 11;
+    private static final int REQUEST_IMAGE_CAPTURE = 11;
     private static final int MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE = 33;
-    String currentPhotoPath;
-    Uri imageUri;
+    private String currentPhotoPath;
+    private Uri imageUri;
 
-    int type;
-    AddNewObjectActivity myParentActivity;
+    public String getPhoto() {
+        return imageUri.toString();
+    }
+
+    private AddNewObjectActivity myParentActivity;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -60,8 +63,6 @@ public class AddObject_InsertPhoto extends Fragment {
         //super.onViewCreated(view, savedInstanceState);
 
         myParentActivity = (AddNewObjectActivity) getActivity();
-
-        type = myParentActivity.getObjectType(); //ovde uvek =3
 
         getImage();
     }

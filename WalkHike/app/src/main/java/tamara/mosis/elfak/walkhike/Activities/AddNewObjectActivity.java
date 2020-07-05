@@ -43,9 +43,11 @@ public class AddNewObjectActivity extends FragmentActivity implements View.OnCli
     User loggedUser;
     User sharedWith;
     String sharedWithUsername;
+    String photo;
 
     AddObject_EditDesc secondFragment;
     AddObject_SetDetails thirdFragment;
+    AddObject_InsertPhoto fourthFragment;
 
     public int getObjectType() {
         return objectType;
@@ -203,16 +205,16 @@ public class AddNewObjectActivity extends FragmentActivity implements View.OnCli
                     sharedWithUsername = thirdFragment.getSharedWithUsername();
 
                     if (objectType == 3) {
-                        AddObject_InsertPhoto fourthFragment = new AddObject_InsertPhoto();
+                        fourthFragment = new AddObject_InsertPhoto();
 
                         getSupportFragmentManager().beginTransaction()
                                 .replace(R.id.fragment_container, fourthFragment)
                                 .addToBackStack(null).commit();
                     } else {
-                        AddObject_ShowInAR fourthFragment = new AddObject_ShowInAR();
+                        AddObject_ShowInAR arFragment = new AddObject_ShowInAR();
 
                         getSupportFragmentManager().beginTransaction()
-                                .replace(R.id.fragment_container, fourthFragment)
+                                .replace(R.id.fragment_container, arFragment)
                                 .addToBackStack(null).commit();
                     }
                     btnNext.setText("Done");
@@ -223,6 +225,9 @@ public class AddNewObjectActivity extends FragmentActivity implements View.OnCli
                         //message
                         isPublic = thirdFragment.getIsPublic();
                         sharedWithUsername = thirdFragment.getSharedWithUsername();
+                    } else if (objectType == 3) {
+                        //photo
+                        photo = fourthFragment.getPhoto();
                     }
 
                     MapObject newMapObject = new MapObject();
@@ -237,7 +242,9 @@ public class AddNewObjectActivity extends FragmentActivity implements View.OnCli
                     }
                     newMapObject.sharedWith = sharedWith;
                     newMapObject.desc = desc;
-                    //newMapObject.photo = inserted photo if objectType = 3 or empty string
+                    if (objectType == 3) {
+                        newMapObject.photo = photo;
+                    }
                     newMapObject.position = position;
                     newMapObject.datetime = new SimpleDateFormat("ddMMyyyyhhmmss").format(Calendar.getInstance().getTime());
                     newMapObject.date = new SimpleDateFormat("dd-MM-yyyy").format(Calendar.getInstance().getTime());
