@@ -5,6 +5,8 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -13,7 +15,9 @@ import android.provider.MediaStore;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -34,7 +38,9 @@ import tamara.mosis.elfak.walkhike.Activities.AddNewObjectActivity;
 import tamara.mosis.elfak.walkhike.Activities.NewProfilePictureActivity;
 import tamara.mosis.elfak.walkhike.R;
 
-public class AddObject_InsertPhoto extends Fragment {
+public class AddObject_InsertPhoto extends Fragment implements View.OnClickListener {
+
+    private ImageView inserted_photo_image_view;
 
     private static final int REQUEST_IMAGE_CAPTURE = 11;
     private static final int MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE = 33;
@@ -42,10 +48,16 @@ public class AddObject_InsertPhoto extends Fragment {
     private Uri imageUri;
 
     public String getPhoto() {
-        return imageUri.toString();
+
+        if (imageUri!= null)
+            return imageUri.toString();
+        else
+            return "";
     }
 
     private AddNewObjectActivity myParentActivity;
+
+    private Button open_camera_button;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -64,7 +76,10 @@ public class AddObject_InsertPhoto extends Fragment {
 
         myParentActivity = (AddNewObjectActivity) getActivity();
 
-        getImage();
+        inserted_photo_image_view = view.findViewById(R.id.inserted_photo_image_view);
+
+        open_camera_button = view.findViewById(R.id.open_camera_btn);
+        open_camera_button.setOnClickListener(this);
     }
 
     private void getImage() {
@@ -153,9 +168,14 @@ public class AddObject_InsertPhoto extends Fragment {
 
             //po uzoru na setPic() iz NewProfilePicture
 
-
-
         }
+        inserted_photo_image_view.setImageURI(imageUri);
+    }
 
+    @Override
+    public void onClick(View v) {
+        if (v.getId() == R.id.open_camera_btn) {
+            getImage();
+        }
     }
 }

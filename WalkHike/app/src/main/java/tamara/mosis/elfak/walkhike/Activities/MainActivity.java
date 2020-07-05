@@ -592,7 +592,9 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
 
             search_edit_text.requestFocus();
             InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-            inputMethodManager.showSoftInput(search_edit_text, InputMethodManager.SHOW_IMPLICIT);
+            if (inputMethodManager != null) {
+                inputMethodManager.showSoftInput(search_edit_text, InputMethodManager.SHOW_IMPLICIT);
+            }
 
             afterTextChanged(search_edit_text.getText());
 
@@ -615,7 +617,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
         googleMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
         this.map=googleMap;
 
-        ArrayList<MapObject> friendsObjects = mapObjectData.getInstance().getFriendsMapObjects(loggedUsername);
+        ArrayList<MapObject> friendsObjects = MapObjectData.getInstance().getFriendsMapObjects(loggedUsername);
         for (int i = 0; i < friendsObjects.size(); i++) {
             AddMarkerObject(friendsObjects.get(i));
         }

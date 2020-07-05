@@ -9,20 +9,27 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.Spinner;
+import android.widget.Toast;
+
+import java.util.ArrayList;
 
 import tamara.mosis.elfak.walkhike.Activities.AddNewObjectActivity;
 import tamara.mosis.elfak.walkhike.R;
+import tamara.mosis.elfak.walkhike.modeldata.FriendshipData;
 import tamara.mosis.elfak.walkhike.modeldata.User;
 
 public class AddObject_SetDetails extends Fragment implements View.OnClickListener {
 
     private AddNewObjectActivity myParentActivity;
-    private EditText edit_share_with;
+    private Spinner share_with_select_user;
     private CheckBox cbx_public;
     private String sharedWithUsername;
     private boolean isPublic;
+    private ArrayList<String> usernames;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -43,20 +50,33 @@ public class AddObject_SetDetails extends Fragment implements View.OnClickListen
         myParentActivity = (AddNewObjectActivity) getActivity();
         isPublic = myParentActivity.isPublic();
 
-        edit_share_with = view.findViewById(R.id.edit_text_share_with);
         cbx_public = (CheckBox) view.findViewById(R.id.cbxMakePublic);
+
+        share_with_select_user = view.findViewById(R.id.share_with_select_user);
+        String email = myParentActivity.getLoggedUserEmail();
+        ArrayList<User> friends = FriendshipData.getInstance().GetUserFriends(email);
+
+        usernames = new ArrayList<>();
+        usernames.add("");
+        for (int i = 0; i < friends.size(); i++) {
+            usernames.add(friends.get(i).username);
+        }
+
+        ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_dropdown_item, usernames);
+        share_with_select_user.setAdapter(spinnerAdapter);
 
         if (!isPublic) {
             sharedWithUsername = myParentActivity.getSharedWithUsername();
             if (sharedWithUsername != null) {
-                edit_share_with.setText(sharedWithUsername);
+                int position = usernames.indexOf(sharedWithUsername);
+                share_with_select_user.setSelection(position);
             }
-            edit_share_with.setEnabled(true);
+            share_with_select_user.setEnabled(true);
         }
         else {
             sharedWithUsername = null;
-            edit_share_with.setText("");
-            edit_share_with.setEnabled(false);
+            share_with_select_user.setEnabled(false);
+            share_with_select_user.setSelection(0);
         }
 
         cbx_public.setChecked(isPublic);
@@ -67,7 +87,10 @@ public class AddObject_SetDetails extends Fragment implements View.OnClickListen
         if (cbx_public.isChecked())
             sharedWithUsername = null;
         else
-            sharedWithUsername = edit_share_with.getText().toString();
+        {
+            //sharedWithUsername = usernames.get(share_with_select_user.getSelectedItemPosition());
+            sharedWithUsername = (String) share_with_select_user.getSelectedItem();
+        }
 
         return sharedWithUsername;
     }
@@ -80,13 +103,13 @@ public class AddObject_SetDetails extends Fragment implements View.OnClickListen
     public void onClick(View v) {
         if (v.getId() == R.id.cbxMakePublic) {
             if (cbx_public.isChecked()) {
-                sharedWithUsername = edit_share_with.getText().toString();
-                edit_share_with.setEnabled(false);
-                edit_share_with.setText("");
+                share_with_select_user.setSelection(0);
+                share_with_select_user.setEnabled(false);
                 isPublic = true;
             } else {
-                edit_share_with.setEnabled(true);
-                edit_share_with.setText(sharedWithUsername);
+                share_with_select_user.setEnabled(true);
+                int position = usernames.indexOf(sharedWithUsername);
+                share_with_select_user.setSelection(position);
                 isPublic = false;
             }
         }

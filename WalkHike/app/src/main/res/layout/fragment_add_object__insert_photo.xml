@@ -5,11 +5,18 @@
     android:layout_height="match_parent"
     android:gravity="center">
 
-    <TextView
+    <ImageView
+        android:id="@+id/inserted_photo_image_view"
         android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+
+    <Button
+        android:id="@+id/open_camera_btn"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:gravity="center"
-        android:textSize="18sp"
-        android:text="Insert photo layout here" />
+        android:text="Click to open camera"
+        android:layout_centerHorizontal="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="20dp"/>
 
 </RelativeLayout>

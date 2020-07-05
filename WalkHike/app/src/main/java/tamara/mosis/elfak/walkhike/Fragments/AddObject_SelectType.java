@@ -49,17 +49,30 @@ public class AddObject_SelectType extends Fragment implements View.OnClickListen
         emoji.setOnClickListener(this);
 
         myParentActivity = (AddNewObjectActivity) getActivity();
-        if (myParentActivity != null)
+        if (myParentActivity != null) {
             this.type = myParentActivity.getObjectType();
-        else
-            this.type = 0;
 
-        switch (this.type) {
-            case 1: message.setBackgroundColor(getResources().getColor(R.color.colorAccent)); break;
-            case 2: checkpoint.setBackgroundColor(getResources().getColor(R.color.colorAccent)); break;
-            case 3: photo.setBackgroundColor(getResources().getColor(R.color.colorAccent)); break;
-            case 4: emoji.setBackgroundColor(getResources().getColor(R.color.colorAccent)); break;
-            default: break;
+            if (this.type == 0) {
+                this.type = 1;
+                myParentActivity.setObjectType(type);
+            }
+
+            switch (this.type) {
+                case 1:
+                    message.setBackgroundColor(getResources().getColor(R.color.colorAccent));
+                    break;
+                case 2:
+                    checkpoint.setBackgroundColor(getResources().getColor(R.color.colorAccent));
+                    break;
+                case 3:
+                    photo.setBackgroundColor(getResources().getColor(R.color.colorAccent));
+                    break;
+                case 4:
+                    emoji.setBackgroundColor(getResources().getColor(R.color.colorAccent));
+                    break;
+                default:
+                    break;
+            }
         }
 
         //super.onViewCreated(view, savedInstanceState);
