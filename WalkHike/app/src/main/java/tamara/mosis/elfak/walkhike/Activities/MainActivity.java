@@ -7,6 +7,7 @@ import androidx.appcompat.app.AppCompatDelegate;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.Manifest;
@@ -82,12 +83,14 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Map;
 
+import tamara.mosis.elfak.walkhike.GroupsRecyclerAdapter;
 import tamara.mosis.elfak.walkhike.NotificationService;
 import tamara.mosis.elfak.walkhike.Probe;
 import tamara.mosis.elfak.walkhike.R;
 import tamara.mosis.elfak.walkhike.SearchResultsListAdapter;
 import tamara.mosis.elfak.walkhike.ShowArObjectActivity;
 
+import tamara.mosis.elfak.walkhike.UsersRecyclerAdapter;
 import tamara.mosis.elfak.walkhike.modeldata.FriendshipData;
 
 import tamara.mosis.elfak.walkhike.modeldata.Scores;
@@ -138,6 +141,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
     boolean filter_opened;
     boolean filter_objects_opened;
     boolean filter_timespan_opened;
+    boolean info_groups_opened;
 
     byte object_filter;
 
@@ -171,6 +175,9 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
     Button search_checkpoints_only;
     Button search_emojis_only;
     Button search_remove_filters;
+
+
+    FloatingActionButton info_add_group;
 
     ListView searchResultsListView;
 
@@ -360,7 +367,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
         search_edit_text.setOnKeyListener(new View.OnKeyListener() {
             @Override
             public boolean onKey(View v, int keyCode, KeyEvent event) {
-                
+
                 if (keyCode == KeyEvent.KEYCODE_ENTER && event.getAction() == KeyEvent.ACTION_UP){
 
                     Toast.makeText(MainActivity.this, "Enter pressed!", Toast.LENGTH_SHORT).show();
@@ -391,8 +398,9 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
         info_window_see_details.setOnClickListener(this);
         info_add_to_route = findViewById(R.id.info_add_to_savedroutes);
         info_add_to_route.setOnClickListener(this);
-
-
+        info_add_group = findViewById(R.id.main_info_addgroup);
+        info_add_group.setOnClickListener(this);
+        info_groups_opened = false;
         lastSelected = null;
 
         usersMarkers = new ArrayList<>();
@@ -576,7 +584,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
             search_photos_only.setSelected(false);
             search_remove_filters.setSelected(false);
             search_edit_text.setText("");
-            
+
             search_filter_activated = 0;
             search_radius_seekBar.setProgress(0);
             search_radius = 100;
@@ -586,7 +594,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
             inputMethodManager.showSoftInput(search_edit_text, InputMethodManager.SHOW_IMPLICIT);
 
             afterTextChanged(search_edit_text.getText());
-            
+
         }
 
 
@@ -709,7 +717,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
     //Toast.makeText(MapWithPlayServiceLocationActivity.this, "Lat : "+location.getLatitude()+" Lng "+location.getLongitude(), Toast.LENGTH_SHORT).show();
         if(map!=null){
             LatLng latLng=new LatLng(location.getLatitude(),location.getLongitude());
-			
+
             //map.clear();
             //map.addMarker(new MarkerOptions().position(latLng).title("Current Location"));
             //map.moveCamera(CameraUpdateFactory.newLatLng(latLng));
@@ -759,7 +767,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
 		//finish everywhere
         }
         return false;
-	}		
+	}
 
     @Override
     public void onClick(View v) {
@@ -1073,7 +1081,43 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
         }
         else if(v.getId() == R.id.info_add_to_savedroutes)
         {
-            MapObject objectTag = (MapObject) v.getTag();
+            if(!info_groups_opened) {
+
+
+                info_groups_opened = true;
+                MapObject objectTag = (MapObject) v.getTag();
+                info_window_container_groups.setVisibility(View.VISIBLE);
+                ArrayList<String> groupList = new ArrayList<>();
+
+
+                SharedPreferences sharedPref = getApplicationContext().getSharedPreferences(
+                        getString(R.string.SavedRoutesShared), Context.MODE_PRIVATE);
+
+                SharedPreferences.Editor editor = sharedPref.edit();
+
+                int num = sharedPref.getInt(getString(R.string.NumberOfSavedTotal), 0);
+                String prikazz = "";
+                for (int i = 0; i < num; i++) {
+                    String groupName = sharedPref.getString(getString(R.string.SavedRoutesGroup) + i, "EMPTY");
+                    int numm = sharedPref.getInt(getString(R.string.NumberOfSavedGroup) + groupName, -1);
+                    groupList.add(groupName);
+                }
+
+
+                String id = objectTag.datetime + objectTag.createdBy.email;
+                GroupsRecyclerAdapter groupsRecyclerAdapter = new GroupsRecyclerAdapter(getApplicationContext(), groupList, id);
+
+                RecyclerView groupsListView = findViewById(R.id.main_info_listview_grupe);
+                groupsListView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
+                groupsListView.setAdapter(groupsRecyclerAdapter);
+            }
+            else
+            {
+                info_groups_opened = false;
+                info_window_container_groups.setVisibility(View.GONE);
+            }
+
+           /*MapObject objectTag = (MapObject) v.getTag();
             String imeGrupe = "Prva grupa";
             SharedPreferences sharedPref = getApplicationContext().getSharedPreferences(
                     getString(R.string.SavedRoutesShared), Context.MODE_PRIVATE);
@@ -1096,7 +1140,47 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
             num++;
             editor.putInt(getString(R.string.NumberOfSavedGroup) + imeGrupe, num);
 
-            editor.commit();
+            editor.commit();*/
+        }
+        else if(v.getId() == R.id.main_info_addgroup)
+        {
+            final EditText adinput = new EditText(getApplicationContext());
+            adinput.setInputType(InputType.TYPE_CLASS_TEXT );
+
+            AlertDialog.Builder builder=new AlertDialog.Builder(MainActivity.this);
+            builder.setView(adinput);
+            builder.setTitle("Make a new group")
+                    .setMessage("Choose group's name")
+                    .setPositiveButton("Set", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            String groupname=adinput.getText().toString();
+                            if(groupname.equals("")) {
+                                Toast.makeText(getApplicationContext(), "Please insert group's name", Toast.LENGTH_LONG).show();
+                            }
+                            else
+                            {
+                                Toast.makeText(getApplicationContext(), "Group created " + groupname, Toast.LENGTH_SHORT).show();
+                                SharedPreferences sharedPref = getApplicationContext().getSharedPreferences(
+                                        getString(R.string.SavedRoutesShared), Context.MODE_PRIVATE);
+
+                                SharedPreferences.Editor editor = sharedPref.edit();
+
+                                int num = sharedPref.getInt(getString(R.string.NumberOfSavedTotal), 0);
+
+                                editor.putString(getString(R.string.SavedRoutesGroup) + num, groupname);
+                                num++;
+                                editor.putInt(getString(R.string.NumberOfSavedTotal), num);
+
+                                editor.commit();
+                            }
+                        }
+                    }).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+                }
+            }).show();
         }
 
     }
@@ -1228,55 +1312,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
 
             lastSelected = marker;
 
-            Button btn=info_window_container.findViewById(R.id.info_add_to_savedroutes);
-            btn.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    info_window_container_groups.setVisibility(View.VISIBLE);
-                    info_window_container.setVisibility(View.GONE);
 
-                    Button btnExistingGroup=info_window_container_groups.findViewById(R.id.info_existing_group);
-                    btnExistingGroup.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            Intent intent=new Intent(getApplicationContext(),FindGroupActivity.class);
-                            startActivity(intent);
-                        }
-                    });
-                    Button btnNewGroup = info_window_container_groups.findViewById(R.id.info_new_group);
-                    btnNewGroup.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            final EditText adinput = new EditText(getApplicationContext());
-                            adinput.setInputType(InputType.TYPE_CLASS_TEXT );
-
-                            AlertDialog.Builder builder=new AlertDialog.Builder(MainActivity.this);
-                            builder.setView(adinput);
-                            builder.setTitle("Make a new group")
-                                    .setMessage("Choose group's name")
-                                    .setPositiveButton("Set", new DialogInterface.OnClickListener() {
-                                        @Override
-                                        public void onClick(DialogInterface dialogInterface, int i) {
-                                            String groupname=adinput.getText().toString();
-                                            if(groupname.equals("")) {
-                                                Toast.makeText(getApplicationContext(), "Please insert group's name", Toast.LENGTH_LONG).show();
-                                            }
-                                            else
-                                            {
-                                                Toast.makeText(getApplicationContext(), "Group created", Toast.LENGTH_SHORT).show();
-
-                                            }
-                                        }
-                                    }).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialogInterface, int i) {
-                                }
-                            }).show();
-                        }
-                    });
-
-                }
-            });
 
         } else {
             info_window_container.setVisibility(View.GONE);

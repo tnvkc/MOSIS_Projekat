@@ -104,50 +104,42 @@
         android:id="@+id/info_window_container_groups"
         android:orientation="vertical"
         android:weightSum="100"
-        android:visibility="gone"
+        android:visibility="visible"
         android:background="@color/colorPrimary"
-        android:layout_above="@+id/bottom_navigation_menu"
+        android:layout_above="@+id/info_window_container"
 
         >
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Save to an existing group or make a new one"
-            android:id="@+id/info_window_text"
-            android:gravity="center_horizontal"
-            android:textSize="20dp"
-            android:layout_gravity="center_vertical"
-            android:layout_marginTop="10dp"
-            />
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="100dp"
-            android:id="@+id/info_window_container_groups_buttons"
-            android:orientation="horizontal"
-            android:weightSum="100"
-            android:background="@color/colorPrimary"
-            android:layout_weight="70"
-            android:layout_gravity="center_vertical"
-            android:layout_marginTop="20dp"
-            >
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
 
-        <Button
-                    android:id="@+id/info_existing_group"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Choose existing"
-                    android:textSize="12sp"
-                    android:layout_weight="50"
-            ></Button>
+            <TextView
+                android:id="@+id/info_window_text"
+                android:layout_width="350dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="5dp"
+                android:gravity="center_horizontal"
+                android:text="Groups"
+                android:textSize="20dp" />
 
-                <Button
-                    android:id="@+id/info_new_group"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Choose new"
-                    android:textSize="12sp"
-                    android:layout_weight="50"></Button>
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
+                android:id="@+id/main_info_addgroup"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="20dp"
+                android:src="@drawable/ic_add_object"
+                app:backgroundTint="@color/colorPrimary"
+                android:scrollbars="vertical"
+                app:fabSize="mini"></com.google.android.material.floatingactionbutton.FloatingActionButton>
         </LinearLayout>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/main_info_listview_grupe"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
 
     </LinearLayout>
 
@@ -178,7 +170,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/main_addnewObject"
-        android:layout_above="@+id/info_window_container"
+        android:layout_above="@+id/info_window_container_groups"
         android:layout_alignParentEnd="true"
         android:layout_marginEnd="35dp"
         android:layout_marginBottom="35dp"

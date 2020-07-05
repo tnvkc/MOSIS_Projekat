@@ -3,6 +3,8 @@ package tamara.mosis.elfak.walkhike.Activities;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Context;
 import android.content.Intent;
@@ -15,6 +17,9 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import java.util.ArrayList;
 
+import tamara.mosis.elfak.walkhike.FriendRequestsRecyclerAdapter;
+import tamara.mosis.elfak.walkhike.GroupSavedRecyclerAdapter;
+import tamara.mosis.elfak.walkhike.GroupsRecyclerAdapter;
 import tamara.mosis.elfak.walkhike.Notification;
 import tamara.mosis.elfak.walkhike.R;
 import tamara.mosis.elfak.walkhike.modeldata.MapObject;
@@ -23,9 +28,13 @@ import tamara.mosis.elfak.walkhike.modeldata.MapObjectData;
 public class CompletedRoutesActivity extends AppCompatActivity {
 
     BottomNavigationView bottom_navigation_menu;
+    RecyclerView rec;
     TextView prikaz;
     ArrayList<MapObject> objekti;
+    ArrayList<String> grupe;
     MapObjectData mapObjectData;
+
+    private GroupSavedRecyclerAdapter recAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,7 +46,26 @@ public class CompletedRoutesActivity extends AppCompatActivity {
         setContentView(R.layout.activity_completed_routes);
 
         prikaz = findViewById(R.id.savedroutes_textview);
-        popuniObjekte();
+        rec = findViewById(R.id.saved_routes_recView);
+        //popuniObjekte();
+
+        grupe = new ArrayList<>();
+        SharedPreferences sharedPref = getApplicationContext().getSharedPreferences(
+                getString(R.string.SavedRoutesShared), Context.MODE_PRIVATE);
+        int num = sharedPref.getInt(getString(R.string.NumberOfSavedTotal), 0);
+
+        for(int i = 0; i< num; i++) {
+            String groupName = sharedPref.getString(getString(R.string.SavedRoutesGroup) + i, "EMPTY");
+            int numm = sharedPref.getInt(getString(R.string.NumberOfSavedGroup) + groupName, -1);
+            grupe.add(groupName);
+        }
+
+        recAdapter=new GroupSavedRecyclerAdapter(getApplicationContext(), grupe );
+
+
+        rec.setHasFixedSize(true);
+        rec.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
+        rec.setAdapter(recAdapter);
 
         bottom_navigation_menu = findViewById(R.id.bottom_navigation_menu);
         bottom_navigation_menu.setSelectedItemId(R.id.completed_routes);
