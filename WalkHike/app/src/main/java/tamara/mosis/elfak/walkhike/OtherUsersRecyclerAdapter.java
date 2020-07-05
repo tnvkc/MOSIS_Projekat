@@ -8,12 +8,15 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.Filter;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
@@ -68,6 +71,11 @@ public class OtherUsersRecyclerAdapter extends RecyclerView.Adapter<OtherUsersRe
         holder.username_view.setText(username + ", "+email);
         //final String user_id=usersList.get(position).userId;
 
+        String imgUrl = usersList.get(position).image;
+        RequestOptions placeholderOpt = new RequestOptions();
+        placeholderOpt.placeholder(R.drawable.girl_1);
+        Glide.with(context).setDefaultRequestOptions(placeholderOpt).load(imgUrl).into(holder.image_view);
+
         holder.addFriendButton.setOnClickListener
                 (new View.OnClickListener()
         {
@@ -119,12 +127,13 @@ public class OtherUsersRecyclerAdapter extends RecyclerView.Adapter<OtherUsersRe
         private View vie;
         private TextView username_view;
         private Button addFriendButton;
-
+        private ImageView image_view;
         public ViewHolderOther(@NonNull View itemView) {
             super(itemView);
             vie=itemView;
             username_view=(TextView)vie.findViewById(R.id.textViewAddUser);
             addFriendButton=vie.findViewById(R.id.addFriendButton);
+            image_view=vie.findViewById(R.id.imageViewFriendPhoto);
 
         }
     }

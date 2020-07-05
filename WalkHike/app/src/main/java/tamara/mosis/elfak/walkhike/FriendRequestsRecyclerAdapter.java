@@ -1,16 +1,20 @@
 package tamara.mosis.elfak.walkhike;
 
 import android.content.Context;
+import android.media.Image;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
 
@@ -62,6 +66,11 @@ public class FriendRequestsRecyclerAdapter extends RecyclerView.Adapter<FriendRe
         else
         {   username=users.get(position).fromUser.username + users.get(position).fromUser.email;
             holder.username_view.setText(username);
+
+            String imgUrl = users.get(position).fromUser.image;
+            RequestOptions placeholderOpt = new RequestOptions();
+            placeholderOpt.placeholder(R.drawable.girl_1);
+            Glide.with(context).setDefaultRequestOptions(placeholderOpt).load(imgUrl).into(holder.image_view);
         }
 
 
@@ -110,6 +119,7 @@ public class FriendRequestsRecyclerAdapter extends RecyclerView.Adapter<FriendRe
         private TextView username_view;
         private ImageButton acceptButton;
         private ImageButton declineButton;
+        private ImageView image_view;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -117,6 +127,7 @@ public class FriendRequestsRecyclerAdapter extends RecyclerView.Adapter<FriendRe
             username_view=(TextView)vie.findViewById(R.id.textViewRequest);
             acceptButton= (ImageButton) vie.findViewById(R.id.button_accept);
             declineButton=  (ImageButton)vie.findViewById(R.id.button_decline);
+            image_view=vie.findViewById(R.id.imageViewRequestPhoto);
 
 
         }
