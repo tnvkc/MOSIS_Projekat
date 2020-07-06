@@ -60,8 +60,8 @@ public class MapObjectData {
         ArrayList<MapObject> list = new ArrayList<>();
         for(int i = 0; i< this.MapObjects.size(); i++)
         {
-            if(this.MapObjects.get(i).objectType != 5 && ((this.MapObjects.get(i).createdBy.username.compareTo(loggedUserUsername) == 0) ||
-                    (this.MapObjects.get(i).sharedWith.username.compareTo(loggedUserUsername) == 0)))
+            if((this.MapObjects.get(i).createdBy.username.compareTo(loggedUserUsername) == 0) ||
+                    (this.MapObjects.get(i).sharedWith.username.compareTo(loggedUserUsername) == 0))
             {
                 list.add(MapObjects.get(i));
             }

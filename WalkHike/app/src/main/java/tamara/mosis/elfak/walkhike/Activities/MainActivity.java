@@ -800,10 +800,9 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
 
                 MapObject objectTag = (MapObject) v.getTag();
 
-                String lat = objectTag.position.latitude;
-                String lon = objectTag.position.longitude;
-
-                Toast.makeText(this, "lat: " + lat + " lon: " + lon, Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(MainActivity.this, ObjectInteractionActivity.class);
+                intent.putExtra("object", objectTag);
+                startActivity(intent);
 
             } else {
 

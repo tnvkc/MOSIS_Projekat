@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".Activities.ObjectInteractionActivity">
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/object_interaction_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:layout_alignParentTop="true"
+        android:background="?attr/toolbarColor"
+        android:minHeight="?attr/actionBarSize">
+    </androidx.appcompat.widget.Toolbar>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/object_interaction_lat"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/object_interaction_toolbar"
+        android:layout_marginTop="25dp"
+        android:layout_marginStart="10dp"
+        android:text="latitude: "
+        />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/object_interaction_lon"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/object_interaction_lat"
+        android:layout_marginStart="10dp"
+        android:text="longitude: "
+        />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/object_interaction_text"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@+id/object_interaction_lon"
+        android:layout_marginTop="25dp"
+        android:text="user .... was here on .... \nand left this object:"
+        android:gravity="center"
+        android:textSize="18sp"
+        />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="150dp"
+        android:id="@+id/object_interaction_details_layout"
+        android:layout_below="@id/object_interaction_text"
+        android:orientation="horizontal"
+        android:weightSum="10">
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="6"
+            android:id="@+id/object_interaction_icon"
+            android:src="@drawable/ic_photo"
+            android:layout_marginTop="20dp"
+            android:layout_marginStart="20dp"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="4"
+            android:id="@+id/object_interaction_desc"
+            android:layout_marginEnd="20dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginStart="20dp"
+            android:text="desc"
+            android:gravity="center|start"
+            />
+
+    </LinearLayout>
+
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/object_interaction_reaction_text"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@+id/object_interaction_details_layout"
+        android:layout_marginTop="30dp"
+        android:layout_marginStart="20dp"
+        android:text="What did you think of this object?"
+        android:textSize="18dp"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="80dp"
+        android:id="@+id/object_interaction_reactions_layout"
+        android:orientation="horizontal"
+        android:layout_below="@+id/object_interaction_reaction_text"
+        android:layout_marginTop="20dp"
+        android:weightSum="90"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp">
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="30"
+            android:id="@+id/object_interaction_great"
+            android:layout_marginEnd="10dp"
+            android:src="@drawable/ic_great"
+            android:clickable="true"
+            android:focusable="true" />
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="30"
+            android:id="@+id/object_interaction_meh"
+            android:src="@drawable/ic_meh"
+            android:clickable="true"
+            android:focusable="true"
+            />
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="30"
+            android:id="@+id/object_interaction_boo"
+            android:layout_marginStart="10dp"
+            android:src="@drawable/ic_boo"
+            android:clickable="true"
+            android:focusable="true"
+            />
+
+    </LinearLayout>
+
+    <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_below="@+id/object_interaction_reactions_layout"
+            android:layout_marginTop="5dp"
+            android:weightSum="90"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="30"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="10dp"
+                android:text="Great!"
+                android:gravity="center"
+                android:textSize="16sp"
+                />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="30"
+                android:text="Meh!"
+                android:gravity="center"
+                android:textSize="16sp"
+                />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="30"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="10dp"
+                android:text="Boo!"
+                android:gravity="center"
+                android:textSize="16sp"
+                />
+
+    </LinearLayout>
+
+</RelativeLayout>
