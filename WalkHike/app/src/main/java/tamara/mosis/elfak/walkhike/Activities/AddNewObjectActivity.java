@@ -319,6 +319,9 @@ public class AddNewObjectActivity extends FragmentActivity implements View.OnCli
                         newMapObject.position = position;
                         newMapObject.datetime = new SimpleDateFormat("ddMMyyyyhhmmss").format(Calendar.getInstance().getTime());
                         newMapObject.date = new SimpleDateFormat("dd-MM-yyyy").format(Calendar.getInstance().getTime());
+                        newMapObject.reactionsGreat = 0;
+                        newMapObject.reactionsMeh = 0;
+                        newMapObject.reactionsBoo = 0;
                         if (objectType == 3) {
                             newMapObject.photo = photo;
                             uploadImage(newMapObject);

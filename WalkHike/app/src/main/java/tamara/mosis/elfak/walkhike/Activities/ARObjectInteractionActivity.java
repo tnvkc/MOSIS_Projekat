@@ -1,11 +1,6 @@
 package tamara.mosis.elfak.walkhike.Activities;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.app.AppCompatDelegate;
-import androidx.appcompat.widget.Toolbar;
-
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
@@ -14,15 +9,29 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatDelegate;
+import androidx.appcompat.widget.Toolbar;
+
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.target.SimpleTarget;
-import com.bumptech.glide.request.transition.Transition;
+import com.google.ar.sceneform.Camera;
+import com.google.ar.sceneform.Node;
+import com.google.ar.sceneform.Scene;
+import com.google.ar.sceneform.math.Vector3;
+import com.google.ar.sceneform.rendering.ModelRenderable;
+import com.google.ar.sceneform.ux.ArFragment;
 
 import tamara.mosis.elfak.walkhike.R;
 import tamara.mosis.elfak.walkhike.modeldata.MapObject;
 import tamara.mosis.elfak.walkhike.modeldata.MapObjectData;
 
-public class ObjectInteractionActivity extends AppCompatActivity implements View.OnClickListener {
+public class ARObjectInteractionActivity extends AppCompatActivity implements View.OnClickListener {
+
+    private ArFragment arFragment;
+    private Scene scene;
+    private Camera camera;
+
+    private int objectType;
 
     Toolbar toolbar;
 
@@ -47,28 +56,36 @@ public class ObjectInteractionActivity extends AppCompatActivity implements View
             setTheme(R.style.AppThemeDark);
         else
             setTheme(R.style.AppThemeLight);
-        setContentView(R.layout.activity_object_interaction);
+        setContentView(R.layout.activity_ar_object_interaction);
 
-        Button obj_interaction_close = findViewById(R.id.object_interaction_close);
+        arFragment = (ArFragment) getSupportFragmentManager().findFragmentById(R.id.ar_object_interaction_ar_fragment);
+
+        //hide hand animation
+        arFragment.getPlaneDiscoveryController().hide();
+        arFragment.getPlaneDiscoveryController().setInstructionView(null);
+
+        scene = arFragment.getArSceneView().getScene();
+        camera = scene.getCamera();
+
+        Button obj_interaction_close = findViewById(R.id.ar_object_interaction_close);
         obj_interaction_close.setOnClickListener(this);
 
-        TextView obj_interaction_text = findViewById(R.id.object_interaction_text);
-        TextView obj_interaction_lat = findViewById(R.id.object_interaction_lat);
-        TextView obj_interaction_lon = findViewById(R.id.object_interaction_lon);
-        TextView obj_interaction_desc = findViewById(R.id.object_interaction_desc);
-        ImageView obj_interaction_icon = findViewById(R.id.object_interaction_icon);
-        obj_interaction_reaction_great = findViewById(R.id.object_interaction_great);
-        obj_interaction_reaction_meh = findViewById(R.id.object_interaction_meh);
-        obj_interaction_reaction_boo = findViewById(R.id.object_interaction_boo);
-        reactions_great = findViewById(R.id.reactions_great);
-        reactions_meh = findViewById(R.id.reactions_meh);
-        reactions_boo = findViewById(R.id.reactions_boo);
+        TextView obj_interaction_text = findViewById(R.id.ar_object_interaction_text);
+        TextView obj_interaction_lat = findViewById(R.id.ar_object_interaction_lat);
+        TextView obj_interaction_lon = findViewById(R.id.ar_object_interaction_lon);
+        TextView obj_interaction_desc = findViewById(R.id.ar_object_interaction_desc);
+        obj_interaction_reaction_great = findViewById(R.id.ar_object_interaction_great);
+        obj_interaction_reaction_meh = findViewById(R.id.ar_object_interaction_meh);
+        obj_interaction_reaction_boo = findViewById(R.id.ar_object_interaction_boo);
+        reactions_great = findViewById(R.id.ar_reactions_great);
+        reactions_meh = findViewById(R.id.ar_reactions_meh);
+        reactions_boo = findViewById(R.id.ar_reactions_boo);
 
         obj_interaction_reaction_great.setOnClickListener(this);
         obj_interaction_reaction_meh.setOnClickListener(this);
         obj_interaction_reaction_boo.setOnClickListener(this);
 
-        toolbar = (Toolbar) findViewById(R.id.object_interaction_toolbar);
+        toolbar = (Toolbar) findViewById(R.id.ar_object_interaction_toolbar);
         setSupportActionBar(toolbar);
 
         getSupportActionBar().setDisplayShowTitleEnabled(true);
@@ -79,35 +96,23 @@ public class ObjectInteractionActivity extends AppCompatActivity implements View
         obj = (MapObject) callerIntent.getSerializableExtra("object");
 
         if (obj != null) {
-            int objectType = obj.objectType;
+            objectType = obj.objectType;
 
             String text = String.format("User %s was here on %s\n and left this ", obj.createdBy, obj.date);
 
             String desc = "";
 
-            if (objectType == 1) {
-                getSupportActionBar().setTitle("Message");
-                text += "message:";
-                desc += "message: ";
-                obj_interaction_icon.setImageResource(R.drawable.ic_message);
-            } else if (objectType == 2) {
+            if (objectType == 2) {
                 getSupportActionBar().setTitle("Checkpoint");
                 text += "checkpoint:";
                 desc += "place name: ";
-                obj_interaction_icon.setImageResource(R.drawable.ic_marker);
-            } else if (objectType == 3) {
-                getSupportActionBar().setTitle("Photo");
-                text += "photo:";
-                desc += "photo description: ";
-
-                Glide.with(this).load(obj.photo).into(obj_interaction_icon);
-
             } else if (objectType == 4) {
                 getSupportActionBar().setTitle("Emoji");
                 text += "emoji:";
                 desc += "reaction: ";
-                obj_interaction_icon.setImageResource(R.drawable.ic_heart);
             }
+
+            ShowArObject();
 
             desc += obj.desc;
 
@@ -141,7 +146,7 @@ public class ObjectInteractionActivity extends AppCompatActivity implements View
     @Override
     public void onClick(View v) {
 
-        if (v.getId() == R.id.object_interaction_great) {
+        if (v.getId() == R.id.ar_object_interaction_great) {
 
             obj_interaction_reaction_great.setBackgroundColor(getColor(R.color.colorAccent));
             obj_interaction_reaction_meh.setBackgroundColor(getColor(android.R.color.transparent));
@@ -153,7 +158,7 @@ public class ObjectInteractionActivity extends AppCompatActivity implements View
 
             SetReactionStrings();
 
-        } else if (v.getId() == R.id.object_interaction_meh) {
+        } else if (v.getId() == R.id.ar_object_interaction_meh) {
 
             obj_interaction_reaction_great.setBackgroundColor(getColor(android.R.color.transparent));
             obj_interaction_reaction_meh.setBackgroundColor(getColor(R.color.colorAccent));
@@ -165,7 +170,7 @@ public class ObjectInteractionActivity extends AppCompatActivity implements View
 
             SetReactionStrings();
 
-        } else if (v.getId() == R.id.object_interaction_boo) {
+        } else if (v.getId() == R.id.ar_object_interaction_boo) {
 
             obj_interaction_reaction_great.setBackgroundColor(getColor(android.R.color.transparent));
             obj_interaction_reaction_meh.setBackgroundColor(getColor(android.R.color.transparent));
@@ -177,7 +182,7 @@ public class ObjectInteractionActivity extends AppCompatActivity implements View
 
             SetReactionStrings();
 
-        } else if (v.getId() == R.id.object_interaction_close) {
+        } else if (v.getId() == R.id.ar_object_interaction_close) {
 
             obj.reactionsGreat = great;
             obj.reactionsMeh = meh;
@@ -200,4 +205,57 @@ public class ObjectInteractionActivity extends AppCompatActivity implements View
         reactions_meh.setText(reactions_text_meh);
         reactions_boo.setText(reactions_text_boo);
     }
+
+    private void ShowArObject() {
+
+        switch(objectType) {
+            case 5: {
+                ModelRenderable
+                        .builder()
+                        .setSource(this, R.raw.trophy)
+                        .build()
+                        .thenAccept(modelRenderable -> {
+
+                            Node node = new Node();
+                            node.setRenderable(modelRenderable);
+                            scene.addChild(node);
+
+                            node.setWorldPosition(new Vector3(0.0f, 0.5f, -2.0f));
+                        });
+                break;
+            }
+            case 4: {
+                ModelRenderable
+                        .builder()
+                        .setSource(this, R.raw.heart)
+                        .build()
+                        .thenAccept(modelRenderable -> {
+
+                            Node node = new Node();
+                            node.setRenderable(modelRenderable);
+                            scene.addChild(node);
+
+                            node.setWorldPosition(new Vector3(0.0f, 0.5f, -2.0f));
+                        });
+                break;
+            }
+            case 2: {
+                ModelRenderable
+                        .builder()
+                        .setSource(this, R.raw.marker)
+                        .build()
+                        .thenAccept(modelRenderable -> {
+
+                            Node node = new Node();
+                            node.setRenderable(modelRenderable);
+                            scene.addChild(node);
+
+                            node.setWorldPosition(new Vector3(0.0f, 0.5f, -2.0f));
+                        });
+                break;
+            }
+        }
+
+    }
+
 }

@@ -27,6 +27,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppThemeLight">
         <activity android:name=".Activities.ObjectInteractionActivity"></activity>
+        <activity android:name=".Activities.ARObjectInteractionActivity"></activity>
         <activity android:name=".Activities.FindGroupActivity" />
         <activity android:name=".Activities.LauncherActivity">
             <intent-filter>

@@ -306,12 +306,30 @@ public class MapObjectData {
 
         @Override
         public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-
+            String myMapObjectKey = dataSnapshot.getKey();
+            MapObject myMapObject = dataSnapshot.getValue(MapObject.class);
+            myMapObject.key = myMapObjectKey;
+            if (MapObjectsMapping.containsKey(myMapObjectKey)) {
+                int index = MapObjectsMapping.get(myMapObjectKey);
+                MapObjects.set(index, myMapObject);
+            } else {
+                MapObjects.add(myMapObject);
+                MapObjectsMapping.put(myMapObjectKey, MapObjects.size() - 1);
+            }
+            if (updateListener != null)
+                updateListener.onListUpdated();
         }
 
         @Override
         public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
-
+            String myMapObjectKey = dataSnapshot.getKey();
+            if (MapObjectsMapping.containsKey(myMapObjectKey)) {
+                int index = MapObjectsMapping.get(myMapObjectKey);
+                MapObjects.remove(index);
+                recreateKeyIndexMapping();
+            }
+            if (updateListener != null)
+                updateListener.onListUpdated();
         }
 
         @Override
@@ -335,4 +353,40 @@ public class MapObjectData {
         if (updateListener != null)
             updateListener.onListUpdated();
     }
+
+    public void deleteMapObject(int index) {
+
+        db.child(FIREBASE_CHILD).child(MapObjects.get(index).key).removeValue();
+        MapObjects.remove(index);
+        recreateKeyIndexMapping();
+    }
+
+    public void UpdateMapObjectReaction(MapObject mo)
+    {
+        int indexx = -1;
+        for(int i = 0; i < MapObjects.size(); i++)
+        {
+            if(MapObjects.get(i).createdBy.compareTo(mo.createdBy) == 0 && MapObjects.get(i).datetime.compareTo(mo.datetime) == 0) {
+                indexx = i;
+                break;
+            }
+        }
+        if(indexx == -1)
+            return;
+
+        MapObject mobj = MapObjects.get(indexx);
+        mobj.reactionsGreat = mo.reactionsGreat;
+        mobj.reactionsMeh = mo.reactionsMeh;
+        mobj.reactionsBoo = mo.reactionsBoo;
+
+        db.child(FIREBASE_CHILD).child(mobj.key).setValue(mobj);
+    }
+
+    private void recreateKeyIndexMapping()
+    {
+        MapObjectsMapping.clear();
+        for (int i = 0; i < MapObjects.size(); i++)
+            MapObjectsMapping.put(MapObjects.get(i).key,i);
+    }
+
 }

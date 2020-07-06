@@ -800,9 +800,15 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
 
                 MapObject objectTag = (MapObject) v.getTag();
 
-                Intent intent = new Intent(MainActivity.this, ObjectInteractionActivity.class);
-                intent.putExtra("object", objectTag);
-                startActivity(intent);
+                if (objectTag.objectType == 1 || objectTag.objectType == 3) {
+                    Intent intent = new Intent(MainActivity.this, ObjectInteractionActivity.class);
+                    intent.putExtra("object", objectTag);
+                    startActivity(intent);
+                } else {
+                    Intent intent = new Intent(MainActivity.this, ARObjectInteractionActivity.class);
+                    intent.putExtra("object", objectTag);
+                    startActivity(intent);
+                }
 
             } else {
 
@@ -1294,10 +1300,9 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
             } else {
 
                 String username = (String) marker.getTag();
+                User referringTo = UserData.getInstance().getUserByUsername(username);
 
-                User refferingTo = UserData.getInstance().getUserByUsername(username);
-
-                String profilePhotoUri = refferingTo.image;
+                String profilePhotoUri = referringTo.image;
 
                 if (!profilePhotoUri.equals("")) {
 
@@ -1312,8 +1317,8 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
                 }
 
                 info_window_username.setText(username);
-                info_window_lat.setText("lat: " + refferingTo.UserPosition.latitude);
-                info_window_lon.setText("lon: " + refferingTo.UserPosition.longitude);
+                info_window_lat.setText("lat: " + referringTo.UserPosition.latitude);
+                info_window_lon.setText("lon: " + referringTo.UserPosition.longitude);
 
                 if (username.compareTo(loggedUsername) == 0)
                     info_window_see_details.setVisibility(View.GONE);
