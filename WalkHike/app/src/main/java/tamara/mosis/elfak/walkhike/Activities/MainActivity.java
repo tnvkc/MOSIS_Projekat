@@ -1116,8 +1116,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
                     groupList.add(groupName);
                 }
 
-
-                String id = objectTag.datetime + objectTag.createdBy.email;
+                String id = objectTag.datetime + objectTag.createdBy; //is this ok
                 GroupsRecyclerAdapter groupsRecyclerAdapter = new GroupsRecyclerAdapter(getApplicationContext(), groupList, id);
 
                 RecyclerView groupsListView = findViewById(R.id.main_info_listview_grupe);
@@ -1284,7 +1283,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
                     info_window_icon.setImageResource(R.drawable.ic_heart);
                 }
 
-                info_window_username.setText(String.format("Left on %s by\n%s", objectTag.date, objectTag.createdBy.username));
+                info_window_username.setText(String.format("Left on %s by\n%s", objectTag.date, objectTag.createdBy));
                 info_window_lat.setText("lat: " + lat);
                 info_window_lon.setText("lon: " + lon);
                 info_window_see_details.setTag(objectTag);

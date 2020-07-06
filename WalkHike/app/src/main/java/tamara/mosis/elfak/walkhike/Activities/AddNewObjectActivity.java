@@ -308,15 +308,13 @@ public class AddNewObjectActivity extends FragmentActivity implements View.OnCli
                     if (readyToWrite) {
 
                         MapObject newMapObject = new MapObject();
-                        newMapObject.createdBy = loggedUser;
+                        newMapObject.createdBy = loggedUser.username;
                         newMapObject.objectType = objectType;
                         newMapObject.isPublic = isPublic;
                         if (!isPublic) {
                             sharedWith = UserData.getInstance().getUserByUsername(sharedWithUsername);
-                        } else {
-                            this.sharedWith = new User(); //ili null?
+                            newMapObject.sharedWith = sharedWith.username;
                         }
-                        newMapObject.sharedWith = sharedWith;
                         newMapObject.desc = desc;
                         newMapObject.position = position;
                         newMapObject.datetime = new SimpleDateFormat("ddMMyyyyhhmmss").format(Calendar.getInstance().getTime());

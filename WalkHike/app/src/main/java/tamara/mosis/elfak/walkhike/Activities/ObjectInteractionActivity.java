@@ -62,7 +62,7 @@ public class ObjectInteractionActivity extends AppCompatActivity implements View
         if (obj != null) {
             int objectType = obj.objectType;
 
-            String text = String.format("User %s was here on %s\n and left this ", obj.createdBy.username, obj.date);
+            String text = String.format("User %s was here on %s\n and left this ", obj.createdBy, obj.date);
 
             String desc = "";
 

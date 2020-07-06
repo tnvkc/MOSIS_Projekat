@@ -60,8 +60,8 @@ public class MapObjectData {
         ArrayList<MapObject> list = new ArrayList<>();
         for(int i = 0; i< this.MapObjects.size(); i++)
         {
-            if((this.MapObjects.get(i).createdBy.username.compareTo(loggedUserUsername) == 0) ||
-                    (this.MapObjects.get(i).sharedWith.username.compareTo(loggedUserUsername) == 0))
+            if((this.MapObjects.get(i).createdBy.compareTo(loggedUserUsername) == 0) ||
+                    (this.MapObjects.get(i).sharedWith.compareTo(loggedUserUsername) == 0))
             {
                 list.add(MapObjects.get(i));
             }
@@ -201,12 +201,10 @@ public class MapObjectData {
         for(int i = 0; i< this.MapObjects.size(); i++) {
 
             mo = this.MapObjects.get(i);
-            if(mo.createdBy != null) {
-                String s = mo.datetime + mo.createdBy.email;
+            String s = mo.datetime + mo.createdBy;
 
-                if (s.compareTo(datetimePlusUser) == 0)
-                    m = mo;
-            }
+            if (s.compareTo(datetimePlusUser) == 0)
+                m = mo;
         }
         return m;
     }

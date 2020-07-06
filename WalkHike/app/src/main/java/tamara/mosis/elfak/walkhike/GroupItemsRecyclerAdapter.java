@@ -96,7 +96,7 @@ public class GroupItemsRecyclerAdapter extends RecyclerView.Adapter<tamara.mosis
                 @Override
                 public  void onClick(View view)
                 {
-                    Toast.makeText(context, "Ovo treba da vodi na objekat na mapi " + m.desc + " by " +m.createdBy.username, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(context, "Ovo treba da vodi na objekat na mapi " + m.desc + " by " +m.createdBy, Toast.LENGTH_SHORT).show();
 
                 }
             });

@@ -405,8 +405,8 @@ public class NotificationService extends IntentService implements MapObjectData.
                 }
                 if(!close && res[0] < 1000)
                 {
-
-                    if(objects.get(i).isPublic == true || objects.get(i).sharedWith.email.compareTo(LoggedUser.email) == 0) {
+/////////////////////////////
+                    if(objects.get(i).isPublic == true || objects.get(i).sharedWith.compareTo(LoggedUser.username) == 0) {
                         index = i;
                         doneObjects.add(objects.get(i).datetime);
 
