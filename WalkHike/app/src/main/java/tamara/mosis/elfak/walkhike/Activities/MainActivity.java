@@ -138,26 +138,36 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
     ArrayList<MapObject> mapObjects;
 
     //filter
+    boolean hide_users;
     boolean filter_opened;
     boolean filter_objects_opened;
     boolean filter_timespan_opened;
+    boolean filter_by_distance_opened;
     boolean info_groups_opened;
 
     byte object_filter;
+    int timespan;
+    int radius;
 
+    ImageView filter_radius;
+    ImageView filter_users;
     ImageView filter_icon;
+    RelativeLayout layout_filter_by_distance;
     RelativeLayout layout_filter_options;
-    RelativeLayout layout_filter_object_type;
-    RelativeLayout layout_filter_timespan;
+    LinearLayout layout_filter_object_type;
+    LinearLayout layout_filter_timespan;
     ImageView filter_object_type;
     ImageView filter_timespan;
     ImageView filter_today;
     ImageView filter_one_week;
     ImageView filter_one_month;
+    ImageView remove_timespan_filter;
     ImageView filter_checkpoint;
     ImageView filter_emoji;
     ImageView filter_photo;
     ImageView filter_message;
+
+    SeekBar filter_by_distance_seekbar;
 
     //search
 
@@ -283,14 +293,21 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
         bottom_navigation_menu.setOnNavigationItemSelectedListener(this);
 
         //filter
+        hide_users = false;
         filter_opened = false;
         filter_objects_opened = false;
         filter_timespan_opened = false;
+        filter_by_distance_opened = false;
 
+        timespan = 0;
+        radius = 100;
         object_filter = (byte) 0x0f;
 
+        filter_users = findViewById(R.id.filter_users);
+        filter_radius = findViewById(R.id.filter_by_distance_icon);
         filter_icon = findViewById(R.id.filter_icon);
         layout_filter_options = findViewById(R.id.layout_filter);
+        layout_filter_by_distance = findViewById(R.id.filter_by_distance_layout);
         layout_filter_object_type = findViewById(R.id.layout_filter_object_type);
         layout_filter_timespan = findViewById(R.id.layout_filter_timespan);
         filter_object_type = findViewById(R.id.filter_object_type);
@@ -298,21 +315,52 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
         filter_today = findViewById(R.id.filter_today);
         filter_one_week = findViewById(R.id.filter_one_week);
         filter_one_month = findViewById(R.id.filter_one_month);
+        remove_timespan_filter = findViewById(R.id.filter_remove_timespan);
         filter_checkpoint = findViewById(R.id.filter_checkpoint);
         filter_emoji = findViewById(R.id.filter_emoji);
         filter_photo = findViewById(R.id.filter_photo);
         filter_message = findViewById(R.id.filter_message);
+        filter_by_distance_seekbar = findViewById(R.id.filter_by_distance_seekbar);
 
+        filter_users.setOnClickListener(this);
+        filter_radius.setOnClickListener(this);
         filter_icon.setOnClickListener(this);
         filter_object_type.setOnClickListener(this);
         filter_timespan.setOnClickListener(this);
         filter_today.setOnClickListener(this);
         filter_one_week.setOnClickListener(this);
         filter_one_month.setOnClickListener(this);
+        remove_timespan_filter.setOnClickListener(this);
         filter_checkpoint.setOnClickListener(this);
         filter_emoji.setOnClickListener(this);
         filter_photo.setOnClickListener(this);
         filter_message.setOnClickListener(this);
+
+        filter_by_distance_seekbar.setProgress(0);
+        filter_by_distance_seekbar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+
+                if (Math.abs(radius - (progress + 100)) > 250) {
+                    radius = progress + 100;
+                    Toast.makeText(MainActivity.this, "show objects from this radius: " + radius + "m", Toast.LENGTH_SHORT).show();
+
+                    FilterMapObjects();
+                    FilterUserObjects();
+                }
+
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+
+            }
+        });
 
         //search
 
@@ -617,16 +665,8 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
         googleMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
         this.map=googleMap;
 
-        ArrayList<MapObject> friendsObjects = MapObjectData.getInstance().getFriendsMapObjects(loggedUsername);
-        for (int i = 0; i < friendsObjects.size(); i++) {
-            AddMarkerObject(friendsObjects.get(i));
-        }
-
-        ArrayList<User> usersFriends = FriendshipData.getInstance().GetUserFriends(loggedUser.email);
-
-        for (int i = 0; i < usersFriends.size(); i++) {
-            AddUserMarker(usersFriends.get(i).username);
-        }
+        FilterMapObjects();
+        FilterUserObjects();
 
         AddUserMarker(loggedUsername);
 
@@ -842,6 +882,46 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
             intent.putExtras(bundle);
             startActivity(intent);
 
+        } else if (v.getId() == R.id.filter_users) {
+
+            if (!hide_users) {
+
+                Toast.makeText(this, "Hide friends", Toast.LENGTH_SHORT).show();
+
+                HideUsers();
+
+                hide_users = true;
+                filter_users.setImageResource(R.drawable.ic_user);
+
+            } else {
+
+                Toast.makeText(this, "Show friends", Toast.LENGTH_SHORT).show();
+
+                FilterUserObjects();
+
+                hide_users = false;
+                filter_users.setImageResource(R.drawable.ic_friends);
+            }
+
+        } else if (v.getId() == R.id.filter_by_distance_icon) {
+
+            if (filter_by_distance_opened) {
+                Toast.makeText(this, "Hide filter by distance options!", Toast.LENGTH_SHORT).show();
+                layout_filter_by_distance.setVisibility(View.GONE);
+                filter_by_distance_opened = false;
+            } else {
+                Toast.makeText(this, "Show filter by distance options!", Toast.LENGTH_SHORT).show();
+                layout_filter_by_distance.setVisibility(View.VISIBLE);
+                layout_filter_options.setVisibility(View.GONE);
+                layout_filter_timespan.setVisibility(View.GONE);
+                layout_filter_object_type.setVisibility(View.GONE);
+                filter_by_distance_opened = true;
+                filter_timespan_opened = false;
+                filter_objects_opened = false;
+                filter_opened = false;
+                //open filter, set seekbar progress to current radius
+            }
+
         } else if (v.getId() == R.id.filter_icon) {
 
             if (filter_opened) {
@@ -855,7 +935,9 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
             } else {
                 Toast.makeText(this, "Show filter options!", Toast.LENGTH_SHORT).show();
                 layout_filter_options.setVisibility(View.VISIBLE);
+                layout_filter_by_distance.setVisibility(View.GONE);
                 filter_opened = true;
+                filter_by_distance_opened = false;
             }
 
         } else if (v.getId() == R.id.filter_object_type) {
@@ -869,6 +951,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
                 Toast.makeText(this, "Show object filters!", Toast.LENGTH_SHORT).show();
                 layout_filter_object_type.setVisibility(View.VISIBLE);
                 layout_filter_timespan.setVisibility(View.GONE);
+                filter_timespan_opened = false;
                 filter_objects_opened = true;
             }
 
@@ -884,7 +967,18 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
                 layout_filter_timespan.setVisibility(View.VISIBLE);
                 layout_filter_object_type.setVisibility(View.GONE);
                 filter_timespan_opened = true;
+                filter_objects_opened = false;
             }
+
+        } else if (v.getId() == R.id.filter_remove_timespan) {
+
+            Toast.makeText(this, "Remove timespan filters!", Toast.LENGTH_SHORT).show();
+            layout_filter_timespan.setVisibility(View.GONE);
+            filter_timespan_opened = false;
+
+            timespan = 0;
+
+            FilterMapObjects();
 
         } else if (v.getId() == R.id.filter_today) {
 
@@ -892,7 +986,9 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
             layout_filter_timespan.setVisibility(View.GONE);
             filter_timespan_opened = false;
 
-            FilterMapObjectsByTimespan(1);
+            timespan = 1;
+
+            FilterMapObjects();
 
         } else if (v.getId() == R.id.filter_one_week) {
 
@@ -900,7 +996,8 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
             layout_filter_timespan.setVisibility(View.GONE);
             filter_timespan_opened = false;
 
-            FilterMapObjectsByTimespan(7);
+            timespan = 7;
+            FilterMapObjects();
 
         } else if (v.getId() == R.id.filter_one_month) {
 
@@ -908,7 +1005,8 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
             layout_filter_timespan.setVisibility(View.GONE);
             filter_timespan_opened = false;
 
-            FilterMapObjectsByTimespan(30);
+            timespan = 30;
+            FilterMapObjects();
 
         } else if (v.getId() == R.id.filter_checkpoint) {
 
@@ -921,7 +1019,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
                 Toast.makeText(this, "Show checkpoints!", Toast.LENGTH_SHORT).show();
             }
 
-            FilterMapObjects(object_filter);
+            FilterMapObjects();
 
         } else if (v.getId() == R.id.filter_emoji) {
 
@@ -933,7 +1031,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
                 Toast.makeText(this, "Show hearts!", Toast.LENGTH_SHORT).show();
             }
 
-            FilterMapObjects(object_filter);
+            FilterMapObjects();
 
         } else if (v.getId() == R.id.filter_photo) {
 
@@ -945,7 +1043,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
                 Toast.makeText(this, "Show photo!", Toast.LENGTH_SHORT).show();
             }
 
-            FilterMapObjects(object_filter);
+            FilterMapObjects();
 
         } else if (v.getId() == R.id.filter_message) {
 
@@ -958,7 +1056,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
                 Toast.makeText(this, "Show messages!", Toast.LENGTH_SHORT).show();
             }
 
-            FilterMapObjects(object_filter);
+            FilterMapObjects();
         } else if (v.getId() == R.id.close_search) {
 
             Toast.makeText(MainActivity.this, "Close search", Toast.LENGTH_SHORT).show();
@@ -1203,27 +1301,20 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
 
     }
 
+    private void HideUsers() {
 
-    protected void FilterMapObjects(byte filter) {
+        for (int i = 0; i < usersMarkers.size(); i++) {
+            usersMarkers.get(i).remove();
+        }
+
+    }
+
+    protected void FilterMapObjects() {
 
         //filter: 0000****, if * = 1 then show certain marker type
+        //timespan: 1 - today, 7 - a week, 30 - a month, 0 - not filtered by timespan
 
-        ArrayList<MapObject> filteredObjects = MapObjectData.getInstance().getFilteredMapObjects(object_filter, loggedUsername);
-
-        for (int i = 0; i < objectsMarkers.size(); i++) {
-            objectsMarkers.get(i).remove();
-        }
-
-        for (int i = 0; i < filteredObjects.size(); i++) {
-            AddMarkerObject(filteredObjects.get(i));
-        }
-    }
-
-    protected void FilterMapObjectsByTimespan(int timespan) {
-
-        //timespan: 1 - today, 7 - a week, 30 - a month
-
-        ArrayList<MapObject> filteredObjects = MapObjectData.getInstance().getMapObjectsFromTimespan(timespan, loggedUsername);
+        ArrayList<MapObject> filteredObjects = MapObjectData.getInstance().getFilteredMapObjects(object_filter, timespan, radius, loggedUsername);
 
         for (int i = 0; i < objectsMarkers.size(); i++) {
             objectsMarkers.get(i).remove();
@@ -1233,6 +1324,51 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
             AddMarkerObject(filteredObjects.get(i));
         }
     }
+
+    protected void FilterUserObjects() {
+
+        HideUsers();
+
+        ArrayList<User> friendsUsers = FriendshipData.getInstance().GetUserFriends(loggedUser.email);
+        ArrayList<User> closeUsers = new ArrayList<>();
+
+        for (int i = 0; i < friendsUsers.size(); i++) {
+
+            User friendUser = UserData.getInstance().getUserByUsername(friendsUsers.get(i).username);
+
+            Position currentUserPosition = loggedUser.UserPosition;
+            double current_lat = Double.parseDouble(currentUserPosition.latitude);
+            double current_lon = Double.parseDouble(currentUserPosition.longitude);
+
+            Position friendUserPosition = friendUser.UserPosition;
+            double friend_lat = Double.parseDouble(friendUserPosition.latitude);
+            double friend_lon = Double.parseDouble(friendUserPosition.longitude);
+
+            float dist[] = new float[1];
+            Location.distanceBetween(current_lat, current_lon, friend_lat, friend_lon, dist);
+
+            if (dist[0] <= radius) {
+                closeUsers.add(friendUser);
+            }
+        }
+
+        for (int i = 0; i < closeUsers.size(); i++) {
+            AddUserMarker(closeUsers.get(i).username);
+        }
+    }
+
+    /*protected void FilterMapObjectsByTimespan() {
+
+        ArrayList<MapObject> filteredObjects = MapObjectData.getInstance().getFilteredMapObjects(object_filter, timespan, loggedUsername);
+
+        for (int i = 0; i < objectsMarkers.size(); i++) {
+            objectsMarkers.get(i).remove();
+        }
+
+        for (int i = 0; i < filteredObjects.size(); i++) {
+            AddMarkerObject(filteredObjects.get(i));
+        }
+    }*/
 
     @Override
     public boolean onMarkerClick(Marker marker) {

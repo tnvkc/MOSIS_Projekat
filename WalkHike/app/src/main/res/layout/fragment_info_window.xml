@@ -1,47 +1,81 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="150dp"
+    android:layout_height="170dp"
+    android:id="@+id/info_window_container"
     android:orientation="horizontal"
-    android:weightSum="100">
+    android:weightSum="100"
+    android:visibility="gone"
+    android:background="@color/colorPrimary"
+    android:layout_above="@+id/bottom_navigation_menu">
 
     <ImageView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:src="@drawable/ic_heart"
-        android:layout_weight="50"
-        android:id="@+id/info_window_icon"/>
+        android:id="@+id/info_window_icon"
+        android:layout_weight="50"/>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        android:layout_weight="50"
-        android:gravity="center">
+        android:gravity="center"
+        android:layout_weight="50">
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="username"
+            android:text="Left on dd/MM/yyyy by\nusername"
             android:id="@+id/info_window_username"
             android:gravity="center"
-            android:layout_marginBottom="20dp"
+            android:layout_marginBottom="20dp"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="lat: latitude"
+            android:id="@+id/info_window_lat"
+            android:gravity="start"
+            android:layout_marginStart="20dp"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="lon: longitude"
+            android:id="@+id/info_window_lon"
+            android:gravity="start"
+            android:layout_marginStart="20dp"
             />
 
-        <TextView
-            android:layout_width="match_parent"
+        <LinearLayout
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="latitude"
-            android:id="@+id/info_window_lat"
-            android:gravity="center"/>
+            android:orientation="horizontal"
+            android:weightSum="20"
+            android:layout_marginTop="10dp">
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="longitude"
-            android:id="@+id/info_window_lon"
-            android:gravity="center"
-            android:layout_marginTop="20dp"/>
+            <Button
+                android:id="@+id/info_add_to_savedroutes"
+                android:background="#22222222"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="10"
+                android:text="Save"
+                android:textSize="12sp"
+                android:layout_marginEnd="10dp"/>
+
+            <TextView
+                android:id="@+id/info_window_see_details"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="10"
+                android:gravity="center"
+                android:text="see\ndetails"
+                android:clickable="true"
+                android:focusable="true" />
+        </LinearLayout>
 
     </LinearLayout>
 </LinearLayout>

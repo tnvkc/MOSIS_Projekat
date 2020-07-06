@@ -70,39 +70,6 @@ public class MapObjectData {
         return list;
     }
 
-    /*
-    public ArrayList<MapObject> getMapObjectsByType(int type, String username) {
-
-        ArrayList<MapObject> usersMarkers = getFriendsMapObjects(username);
-        ArrayList<MapObject> list = new ArrayList<>();
-        for(int i = 0; i< usersMarkers.size(); i++)
-        {
-            if (usersMarkers.get(i).objectType == type)
-            {
-                list.add(usersMarkers.get(i));
-            }
-        }
-
-        return list;
-    }
-
-     */
-
-    /*
-    public MapObject getSearchedMapObject(String searchText, String username) {
-
-        ArrayList<MapObject> usersMarkers = getFriendsMapObjects(username);
-
-        for(int i = 0; i < usersMarkers.size(); i++)
-        {
-            if (usersMarkers.get(i).desc.toLowerCase().compareTo(searchText.toLowerCase()) == 0) {
-                return usersMarkers.get(i);
-            }
-        }
-
-        return null;
-    }*/
-
     public ArrayList<MapObject> getSearchedMapObjects(String searchText, int searchFilter, int radius, String username) {
 
         ArrayList<MapObject> usersMarkers = getFriendsMapObjects(username);
@@ -127,15 +94,6 @@ public class MapObjectData {
         Position currentUserPosition = UserData.getInstance().getUserByUsername(username).UserPosition;
         double current_lat = Double.parseDouble(currentUserPosition.latitude);
         double current_lon = Double.parseDouble(currentUserPosition.longitude);
-
-        /*
-        Position objectPosition;
-        if (mo.objectType == 5) {
-            objectPosition = UserData.getInstance().getUserByUsername(mo.desc).UserPosition;
-            //za sada, ali trebace da se update-uje pozicija i u mapobject zbog prikaza na mapi!
-        } else {
-            objectPosition = mo.position;
-        }*/
 
         double object_lat = Double.parseDouble(position.latitude);
         double object_lon = Double.parseDouble(position.longitude);
@@ -170,12 +128,20 @@ public class MapObjectData {
 
          */
 
-
     }
 
-    public ArrayList<MapObject> getFilteredMapObjects(Byte filter, String username) {
+    public ArrayList<MapObject> getFilteredMapObjects(Byte filter, int timespan, int radius, String username) {
 
-        ArrayList<MapObject> usersMarkers = getFriendsMapObjects(username);
+        ArrayList<MapObject> usersMarkers = getFriendsMapObjects(username); //svi friends objects
+
+        if (timespan != 0) {
+            //filter by timespan
+            usersMarkers = getMapObjectsFromTimespan(timespan, username, usersMarkers);
+        }
+
+        usersMarkers = getMapObjectsByDistance(radius, username, usersMarkers); //filter by distance
+
+        //filter by object type:
         ArrayList<MapObject> list = new ArrayList<>();
         for(int i = 0; i< usersMarkers.size(); i++)
         {
@@ -188,6 +154,50 @@ public class MapObjectData {
                     ((filter & 1) == 1 && mo.objectType == 1)
             ) {
                 list.add(mo);
+            }
+        }
+
+        return list;
+    }
+
+    public ArrayList<MapObject> getMapObjectsByDistance(int radius, String username, ArrayList<MapObject> listToFilter) {
+
+        ArrayList<MapObject> list = new ArrayList<>();
+        for(int i = 0; i < listToFilter.size(); i++)
+        {
+            MapObject mo = listToFilter.get(i);
+
+            if (isCloserThanRadius(mo.position, radius, username)) {
+                list.add(mo);
+            }
+        }
+        return list;
+    }
+
+    private ArrayList<MapObject> getMapObjectsFromTimespan(int timespan, String username, ArrayList<MapObject> listToFilter) {
+
+        //1 - today, 7 - week, 30 - month
+        DateFormat format = new SimpleDateFormat("dd-MM-yyyy");
+        Date currentDate = Calendar.getInstance().getTime();
+        //Date currentDate = .format(Calendar.getInstance().getTime());
+
+        ArrayList<MapObject> list = new ArrayList<>();
+
+        for(int i = 0; i < listToFilter.size(); i++)
+        {
+            MapObject mo = listToFilter.get(i);
+            Date objectDate;
+            try {
+                objectDate = format.parse(mo.date);
+            } catch (Exception e) {
+                break;
+            }
+
+            long difference = currentDate.getTime() - objectDate.getTime();
+            long dayDifference = TimeUnit.DAYS.convert(difference, TimeUnit.MILLISECONDS);
+
+            if (dayDifference < timespan) {
+                list.add(listToFilter.get(i));
             }
         }
 
@@ -208,38 +218,6 @@ public class MapObjectData {
         }
         return m;
     }
-
-    public ArrayList<MapObject> getMapObjectsFromTimespan(int timespan, String username) {
-
-        //1 - today, 7 - week, 30 - month
-        DateFormat format = new SimpleDateFormat("dd-MM-yyyy");
-        Date currentDate = Calendar.getInstance().getTime();
-        //Date currentDate = .format(Calendar.getInstance().getTime());
-
-        ArrayList<MapObject> usersMarkers = getFriendsMapObjects(username);
-        ArrayList<MapObject> list = new ArrayList<>();
-
-        for(int i = 0; i< usersMarkers.size(); i++)
-        {
-            MapObject mo = usersMarkers.get(i);
-            Date objectDate;
-            try {
-                objectDate = format.parse(mo.date);
-            } catch (Exception e) {
-                break;
-            }
-
-            long difference = currentDate.getTime() - objectDate.getTime();
-            long dayDifference = TimeUnit.DAYS.convert(difference, TimeUnit.MILLISECONDS);
-
-            if (dayDifference < timespan) {
-                list.add(usersMarkers.get(i));
-            }
-        }
-
-        return list;
-    }
-
 
     MapObjectData.ListUpdatedEventListener updateListener;
     public void setEventListener(MapObjectData.ListUpdatedEventListener listener) {
