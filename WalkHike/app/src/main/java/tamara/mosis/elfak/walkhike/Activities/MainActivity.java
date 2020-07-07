@@ -620,12 +620,14 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
         {
             Intent intent=new Intent(getApplicationContext(), Probe.class);
             startActivity(intent);
+            finish();
         }
         else if(item.getItemId() == R.id.main_menu_profile_item) {
 
             Intent intent=new Intent(getApplicationContext(), ProfileActivity.class);
             //intent.putExtra("username",);
             startActivity(intent);
+            finish();
         } else if(item.getItemId() == R.id.main_menu_search_item) {
 
             Toast.makeText(this, "Search objects here!", Toast.LENGTH_SHORT).show();
@@ -672,6 +674,17 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
         //googleMap.getUiSettings().setRotateGesturesEnabled(false);
         //if you need to disable zooming
         //googleMap.getUiSettings().setZoomGesturesEnabled(false);
+
+        googleMap.setOnMapClickListener(new GoogleMap.OnMapClickListener()
+        {
+            @Override
+            public void onMapClick(LatLng arg0)
+            {
+                android.util.Log.i("onMapClick", "Horray!");
+                info_window_container.setVisibility(View.GONE);
+                info_window_container_groups.setVisibility(View.GONE);
+            }
+        });
 
         googleMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
         this.map=googleMap;
@@ -733,7 +746,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
                 LatLng latLng=new LatLng(location.getLatitude(),location.getLongitude());
                 //map.addMarker(new MarkerOptions().position(latLng).title("Current Location"));
                map.moveCamera(CameraUpdateFactory.newLatLng(latLng));
-               map.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng,10f));
+               map.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng,20f));
                 //Toast.makeText(this, "Usao u latlong", Toast.LENGTH_SHORT );
             }
         }
@@ -799,6 +812,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
             case R.id.notifications: {
                 Intent intent = new Intent(getApplicationContext(), NotificationsActivity.class);
                 startActivity(intent);
+                finish();
                 overridePendingTransition(0, 0);
                 return true;
             }
@@ -806,18 +820,21 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
                 Intent intent = new Intent(getApplicationContext(), FriendslistActivity.class);
                 startActivity(intent);
                 overridePendingTransition(0, 0);
+                finish();
                 return true;
             }
             case R.id.completed_routes: {
                 Intent intent = new Intent(getApplicationContext(), CompletedRoutesActivity.class);
                 startActivity(intent);
                 overridePendingTransition(0, 0);
+                finish();
                 return true;
             }
             case R.id.leaderboard: {
                 Intent intent = new Intent(getApplicationContext(), LeaderboardsActivity.class);
                 startActivity(intent);
                 overridePendingTransition(0, 0);
+                finish();
                 return true;
             }
 		//finish everywhere
@@ -827,8 +844,10 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
 
     @Override
     public void onClick(View v) {
+
         if(v.getId() == R.id.main_startService)
         {
+
 
             if(!startedService) {
                 Toast.makeText(getApplicationContext(), "Start service", Toast.LENGTH_SHORT).show();
@@ -859,10 +878,12 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
                     Intent intent = new Intent(MainActivity.this, ObjectInteractionActivity.class);
                     intent.putExtra("object", objectTag);
                     startActivity(intent);
+                    finish();
                 } else {
                     Intent intent = new Intent(MainActivity.this, ARObjectInteractionActivity.class);
                     intent.putExtra("object", objectTag);
                     startActivity(intent);
+                    finish();
                 }
 
             } else {
@@ -872,6 +893,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
                 Intent intent = new Intent(MainActivity.this, FriendProfileActivity.class);
                 intent.putExtra("username", username);
                 startActivity(intent);
+                finish();
 
             }
 
@@ -896,6 +918,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
             bundle.putInt("object_id", 3); //1 za trophy, 2 za emoji, 3 za marker
             intent.putExtras(bundle);
             startActivity(intent);
+            finish();
 
         } else if (v.getId() == R.id.filter_users) {
 
@@ -1215,11 +1238,11 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
         {
             if(!info_groups_opened) {
 
-
+                ArrayList<String> groupList = new ArrayList<>();
                 info_groups_opened = true;
                 MapObject objectTag = (MapObject) v.getTag();
                 info_window_container_groups.setVisibility(View.VISIBLE);
-                ArrayList<String> groupList = new ArrayList<>();
+
 
 
                 SharedPreferences sharedPref = getApplicationContext().getSharedPreferences(
@@ -1248,34 +1271,11 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
                 info_window_container_groups.setVisibility(View.GONE);
             }
 
-           /*MapObject objectTag = (MapObject) v.getTag();
-            String imeGrupe = "Prva grupa";
-            SharedPreferences sharedPref = getApplicationContext().getSharedPreferences(
-                    getString(R.string.SavedRoutesShared), Context.MODE_PRIVATE);
-
-            SharedPreferences.Editor editor = sharedPref.edit();
-
-            int num = sharedPref.getInt(getString(R.string.NumberOfSavedTotal), 0);
-
-            //dodavanje grupe
-            if(num == 0) {
-                editor.putString(getString(R.string.SavedRoutesGroup) + num, imeGrupe);
-                editor.putInt(getString(R.string.NumberOfSavedTotal), 1);
-            }
-
-
-            num = sharedPref.getInt(getString(R.string.NumberOfSavedGroup) + imeGrupe, 0);
-
-            String id = objectTag.datetime + objectTag.createdBy.email;
-            editor.putString(getString(R.string.SavedRoute) + imeGrupe + num, id);
-            num++;
-            editor.putInt(getString(R.string.NumberOfSavedGroup) + imeGrupe, num);
-
-            editor.commit();*/
         }
         else if(v.getId() == R.id.main_info_addgroup)
         {
             final EditText adinput = new EditText(getApplicationContext());
+            MapObject objectTag = (MapObject) v.getTag();
             adinput.setInputType(InputType.TYPE_CLASS_TEXT );
 
             AlertDialog.Builder builder=new AlertDialog.Builder(MainActivity.this);
@@ -1304,6 +1304,25 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
                                 editor.putInt(getString(R.string.NumberOfSavedTotal), num);
 
                                 editor.commit();
+
+                                ArrayList<String> groupList = new ArrayList<>();
+
+
+                                String id = objectTag.datetime + objectTag.createdBy; //is this ok
+
+
+                                String prikazz = "";
+                                for (int j = 0; j < num; j++) {
+                                    String groupName = sharedPref.getString(getString(R.string.SavedRoutesGroup) + j, "EMPTY");
+                                    int numm = sharedPref.getInt(getString(R.string.NumberOfSavedGroup) + groupName, -1);
+                                    groupList.add(groupName);
+                                }
+
+                                GroupsRecyclerAdapter groupsRecyclerAdapter = new GroupsRecyclerAdapter(getApplicationContext(), groupList, id);
+
+                                RecyclerView groupsListView = findViewById(R.id.main_info_listview_grupe);
+                                groupsListView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
+                                groupsListView.setAdapter(groupsRecyclerAdapter);
                             }
                         }
                     }).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
@@ -1409,7 +1428,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
         LatLng latLng = new LatLng(lat, lon);
 
         map.moveCamera(CameraUpdateFactory.newLatLng(latLng));
-        map.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng,10f));
+        map.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng,20f));
 
         Marker m = FindMapMarker(obj);
         ShowMarkerInfoWindow(m);
@@ -1447,6 +1466,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
                 info_window_see_details.setText("see details");
                 info_add_to_route.setTag(objectTag);
                 info_add_to_route.setVisibility(View.VISIBLE);
+                info_add_group.setTag(objectTag);
 
             } else {
 

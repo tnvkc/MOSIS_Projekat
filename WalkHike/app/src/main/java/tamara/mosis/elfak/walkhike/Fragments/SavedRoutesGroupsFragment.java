@@ -10,9 +10,11 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 
+import tamara.mosis.elfak.walkhike.Activities.CompletedRoutesActivity;
 import tamara.mosis.elfak.walkhike.GroupSavedRecyclerAdapter;
 import tamara.mosis.elfak.walkhike.R;
 
@@ -22,7 +24,7 @@ import tamara.mosis.elfak.walkhike.R;
  * Use the {@link SavedRoutesGroupsFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class SavedRoutesGroupsFragment extends Fragment implements GroupSavedRecyclerAdapter.ListenerOnGroupClick {
+public class SavedRoutesGroupsFragment extends Fragment implements GroupSavedRecyclerAdapter.ListenerOnGroupClick, CompletedRoutesActivity.ListenerForNewGroups {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -32,6 +34,8 @@ public class SavedRoutesGroupsFragment extends Fragment implements GroupSavedRec
     ArrayList<String> grupe;
     View view;
     RecyclerView rec;
+    TextView prikaz;
+
     private GroupSavedRecyclerAdapter recAdapter;
 
 
@@ -77,6 +81,17 @@ public class SavedRoutesGroupsFragment extends Fragment implements GroupSavedRec
         view = inflater.inflate(R.layout.fragment_saved_routes_groups, container, false);
 
         rec = view.findViewById(R.id.saved_routes_recView);
+        prikaz = view.findViewById(R.id.savedroutes_view_za_grupe);
+        CompletedRoutesActivity.setUpListenerObjectNoti(this);
+
+        readShared();
+
+
+        return  view;
+    }
+
+    void readShared()
+    {
         grupe = new ArrayList<>();
         SharedPreferences sharedPref = view.getContext().getSharedPreferences(
                 getString(R.string.SavedRoutesShared), view.getContext().MODE_PRIVATE);
@@ -88,6 +103,16 @@ public class SavedRoutesGroupsFragment extends Fragment implements GroupSavedRec
             grupe.add(groupName);
         }
 
+        if(num == 0)
+        {
+            prikaz.setText("You don't have any groups! Create one!");
+        }
+        else
+        {
+            prikaz.setText("");
+        }
+
+
         recAdapter=new GroupSavedRecyclerAdapter(view.getContext(), grupe );
 
 
@@ -96,13 +121,16 @@ public class SavedRoutesGroupsFragment extends Fragment implements GroupSavedRec
 
         rec.setAdapter(recAdapter);
         recAdapter.setUpListenerOnGroupClick(this);
-
-        return  view;
     }
 
 
     @Override
     public void onGroupClick(String groupp) {
         getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.savedroutes_viewpager, new Savedroutes_group_items(groupp)).commit();
+    }
+
+    @Override
+    public void onNewObject() {
+        readShared();
     }
 }

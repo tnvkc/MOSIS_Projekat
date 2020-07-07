@@ -3,20 +3,27 @@ package tamara.mosis.elfak.walkhike.Activities;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
+import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager.widget.ViewPager;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.text.InputType;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
 
@@ -39,7 +46,8 @@ public class CompletedRoutesActivity extends AppCompatActivity {
     TextView prikaz;
 
     private View viewvpager_groups;
-
+    FloatingActionButton floatingActionButton;
+    Toolbar toolbar;
 
 
     @Override
@@ -50,6 +58,61 @@ public class CompletedRoutesActivity extends AppCompatActivity {
         else
             setTheme(R.style.AppThemeLight);
         setContentView(R.layout.activity_completed_routes);
+        toolbar = (Toolbar) findViewById(R.id.savedroutes_toolbar);
+        floatingActionButton = findViewById(R.id.savedroutes_addGroup_actiionButtor);
+        floatingActionButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                final EditText adinput = new EditText(getApplicationContext());
+                adinput.setInputType(InputType.TYPE_CLASS_TEXT );
+
+                AlertDialog.Builder builder=new AlertDialog.Builder(CompletedRoutesActivity.this);
+                builder.setView(adinput);
+                builder.setTitle("Make a new group")
+                        .setMessage("Choose group's name")
+                        .setPositiveButton("Set", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                String groupname=adinput.getText().toString();
+                                if(groupname.equals("")) {
+                                    Toast.makeText(getApplicationContext(), "Please insert group's name", Toast.LENGTH_LONG).show();
+                                }
+                                else
+                                {
+                                    Toast.makeText(getApplicationContext(), "Group created " + groupname, Toast.LENGTH_SHORT).show();
+                                    SharedPreferences sharedPref = getApplicationContext().getSharedPreferences(
+                                            getString(R.string.SavedRoutesShared), Context.MODE_PRIVATE);
+
+                                    SharedPreferences.Editor editor = sharedPref.edit();
+
+                                    int num = sharedPref.getInt(getString(R.string.NumberOfSavedTotal), 0);
+
+                                    editor.putString(getString(R.string.SavedRoutesGroup) + num, groupname);
+                                    num++;
+                                    editor.putInt(getString(R.string.NumberOfSavedTotal), num);
+
+                                    editor.commit();
+
+                                    myObjectListener.onNewObject();
+                                }
+                            }
+                        }).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                    }
+                }).show();
+            }
+        });
+
+
+        setSupportActionBar(toolbar);
+
+        getSupportActionBar().setTitle("Saved objects");
+
+        getSupportActionBar().setDisplayShowTitleEnabled(true);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
 
         //prikaz = findViewById(R.id.savedroutes_textview);
         //
@@ -72,24 +135,28 @@ public class CompletedRoutesActivity extends AppCompatActivity {
                         Intent intent=new Intent(getApplicationContext(), NotificationsActivity.class);
                         startActivity(intent);
                         overridePendingTransition(0, 0);
+                        finish();
                         return true;
                     }
                     case R.id.friends: {
                         Intent intent=new Intent(getApplicationContext(), FriendslistActivity.class);
                         startActivity(intent);
                         overridePendingTransition(0, 0);
+                        finish();
                         return true;
                     }
                     case R.id.map: {
                         Intent intent=new Intent(getApplicationContext(), MainActivity.class);
                         startActivity(intent);
                         overridePendingTransition(0, 0);
+                        finish();
                         return true;
                     }
                     case R.id.leaderboard: {
                         Intent intent=new Intent(getApplicationContext(), LeaderboardsActivity.class);
                         startActivity(intent);
                         overridePendingTransition(0, 0);
+                        finish();
                         return true;
                     }
                 }
@@ -99,6 +166,24 @@ public class CompletedRoutesActivity extends AppCompatActivity {
 
     }
 
+
+    private static ListenerForNewGroups  myObjectListener;
+
+    public static void setUpListenerObjectNoti(ListenerForNewGroups Listener) {
+        myObjectListener = Listener;
+    }
+
+
+
+    public void notifyNewGroup()
+    { //View view
+        if(myObjectListener != null)
+            myObjectListener.onNewObject();
+    }
+
+    public interface ListenerForNewGroups{
+        void onNewObject();
+    }
 
 
     void onGroupClick()

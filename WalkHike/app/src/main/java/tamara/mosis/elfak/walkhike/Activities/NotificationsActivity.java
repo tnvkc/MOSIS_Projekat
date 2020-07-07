@@ -3,6 +3,7 @@ package tamara.mosis.elfak.walkhike.Activities;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
+import androidx.appcompat.widget.Toolbar;
 
 import android.content.Context;
 import android.content.Intent;
@@ -29,6 +30,7 @@ public class NotificationsActivity extends AppCompatActivity implements Notifica
     BottomNavigationView bottom_navigation_menu;
     ArrayList<Notification> notifications;
 
+    Toolbar toolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,6 +40,15 @@ public class NotificationsActivity extends AppCompatActivity implements Notifica
         else
             setTheme(R.style.AppThemeLight);
         setContentView(R.layout.activity_notifications);
+        toolbar = (Toolbar) findViewById(R.id.notifications_toolbar);
+        setSupportActionBar(toolbar);
+
+        getSupportActionBar().setTitle("Notifications");
+
+        getSupportActionBar().setDisplayShowTitleEnabled(true);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+
         notification_list = findViewById(R.id.notification_list);
 
         NotificationService.setUpListenerObjectNoti(this);
@@ -71,24 +82,28 @@ public class NotificationsActivity extends AppCompatActivity implements Notifica
                         Intent intent=new Intent(getApplicationContext(), FriendslistActivity.class);
                         startActivity(intent);
                         overridePendingTransition(0, 0);
+                        finish();
                         return true;
                     }
                     case R.id.map: {
                         Intent intent=new Intent(getApplicationContext(), MainActivity.class);
                         startActivity(intent);
                         overridePendingTransition(0, 0);
+                        finish();
                         return true;
                     }
                     case R.id.completed_routes: {
                         Intent intent=new Intent(getApplicationContext(), CompletedRoutesActivity.class);
                         startActivity(intent);
                         overridePendingTransition(0, 0);
+                        finish();
                         return true;
                     }
                     case R.id.leaderboard: {
                         Intent intent=new Intent(getApplicationContext(), LeaderboardsActivity.class);
                         startActivity(intent);
                         overridePendingTransition(0, 0);
+                        finish();
                         return true;
                     }
                 }
@@ -164,6 +179,10 @@ public class NotificationsActivity extends AppCompatActivity implements Notifica
         }
 
 
+        if(notifications.size() == 0)
+        {
+
+        }
         /////////////
         notifications.sort(new Comparator<Notification>() {
             @Override

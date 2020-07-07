@@ -7,21 +7,36 @@
     android:orientation="vertical"
     tools:context=".Activities.NotificationsActivity">
 
-    <TextView
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/notifications_toolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="0dp"
+        android:layout_marginBottom="0dp"
+        android:background="?attr/toolbarColor"
+        android:minHeight="?attr/actionBarSize">
+
+    </androidx.appcompat.widget.Toolbar>
+
+    <TextView
         android:id="@+id/title_notifications"
-        android:gravity="center"
-        android:padding="4dp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/bottom_navigation_menu"
+        android:layout_below="@+id/notifications_toolbar"
+
         android:text="@string/title_notifications"
-        android:textAppearance="@style/TextAppearance.AppCompat.Large" />
+        android:visibility="visible" />
 
     <ListView
         android:id="@+id/notification_list"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/title_notifications"
-        />
+        android:layout_height="600dp"
+        android:layout_above="@+id/bottom_navigation_menu"
+        android:layout_below="@+id/notifications_toolbar"
+        android:layout_marginTop="0dp"
+        android:layout_marginBottom="0dp" />
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottom_navigation_menu"
