@@ -53,6 +53,17 @@ public class FriendshipData {
         void onListUpdatedFreidns();
     }
 
+    ///listener za prihvatanje prijatevljstva
+    FriendshipData.PrihvatanjePrijateljaEventListener novoPrijateljstvo;
+    public void setPrihvatanjePrijateljaEventListener(FriendshipData.PrihvatanjePrijateljaEventListener listener) {
+        novoPrijateljstvo = listener;
+    }
+    public interface PrihvatanjePrijateljaEventListener {
+        void onNovoPrijateljstvo( Friendship f);
+    }
+
+
+    // za servis, da bi stigla notifikacija
     FriendshipData.NewItemListUpdatedEventListener NewUpdateListener;
     public void setNewItemEventListener(FriendshipData.NewItemListUpdatedEventListener listener) {
         NewUpdateListener = listener;
@@ -121,6 +132,9 @@ public class FriendshipData {
             }
             if (updateListener != null)
                 updateListener.onListUpdatedFreidns();
+
+            if(novoPrijateljstvo!= null)
+                novoPrijateljstvo.onNovoPrijateljstvo(myFriendship);
         }
 
         @Override
@@ -225,6 +239,12 @@ public class FriendshipData {
             if (mailFrom.compareTo(Friendships.get(i).fromUser.email) == 0
                     && mailTo.compareTo(Friendships.get(i).toUser.email) == 0)
                 indexx = i;
+
+            else if (mailFrom.compareTo(Friendships.get(i).toUser.email) == 0
+                    && mailTo.compareTo(Friendships.get(i).fromUser.email) == 0)
+                indexx = i;
+
+
         }
 
         if(indexx != -1) {

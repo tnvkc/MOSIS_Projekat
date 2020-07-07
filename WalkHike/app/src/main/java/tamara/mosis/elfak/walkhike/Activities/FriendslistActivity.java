@@ -5,7 +5,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.appcompat.widget.Toolbar;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -24,8 +26,12 @@ import java.util.ArrayList;
 import tamara.mosis.elfak.walkhike.Fragments.FriendsFragment;
 import tamara.mosis.elfak.walkhike.R;
 import tamara.mosis.elfak.walkhike.UsersRecyclerAdapter;
+import tamara.mosis.elfak.walkhike.modeldata.Friendship;
+import tamara.mosis.elfak.walkhike.modeldata.FriendshipData;
 import tamara.mosis.elfak.walkhike.modeldata.MapObject;
 import tamara.mosis.elfak.walkhike.modeldata.Scores;
+import tamara.mosis.elfak.walkhike.modeldata.User;
+import tamara.mosis.elfak.walkhike.modeldata.UserData;
 
 public class FriendslistActivity extends AppCompatActivity {
 
@@ -33,6 +39,7 @@ public class FriendslistActivity extends AppCompatActivity {
     BottomNavigationView bottom_navigation_menu;
     FloatingActionButton buttonAddFriend;
     SearchView searchView;
+    User loggedUser;
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -71,12 +78,15 @@ public class FriendslistActivity extends AppCompatActivity {
             setTheme(R.style.AppThemeLight);
         setContentView(R.layout.activity_friendslist);
 
+
         toolbar = (Toolbar)findViewById(R.id.friends_list_toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle("Friends");
         getSupportActionBar().setDisplayShowTitleEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
+
+
 
         searchView=findViewById(R.id.search_bar);
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener()
@@ -148,6 +158,7 @@ public class FriendslistActivity extends AppCompatActivity {
 
 
     }
+
 
 
 }
