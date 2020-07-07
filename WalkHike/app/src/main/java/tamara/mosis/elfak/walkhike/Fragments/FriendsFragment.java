@@ -34,12 +34,13 @@ import tamara.mosis.elfak.walkhike.modeldata.User;
 import tamara.mosis.elfak.walkhike.modeldata.UserData;
 
 
-public class FriendsFragment extends Fragment {
+public class FriendsFragment extends Fragment implements FriendshipData.PrihvatanjePrijateljaEventListener  {
 
     private RecyclerView usersListView;
     private List<User> usersList;
     public UsersRecyclerAdapter usersRecyclerAdapter;
     private FirebaseFirestore firebaseFirestore;
+    User loggedUser;
 
     MenuItem buttonAddFriend;
     FriendshipData friendshipData;
@@ -62,6 +63,8 @@ public class FriendsFragment extends Fragment {
         //friendshipData.getInstance().getFriendships();
         firebaseFirestore=firebaseFirestore.getInstance();
 
+
+        FriendshipData.getInstance().setPrihvatanjePrijateljaEventListener(this);
         SharedPreferences sharedPref = getContext().getSharedPreferences( "Userdata", Context.MODE_PRIVATE);
         String username = sharedPref.getString(getString(R.string.loggedUser_username), "EMPTY");
         String email = sharedPref.getString(getString(R.string.loggedUser_email), "EMPTY");
@@ -69,14 +72,15 @@ public class FriendsFragment extends Fragment {
         int indexx  = sharedPref.getInt(getString(R.string.loggedUser_index), -1);
 
         String index1 = email; //"email1@email.com";
+        loggedUser = UserData.getInstance().getUserByUsername(username);
 
 
         usersListView=view.findViewById(R.id.friends_list_rv) ;
         usersList= friendshipData.getInstance().GetUserFriends(email);//new ArrayList<>();
-        usersRecyclerAdapter=new UsersRecyclerAdapter(getContext(),usersList, email);
+        usersRecyclerAdapter=new UsersRecyclerAdapter(view.getContext(),usersList, email);
 
         usersListView.setHasFixedSize(true);
-        usersListView.setLayoutManager(new LinearLayoutManager(getContext()));
+        usersListView.setLayoutManager(new LinearLayoutManager(view.getContext()));
         usersListView.setAdapter(usersRecyclerAdapter);
 
 
@@ -106,6 +110,20 @@ public class FriendsFragment extends Fragment {
        // }
 
         //prikaz.setText(prikaziii);
+    }
+
+    @Override
+    public void onNovoPrijateljstvo(Friendship f) {
+
+        if(f.accepted == true) {
+            if (f.toUser.username.compareTo(loggedUser.username) == 0 ) {
+                usersList.add(UserData.getInstance().getUser(f.fromUser.email));//new ArrayList<>();
+            }
+            else if( f.fromUser.username.compareTo(loggedUser.username) == 0)
+            {
+                usersList.add(UserData.getInstance().getUser(f.toUser.email));
+            }
+        }
     }
 
 }

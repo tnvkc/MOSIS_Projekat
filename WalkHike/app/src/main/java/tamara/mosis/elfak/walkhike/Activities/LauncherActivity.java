@@ -76,14 +76,7 @@ public class LauncherActivity extends AppCompatActivity implements
 
         Scores s = null;
 
-        userData.getInstance().getUsers();
-        skorovi = scoresData.getInstance().getScores();
-        MapObjectData.getInstance().getMapObjects();
-        skorovi = scoresData.getInstance().getScores();
-        if(positionsData.getInstance().getPositions().size() != 0 && userData.getInstance().getUsers() != null)
-            Log.v("uspeh", "all");
-        else
-            Log.v("uspeh", "nema");
+
 
         FirebaseUser currentUser=firebaseAuth.getCurrentUser();
         if(currentUser!=null && emaill.compareTo("EMPTY") != 0)
@@ -99,8 +92,16 @@ public class LauncherActivity extends AppCompatActivity implements
         else {
             new Handler().postDelayed(new Runnable() {
 
+
                 @Override
                 public void run() {
+                    SharedPreferences.Editor editor = sharedPref.edit();
+
+                    editor.remove(getString(R.string.loggedUser_email));
+                    editor.remove(getString(R.string.loggedUser_username));
+                    editor.remove("userImage");
+                    editor.remove(getString(R.string.loggedUser_index));
+                    editor.commit();
                     Intent intent = new Intent(LauncherActivity.this, LoginActivity.class);
                     startActivity(intent);
 
@@ -108,10 +109,6 @@ public class LauncherActivity extends AppCompatActivity implements
                 }
             }, 500);
         }
-
-        userData.getInstance().getUsers();
-
-        MapObjectData.getInstance().getMapObjects();
 
 
     }

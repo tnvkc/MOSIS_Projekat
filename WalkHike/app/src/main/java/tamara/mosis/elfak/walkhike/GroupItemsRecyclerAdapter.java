@@ -1,6 +1,7 @@
 package tamara.mosis.elfak.walkhike;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,6 +14,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.List;
 
+import tamara.mosis.elfak.walkhike.Activities.LoginActivity;
+import tamara.mosis.elfak.walkhike.Activities.MainActivity;
 import tamara.mosis.elfak.walkhike.modeldata.MapObject;
 import tamara.mosis.elfak.walkhike.modeldata.MapObjectData;
 
@@ -96,6 +99,9 @@ public class GroupItemsRecyclerAdapter extends RecyclerView.Adapter<tamara.mosis
                 @Override
                 public  void onClick(View view)
                 {
+                    Intent intent =new Intent(context, MainActivity.class);
+                    intent.putExtra("objekaat", m);
+                    context.startActivity(intent);
                     Toast.makeText(context, "Ovo treba da vodi na objekat na mapi " + m.desc + " by " +m.createdBy, Toast.LENGTH_SHORT).show();
 
                 }

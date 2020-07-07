@@ -57,28 +57,77 @@ public class GroupsRecyclerAdapter extends RecyclerView.Adapter<GroupsRecyclerAd
         String imeGrupe = groupslist.get(position);
         holder.groupname_view.setText(groupslist.get(position));
 
-        holder.chooseButton.setOnClickListener
-                (new View.OnClickListener() {
-                    @Override
-                    public void onClick(final View view) {
-                        SharedPreferences sharedPref = context.getSharedPreferences(
-                                context.getString(R.string.SavedRoutesShared), Context.MODE_PRIVATE);
+        SharedPreferences sharedPref = context.getSharedPreferences(
+                context.getString(R.string.SavedRoutesShared), Context.MODE_PRIVATE);
 
-                        SharedPreferences.Editor editor = sharedPref.edit();
+        int num = sharedPref.getInt(context.getString(R.string.NumberOfSavedGroup) + imeGrupe, 0);
 
-                        int num = sharedPref.getInt(context.getString(R.string.NumberOfSavedGroup) + imeGrupe, 0);
+        boolean postoji = false;
+        int pos = -1;
+        for(int i =0; i< num; i++)
+        {
+            String pom = sharedPref.getString(context.getString(R.string.SavedRoute) + imeGrupe + i, "EMPTY");
+            if(pom.compareTo("EMPTY") != 0)
+            {
+                postoji = true;
+                pos = i;
+            }
+        }
 
-                        String id = objectTag;
-                        editor.putString(context.getString(R.string.SavedRoute) + imeGrupe + num, id);
-                        num++;
+        if(!postoji) {
+
+            holder.chooseButton.setOnClickListener
+                    (new View.OnClickListener() {
+                        @Override
+                        public void onClick(final View view) {
+
+                            SharedPreferences.Editor editor = sharedPref.edit();
+
+                            int num = sharedPref.getInt(context.getString(R.string.NumberOfSavedGroup) + imeGrupe, 0);
+
+                            String id = objectTag;
+                            editor.putString(context.getString(R.string.SavedRoute) + imeGrupe + num, id);
+                            num++;
+                            editor.putInt(context.getString(R.string.NumberOfSavedGroup) + imeGrupe, num);
+
+                            editor.commit();
+                            Toast.makeText(context, "Object added to group " + groupslist.get(position), Toast.LENGTH_SHORT).show();
+                            holder.chooseButton.setText("*");
+                            // removeItem(holder.getAdapterPosition());
+                            //  groupslist.remove(position);
+                        }
+                    });
+        }
+        else
+        {
+            holder.chooseButton.setText("*");
+            int finalPos = pos;
+            holder.chooseButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    int num = sharedPref.getInt(context.getString(R.string.NumberOfSavedGroup) + imeGrupe, 0);
+
+                    SharedPreferences.Editor editor = sharedPref.edit();
+                    String id = objectTag;
+
+
+                    if(finalPos != -1) {
+                        for (int j = finalPos + 1; j < num; j++) {
+                            String objectId = sharedPref.getString(context.getString(R.string.SavedRoute) + imeGrupe + j, "EMPTY");
+                            editor.putString(context.getString(R.string.SavedRoute) + imeGrupe + (j - 1), objectId);
+                        }
+
+                        num--;
                         editor.putInt(context.getString(R.string.NumberOfSavedGroup) + imeGrupe, num);
-
                         editor.commit();
-                        Toast.makeText(context, "Object added to group " + groupslist.get(position), Toast.LENGTH_SHORT).show();
-                       // removeItem(holder.getAdapterPosition());
-                      //  groupslist.remove(position);
+                        Toast.makeText(context, "Object removed from group " + groupslist.get(position), Toast.LENGTH_SHORT).show();
+                        holder.chooseButton.setText("+");
                     }
-                });
+                }
+            });
+
+
+        }
 
     }
 

@@ -65,11 +65,11 @@ public class FriendProfileActivity extends AppCompatActivity {
         rec = findViewById(R.id.friends_profile_listview);
         //prikaz.setText("OVO JE FRAGMENT");
 
-        recAdapter=new MapObjectRecyclerAdapter(getApplicationContext(), objekti );
+        recAdapter=new MapObjectRecyclerAdapter(FriendProfileActivity.this, objekti );
 
 
         rec.setHasFixedSize(true);
-        rec.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
+        rec.setLayoutManager(new LinearLayoutManager(FriendProfileActivity.this));
 
         rec.setAdapter(recAdapter);
 

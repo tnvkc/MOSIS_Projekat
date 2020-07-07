@@ -1,12 +1,10 @@
 package tamara.mosis.elfak.walkhike.modeldata;
 
-import android.graphics.Bitmap;
 import android.location.Location;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import com.google.android.gms.maps.model.LatLng;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -14,15 +12,12 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-import java.nio.charset.Charset;
 import java.text.DateFormat;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 public class MapObjectData {
@@ -254,7 +249,7 @@ public class MapObjectData {
         this.liistener = lis;
     }
     public interface MapObjectAddedListener{
-        void onMapObejctAdded(MapObject obj);
+        void onMapObjectAdded(MapObject obj, boolean novi);
     }
 
     ReadyEventListener probaList;
@@ -298,7 +293,7 @@ public class MapObjectData {
 
                 if(liistener != null)
                 {
-                    liistener.onMapObejctAdded(myMapObject);
+                    liistener.onMapObjectAdded(myMapObject, true);
                 }
             }
         }
@@ -317,6 +312,11 @@ public class MapObjectData {
             }
             if (updateListener != null)
                 updateListener.onListUpdated();
+
+            if(liistener != null)
+            {
+                liistener.onMapObjectAdded(myMapObject, false);
+            }
         }
 
         @Override
