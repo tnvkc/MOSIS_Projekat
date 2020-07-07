@@ -3,6 +3,7 @@ package tamara.mosis.elfak.walkhike.Activities;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
+import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
@@ -24,6 +25,7 @@ public class LeaderboardsActivity extends AppCompatActivity {
 
     private TabLayout leaderboards_tablayout_activity_distance;
     private ViewPager leaderboards_viewpager_activity_distance;
+    Toolbar toolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,6 +35,15 @@ public class LeaderboardsActivity extends AppCompatActivity {
         else
             setTheme(R.style.AppThemeLight);
         setContentView(R.layout.activity_leaderboards);
+
+        toolbar = (Toolbar) findViewById(R.id.leaderboards_toolbar);
+        setSupportActionBar(toolbar);
+
+        getSupportActionBar().setTitle("Leaderboards");
+
+        getSupportActionBar().setDisplayShowTitleEnabled(true);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
 
         bottom_navigation_menu = findViewById(R.id.bottom_navigation_menu);
         bottom_navigation_menu.setSelectedItemId(R.id.leaderboard);
@@ -44,24 +55,28 @@ public class LeaderboardsActivity extends AppCompatActivity {
                         Intent intent=new Intent(getApplicationContext(), NotificationsActivity.class);
                         startActivity(intent);
                         overridePendingTransition(0, 0);
+                        finish();
                         return true;
                     }
                     case R.id.friends: {
                         Intent intent=new Intent(getApplicationContext(), FriendslistActivity.class);
                         startActivity(intent);
                         overridePendingTransition(0, 0);
+                        finish();
                         return true;
                     }
                     case R.id.map: {
                         Intent intent=new Intent(getApplicationContext(), MainActivity.class);
                         startActivity(intent);
                         overridePendingTransition(0, 0);
+                        finish();
                         return true;
                     }
                     case R.id.completed_routes: {
                         Intent intent=new Intent(getApplicationContext(), CompletedRoutesActivity.class);
                         startActivity(intent);
                         overridePendingTransition(0, 0);
+                        finish();
                         return true;
                     }
                 }
