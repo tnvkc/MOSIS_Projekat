@@ -22,6 +22,7 @@ import android.graphics.Bitmap;
 import android.graphics.Camera;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.UserManager;
 import android.text.Editable;
 import android.text.InputType;
 import android.text.TextWatcher;
@@ -209,8 +210,6 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
     //mapObjects
     Marker lastSelected;
     Marker userMarker;
-
-    Marker loggedUserMarker;
     ArrayList<Marker> usersMarkers;
     ArrayList<Marker> objectsMarkers;
 
@@ -249,6 +248,47 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
             @Override
             public void onListUpdated() {
                 FilterMapObjects();
+            }
+        });
+
+        UserData.getInstance().setEventListener(new UserData.ListUpdatedEventListener() {
+            @Override
+            public void onListUpdated() {
+                FilterUserObjects();
+                map.animateCamera(CameraUpdateFactory.newLatLng(new LatLng(location.getLatitude(), location.getLongitude())));
+            }
+
+            @Override
+            public void onListUpdated(User user) {
+
+                double lat = Double.parseDouble(user.UserPosition.latitude);
+                double lon = Double.parseDouble(user.UserPosition.longitude);
+
+                if (user.username.compareTo(loggedUsername) == 0) {
+
+                    userMarker.setPosition(new LatLng(lat, lon));
+                    loggedUser = user;
+                    userMarker.setTag(user);
+
+//                    location = new Location();
+//                    location.setLatitude(lat);
+//                    location.setLongitude(lon);
+
+                    map.animateCamera(CameraUpdateFactory.newLatLng(new LatLng(lat, lon)));
+
+                } else {
+
+                    for (int i = 0; i < usersMarkers.size(); i++) {
+
+                        Marker currentMarker = usersMarkers.get(i);
+
+                        if (((User) currentMarker.getTag()) != null && ((User) currentMarker.getTag()).username.compareTo(user.username) == 0) {
+                            currentMarker.setPosition(new LatLng(lat, lon));
+                            currentMarker.setTag(user);
+                        }
+                    }
+
+                }
             }
         });
 
@@ -821,14 +861,17 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
     public void onLocationChanged(Location location) {
     //Toast.makeText(MapWithPlayServiceLocationActivity.this, "Lat : "+location.getLatitude()+" Lng "+location.getLongitude(), Toast.LENGTH_SHORT).show();
         if(map!=null){
-            LatLng latLng=new LatLng(location.getLatitude(),location.getLongitude());
+
+            Location prev = this.location;
+
+            //LatLng latLng=new LatLng(location.getLatitude(),location.getLongitude());
 
             //map.clear();
             //map.addMarker(new MarkerOptions().position(latLng).title("Current Location"));
             //map.moveCamera(CameraUpdateFactory.newLatLng(latLng));
             //map.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng,15f));
 
-            this.location = location;
+            //this.location = location;
 
             /*Marker m1 = map.addMarker(new MarkerOptions().position(latLng).alpha(0.5f));
             Marker m = map.addMarker(new MarkerOptions().position(latLng));
@@ -839,6 +882,20 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
             //map.addMarker(new MarkerOptions().position(latLng).title("Current Location"));
             //map.moveCamera(CameraUpdateFactory.newLatLng(latLng));
             //map.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng,10f));
+
+            /*float meters = prev.distanceTo(this.location);
+
+            Position newPosition = new Position();
+            newPosition.latitude = String.valueOf(location.getLatitude());
+            newPosition.longitude = String.valueOf(location.getLongitude());
+
+            if(meters > 5) {
+                UserData.getInstance().updateUserPosition(loggedUser.email, newPosition);
+                //scoresData.getInstance().updateScoreDistance((int)meters, LoggedUser);
+            } else {
+                this.location = prev;
+            }*/
+
         }
     }
 
@@ -1408,7 +1465,6 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
         for (int i = 0; i < usersMarkers.size(); i++) {
             usersMarkers.get(i).remove();
         }
-
     }
 
     protected void FilterMapObjects() {
@@ -1433,6 +1489,8 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
     protected void FilterUserObjects() {
 
         HideUsers();
+
+        usersMarkers = new ArrayList<>();
 
         ArrayList<User> friendsUsers = FriendshipData.getInstance().GetUserFriends(loggedUser.email);
         ArrayList<User> closeUsers = new ArrayList<>();

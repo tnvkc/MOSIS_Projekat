@@ -51,6 +51,7 @@ public class UserData {
     }
     public interface ListUpdatedEventListener {
         void onListUpdated();
+        void onListUpdated(User user);
     }
 
 
@@ -109,7 +110,7 @@ public class UserData {
                 UsersMapping.put(myUserKey, users.size() - 1);
             }
             if (updateListener != null)
-                updateListener.onListUpdated();
+                updateListener.onListUpdated(myUser);
         }
 
         @Override
@@ -202,7 +203,7 @@ public class UserData {
     public void updateUserPosition(String email,  Position newPos)
     {
         int indexx = -1;
-        for(int i =0; i<users.size(); i++)
+        for(int i =0; i < users.size(); i++)
         {
             if(users.get(i).email.compareTo(email) == 0)
                 indexx = i;
