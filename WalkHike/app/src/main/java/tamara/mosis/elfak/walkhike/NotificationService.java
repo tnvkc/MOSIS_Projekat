@@ -85,6 +85,7 @@ public class NotificationService extends IntentService implements MapObjectData.
     private ArrayList<Position> positions;
     private boolean[] poossss;
     private ArrayList<Position> DonePositions;
+    ArrayList<String> friendsUsers;
 
 
     private ArrayList<MapObject> objects;
@@ -156,6 +157,14 @@ public class NotificationService extends IntentService implements MapObjectData.
         doneObjects = new ArrayList<>();
 
         numberOfObjectNotis = 100;
+
+        ArrayList<User> friendsUserss = FriendshipData.getInstance().GetUserFriends(LoggedUser.email);
+
+       friendsUsers = new ArrayList<>();
+
+        for (int i = 0; i < friendsUserss.size(); i++) {
+            friendsUsers.add(friendsUserss.get(i).username);
+        }
 
     }
 
@@ -296,8 +305,9 @@ public class NotificationService extends IntentService implements MapObjectData.
                 meters = 0;
 
                 findNearbyUsers();
-                findNearbyObjects();
+
             }
+            findNearbyObjects();
 
             //findNearbyUsers();
             //PD.getInstance().updatePlace(1, p.desc, p.longitude, p.latitude);
@@ -394,42 +404,42 @@ public class NotificationService extends IntentService implements MapObjectData.
         if(objects.size() != 0) {
             boolean close = false;
 
-            for (int i = 0; i < users.size(); i++) {
+            for (int i = 0; i < objects.size(); i++) {
 
-                close = false;
-                float res[] = new float[5];
-                Location.distanceBetween(latLng.latitude, latLng.longitude, Double.parseDouble(objects.get(i).position.latitude),
-                        Double.parseDouble(objects.get(i).position.longitude), res);
-
-                for(int j = 0; j< doneObjects.size(); j++) {
-                    if(objects.get(i).datetime.compareTo(doneObjects.get(j))== 0)
+                MapObject mo = objects.get(i);
+                if(  (mo.isPublic && friendsUsers.contains(mo.createdBy)) ||
+                        (!mo.isPublic && mo.sharedWith.compareTo(LoggedUser.username) == 0))
                     {
-                        close = true;
-                        if (res[0] > 1000) {
-                            doneObjects.remove(j);
+                        close = false;
+                        float res[] = new float[5];
+                        Location.distanceBetween(latLng.latitude, latLng.longitude, Double.parseDouble(objects.get(i).position.latitude),
+                                Double.parseDouble(objects.get(i).position.longitude), res);
+
+                        for (int j = 0; j < doneObjects.size(); j++) {
+                            if ((objects.get(i).datetime + objects.get(i).createdBy).compareTo(doneObjects.get(j)) == 0) {
+                                close = true;
+                                if (res[0] > 1000) {
+                                    doneObjects.remove(j);
+                                }
+                            }
+                        }
+                        if (!close && res[0] < 1000) {
+/////////////////////////////
+
+                            index = i;
+                            doneObjects.add(objects.get(i).datetime + objects.get(i).createdBy);
+
+                            Log.v("MapObject", objects.get(i).datetime + " !");
+
+
+                            sendNotif("notify_" + objects.get(i), "usersnear", numberOfFriendNotis, "Object near you!",
+                                    "Object near you!", "Near you", "Object near you!",
+                                    new Intent(getApplicationContext(), MainActivity.class));
+
+
                         }
                     }
                 }
-                if(!close && res[0] < 1000)
-                {
-/////////////////////////////
-                    if(objects.get(i).isPublic == true || objects.get(i).sharedWith.compareTo(LoggedUser.username) == 0) {
-                        index = i;
-                        doneObjects.add(objects.get(i).datetime);
-
-                        Log.v("MapObject", objects.get(i).datetime + " !");
-
-
-                        sendNotif("notify_" + objects.get(i), "usersnear", numberOfFriendNotis, "Object near you!",
-                                "Object near you!", "Near you", "Object near you!",
-                                new Intent(getApplicationContext(), MainActivity.class));
-
-
-                        //numberOfObjectNotis++;
-                        //users.remove(i);
-                    }
-                }
-            }
         }
     }
 

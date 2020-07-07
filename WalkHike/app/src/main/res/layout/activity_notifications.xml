@@ -36,7 +36,21 @@
         android:layout_above="@+id/bottom_navigation_menu"
         android:layout_below="@+id/notifications_toolbar"
         android:layout_marginTop="0dp"
-        android:layout_marginBottom="0dp" />
+        android:layout_marginBottom="0dp" >
+
+
+
+    </ListView>
+
+    <Button
+        android:id="@+id/notification_clear_all_notis"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/bottom_navigation_menu"
+        android:layout_alignParentEnd="true"
+        android:layout_marginEnd="20dp"
+        android:layout_marginBottom="20dp"
+        android:text="Clear all notifications" />
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottom_navigation_menu"
@@ -46,6 +60,7 @@
         app:itemBackground="@color/colorPrimary"
         app:itemIconTint="@drawable/selector"
         app:itemTextColor="@drawable/selector"
+
         app:menu="@menu/navigation_menu" />
 
 </RelativeLayout>

@@ -1411,6 +1411,8 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
 
     }
 
+
+
     protected void FilterMapObjects() {
 
         //filter: 0000****, if * = 1 then show certain marker type

@@ -4,9 +4,12 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
+import android.view.ContextMenu;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.Filter;
 import android.widget.ImageButton;
@@ -60,6 +63,76 @@ public class GroupSavedRecyclerAdapter extends RecyclerView.Adapter<GroupSavedRe
                 (new View.OnClickListener() {
                     @Override
                     public void onClick(final View view) {
+
+                        // removeItem(holder.getAdapterPosition());
+                        //  groupslist.remove(position);
+                    }
+                });
+        holder.vie.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public  void onClick(View view)
+            {
+                Toast.makeText(context, "treba da vodi na drugi fragment za objekte rute", Toast.LENGTH_SHORT).show();
+                doWork(groupslist.get(position));
+
+            }
+        });
+        holder.vie.setOnCreateContextMenuListener(new View.OnCreateContextMenuListener() {
+            @Override
+            public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
+                AdapterView.AdapterContextMenuInfo info=(AdapterView.AdapterContextMenuInfo) menuInfo;
+                String group = imeGrupe;
+                menu.setHeaderTitle(imeGrupe);
+                menu.add(0,1,1,"Delete group").setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+                    @Override
+                    public boolean onMenuItemClick(MenuItem item) {
+
+                        SharedPreferences sharedPref = context.getSharedPreferences(
+                                context.getString(R.string.SavedRoutesShared), Context.MODE_PRIVATE);
+
+                        int numm= sharedPref.getInt( context.getString(R.string.NumberOfSavedTotal), 0);
+                        SharedPreferences.Editor editor = sharedPref.edit();
+
+                        int pomeraj = -1;
+                        for(int j = 0; j < numm; j++)
+                        {
+                            String s = sharedPref.getString(context.getString(R.string.SavedRoutesGroup) + j, "EMPTY");
+                            if(s.compareTo(imeGrupe) == 0)
+                            {
+                                pomeraj = j;
+                            }
+                            if(pomeraj != -1)
+                            {
+                                s = sharedPref.getString(context.getString(R.string.SavedRoutesGroup) + (j+1), "EMPTY");
+                                editor.putString(context.getString(R.string.SavedRoutesGroup) + j, s);
+                            }
+
+                        }
+                        editor.remove(context.getString(R.string.SavedRoutesGroup) + (numm - 1));
+                        numm --;
+                        editor.putInt( context.getString(R.string.NumberOfSavedTotal), numm);
+
+
+                        int num = sharedPref.getInt( context.getString(R.string.NumberOfSavedGroup), 0);
+                        for(int i = 0; i<num; i++)
+                        {
+                            editor.remove( context.getString(R.string.SavedRoute) + imeGrupe + i);
+
+                        }
+
+                        editor.putInt( context.getString(R.string.NumberOfSavedGroup)+ imeGrupe, 0);
+
+
+                        editor.commit();
+                        Toast.makeText(context, "Group " + groupslist.get(position) + " deleted", Toast.LENGTH_SHORT).show();
+                        removeItem(position);
+                        return true;
+                    }
+                });
+                menu.add(0,2,2,"Clear all items").setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+                    @Override
+                    public boolean onMenuItemClick(MenuItem item) {
                         SharedPreferences sharedPref = context.getSharedPreferences(
                                 context.getString(R.string.SavedRoutesShared), Context.MODE_PRIVATE);
                         int num = sharedPref.getInt( context.getString(R.string.NumberOfSavedGroup), 0);
@@ -79,20 +152,14 @@ public class GroupSavedRecyclerAdapter extends RecyclerView.Adapter<GroupSavedRe
 
                         editor.commit();
                         Toast.makeText(context, "Group " + groupslist.get(position) + " cleared", Toast.LENGTH_SHORT).show();
-                        // removeItem(holder.getAdapterPosition());
-                        //  groupslist.remove(position);
+                        return true;
                     }
                 });
-        holder.vie.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public  void onClick(View view)
-            {
-                Toast.makeText(context, "treba da vodi na drugi fragment za objekte rute", Toast.LENGTH_SHORT).show();
-                doWork(groupslist.get(position));
-
             }
         });
+
+
+
     }
 
     @Override
@@ -102,7 +169,7 @@ public class GroupSavedRecyclerAdapter extends RecyclerView.Adapter<GroupSavedRe
     }
 
     private void removeItem(int position) {
-        //usersList.remove(position);
+        groupslist.remove(position);
         notifyItemRemoved(position);
         notifyItemRangeChanged(position, groupslist.size());
     }
@@ -138,6 +205,9 @@ public class GroupSavedRecyclerAdapter extends RecyclerView.Adapter<GroupSavedRe
     public interface ListenerOnGroupClick{
         void onGroupClick(String groupp);
     }
+
+
+
 
 }
 

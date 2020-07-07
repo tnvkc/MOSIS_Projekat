@@ -11,6 +11,8 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
 import android.widget.ListView;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -31,6 +33,7 @@ public class NotificationsActivity extends AppCompatActivity implements Notifica
     ArrayList<Notification> notifications;
 
     Toolbar toolbar;
+    Button clearBtn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,6 +70,61 @@ public class NotificationsActivity extends AppCompatActivity implements Notifica
                NotificationsListAdapter listAdapter = new NotificationsListAdapter(getApplicationContext(), R.layout.notification_view, notifications);
                notification_list.setAdapter(listAdapter);
            }
+       });
+
+       clearBtn = findViewById(R.id.notification_clear_all_notis);
+       clearBtn.setOnClickListener(new View.OnClickListener() {
+           @Override
+           public void onClick(View v) {
+               ArrayList<Notification> notifications = new ArrayList<>();
+               SharedPreferences sharedPref = getApplicationContext().getSharedPreferences(
+                       getString(R.string.NotificationsFriend), Context.MODE_PRIVATE);
+               int numOfNotis = sharedPref.getInt(getString(R.string.NotificationsNumber), 0);
+
+               SharedPreferences.Editor editor = sharedPref.edit();
+               for(int i = 0; i< numOfNotis; i++)
+               {
+                    editor.remove(getString(R.string.NotificationsFromUser) + i);
+                    editor.remove(getString(R.string.NotificationsDate) + i);
+
+               }
+               editor.putInt(getString(R.string.NotificationsNumber), 0);
+               editor.commit();
+
+
+               SharedPreferences sharedPref2 = getApplicationContext().getSharedPreferences(
+                       getString(R.string.NotiObjects), Context.MODE_PRIVATE);
+               numOfNotis = sharedPref.getInt(getString(R.string.NotiObjectsNumber), 0);
+               editor = sharedPref2.edit();
+
+               for(int i = 0; i< numOfNotis; i++)
+               {
+
+                   editor.remove(getString(R.string.NotiObjectsFromUser) + i);
+                   editor.remove(getString(R.string.NotiObjectsDate) + i);
+               }
+               editor.putInt(getString(R.string.NotiObjectsNumber), 0);
+
+               numOfNotis = sharedPref2.getInt(getString(R.string.NotiObjectsNumber) + "reactions", 0);
+
+               for(int i = 0; i< numOfNotis; i++)
+               {
+
+                   editor.remove(getString(R.string.NotiObjectsDate) + "reactions" + i);
+               }
+               editor.putInt(getString(R.string.NotiObjectsNumber) + "reactions", 0);
+               editor.commit();
+
+
+               notifications = prepareNotificationTestData();
+
+               NotificationsListAdapter listAdapter = new NotificationsListAdapter(getApplicationContext(), R.layout.notification_view, notifications);
+               ListView notification_list = findViewById(R.id.notification_list);
+               notification_list.setAdapter(listAdapter);
+           }
+
+
+
        });
 
 
