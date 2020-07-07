@@ -85,4 +85,5 @@
     <string name="SavedRoute">Saved_route</string>
     <string name="NumberOfSavedTotal">saved_routes_total</string>
     <string name="NumberOfSavedGroup">saved_routes_group</string>
+    <string name="ReactedObjectsPrefs">reacted_objects_shared_prefs</string>
 </resources>

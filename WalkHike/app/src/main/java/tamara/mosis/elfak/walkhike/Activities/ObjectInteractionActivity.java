@@ -4,7 +4,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.appcompat.widget.Toolbar;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.view.MenuItem;
@@ -21,12 +23,15 @@ import com.bumptech.glide.request.transition.Transition;
 import tamara.mosis.elfak.walkhike.R;
 import tamara.mosis.elfak.walkhike.modeldata.MapObject;
 import tamara.mosis.elfak.walkhike.modeldata.MapObjectData;
+import tamara.mosis.elfak.walkhike.modeldata.ScoresData;
+import tamara.mosis.elfak.walkhike.modeldata.UserData;
 
 public class ObjectInteractionActivity extends AppCompatActivity implements View.OnClickListener {
 
     Toolbar toolbar;
 
     MapObject obj;
+    String currentUser;
 
     private ImageView obj_interaction_reaction_great;
     private ImageView obj_interaction_reaction_meh;
@@ -77,8 +82,10 @@ public class ObjectInteractionActivity extends AppCompatActivity implements View
 
         Intent callerIntent = getIntent();
         obj = (MapObject) callerIntent.getSerializableExtra("object");
+        currentUser = callerIntent.getStringExtra("username");
 
         if (obj != null) {
+
             int objectType = obj.objectType;
 
             String text = String.format("User %s was here on %s\n and left this ", obj.createdBy, obj.date);
@@ -126,8 +133,78 @@ public class ObjectInteractionActivity extends AppCompatActivity implements View
 
             SetReactionStrings();
 
-            //to do: read shared prefs- if user already reacted to object, set image view background for chosen reaction
+            if (currentUser.compareTo(obj.createdBy) == 0) {
+
+                obj_interaction_reaction_great.setClickable(false);
+                obj_interaction_reaction_great.setFocusable(false);
+                obj_interaction_reaction_meh.setClickable(false);
+                obj_interaction_reaction_meh.setFocusable(false);
+                obj_interaction_reaction_boo.setClickable(false);
+                obj_interaction_reaction_boo.setFocusable(false);
+
+            } else {
+
+                String object_key = obj.createdBy + obj.datetime;
+
+                SharedPreferences sharedPref = getApplicationContext()
+                        .getSharedPreferences(getString(R.string.ReactedObjectsPrefs), Context.MODE_PRIVATE);
+
+                String s = sharedPref.getString(object_key, "EMPTY");
+
+                if(s.compareTo("EMPTY") != 0) {
+
+                    if (s.compareTo("great") == 0) {
+                        obj.reactionsGreat--;
+                        ReactGreat();
+                    } else if (s.compareTo("meh") == 0) {
+                        obj.reactionsMeh--;
+                        ReactMeh();
+                    } else {
+                        obj.reactionsBoo--;
+                        ReactBoo();
+                    }
+
+                }
+
+            }
+
         }
+    }
+
+    private void ReactGreat() {
+
+        obj_interaction_reaction_great.setBackgroundColor(getColor(R.color.colorAccent));
+        obj_interaction_reaction_meh.setBackgroundColor(getColor(android.R.color.transparent));
+        obj_interaction_reaction_boo.setBackgroundColor(getColor(android.R.color.transparent));
+
+        great = obj.reactionsGreat + 1;
+        meh = obj.reactionsMeh;
+        boo = obj.reactionsBoo;
+
+    }
+
+    private void ReactMeh() {
+
+        obj_interaction_reaction_great.setBackgroundColor(getColor(android.R.color.transparent));
+        obj_interaction_reaction_meh.setBackgroundColor(getColor(R.color.colorAccent));
+        obj_interaction_reaction_boo.setBackgroundColor(getColor(android.R.color.transparent));
+
+        great = obj.reactionsGreat;
+        meh = obj.reactionsMeh + 1;
+        boo = obj.reactionsBoo;
+
+    }
+
+    private void ReactBoo() {
+
+        obj_interaction_reaction_great.setBackgroundColor(getColor(android.R.color.transparent));
+        obj_interaction_reaction_meh.setBackgroundColor(getColor(android.R.color.transparent));
+        obj_interaction_reaction_boo.setBackgroundColor(getColor(R.color.colorAccent));
+
+        great = obj.reactionsGreat;
+        meh = obj.reactionsMeh;
+        boo = obj.reactionsBoo + 1;
+
     }
 
     @Override
@@ -143,48 +220,47 @@ public class ObjectInteractionActivity extends AppCompatActivity implements View
 
         if (v.getId() == R.id.object_interaction_great) {
 
-            obj_interaction_reaction_great.setBackgroundColor(getColor(R.color.colorAccent));
-            obj_interaction_reaction_meh.setBackgroundColor(getColor(android.R.color.transparent));
-            obj_interaction_reaction_boo.setBackgroundColor(getColor(android.R.color.transparent));
-
-            great = obj.reactionsGreat + 1;
-            meh = obj.reactionsMeh;
-            boo = obj.reactionsBoo;
-
+            ReactGreat();
             SetReactionStrings();
 
         } else if (v.getId() == R.id.object_interaction_meh) {
 
-            obj_interaction_reaction_great.setBackgroundColor(getColor(android.R.color.transparent));
-            obj_interaction_reaction_meh.setBackgroundColor(getColor(R.color.colorAccent));
-            obj_interaction_reaction_boo.setBackgroundColor(getColor(android.R.color.transparent));
-
-            great = obj.reactionsGreat;
-            meh = obj.reactionsMeh + 1;
-            boo = obj.reactionsBoo;
-
+            ReactMeh();
             SetReactionStrings();
 
         } else if (v.getId() == R.id.object_interaction_boo) {
 
-            obj_interaction_reaction_great.setBackgroundColor(getColor(android.R.color.transparent));
-            obj_interaction_reaction_meh.setBackgroundColor(getColor(android.R.color.transparent));
-            obj_interaction_reaction_boo.setBackgroundColor(getColor(R.color.colorAccent));
-
-            great = obj.reactionsGreat;
-            meh = obj.reactionsMeh;
-            boo = obj.reactionsBoo + 1;
-
+            ReactBoo();
             SetReactionStrings();
 
         } else if (v.getId() == R.id.object_interaction_close) {
+
+            String reaction = "";
+            if (obj.reactionsGreat != great)
+                reaction = "great";
+            else if (obj.reactionsMeh != meh)
+                reaction = "meh";
+            else
+                reaction = "boo";
 
             obj.reactionsGreat = great;
             obj.reactionsMeh = meh;
             obj.reactionsBoo = boo;
 
             MapObjectData.getInstance().UpdateMapObjectReaction(obj); //to do
-            //update shared prefs for user --- unutar iste fje
+
+            String object_key = obj.createdBy + obj.datetime;
+
+            SharedPreferences sharedPref = getApplicationContext().getSharedPreferences(
+                    getString(R.string.ReactedObjectsPrefs), Context.MODE_PRIVATE);
+
+            SharedPreferences.Editor editor = sharedPref.edit();
+
+            editor.putString(object_key, reaction);
+            editor.apply();
+
+            //update user activity scores
+            ScoresData.getInstance().updateScoreActivity(100, currentUser);
 
             Toast.makeText(this, "Current reactions " + great + ", " + meh + ", " + boo, Toast.LENGTH_SHORT).show();
             finish();

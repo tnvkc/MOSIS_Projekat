@@ -19,6 +19,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.graphics.Camera;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.Editable;
@@ -35,6 +36,7 @@ import android.location.LocationManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Filter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -199,8 +201,10 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
     TextView info_window_username;
     TextView info_window_lat;
     TextView info_window_lon;
-    TextView info_window_see_details;
+    ImageView info_window_delete_object;
+    Button info_window_see_details;
     Button info_add_to_route;
+
 
     //mapObjects
     Marker lastSelected;
@@ -233,11 +237,25 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
         else
             setTheme(R.style.AppThemeLight);
 
+//        MapObjectData.getInstance().setDeleteEventListener(new MapObjectData.ObjectDeletedEventListener() {
+//            @Override
+//            public void onObjectDeleted() {
+//                FilterMapObjects();
+//            }
+//        });
+
+        MapObjectData.getInstance().setListUpdatedEventListener(new MapObjectData.ListUpdatedEventListener() {
+            @Override
+            public void onListUpdated() {
+                FilterMapObjects();
+            }
+        });
+
         setContentView(R.layout.activity_main);
         mfirebaseAuth=FirebaseAuth.getInstance();
         ArrayList<User> users = userData.getInstance().getUsers();
         friendshipData.getInstance().getFriendships();
-        mapObjects = mapObjectData.getInstance().getMapObjects();
+        mapObjects = MapObjectData.getInstance().getMapObjects();
         skorovi =  scoresData.getInstance().getScores();
 
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
@@ -443,6 +461,8 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
         info_window_username = findViewById(R.id.info_window_username);
         info_window_lat = findViewById(R.id.info_window_lat);
         info_window_lon = findViewById(R.id.info_window_lon);
+        info_window_delete_object = findViewById(R.id.info_delete_object);
+        info_window_delete_object.setOnClickListener(this);
         info_window_see_details = findViewById(R.id.info_window_see_details);
         info_window_see_details.setOnClickListener(this);
         info_add_to_route = findViewById(R.id.info_add_to_savedroutes);
@@ -666,6 +686,22 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
         googleMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
         this.map=googleMap;
 
+        map.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
+            @Override
+            public void onMapClick(LatLng latLng) {
+
+                info_window_container.setVisibility(View.GONE);
+                layout_filter_object_type.setVisibility(View.GONE);
+                filter_objects_opened = false;
+                layout_filter_by_distance.setVisibility(View.GONE);
+                filter_by_distance_opened = false;
+                layout_filter_timespan.setVisibility(View.GONE);
+                filter_timespan_opened = false;
+                layout_filter_options.setVisibility(View.GONE);
+                filter_opened = false;
+            }
+        });
+
         FilterMapObjects();
         FilterUserObjects();
 
@@ -719,7 +755,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
                 LatLng latLng=new LatLng(location.getLatitude(),location.getLongitude());
                 //map.addMarker(new MarkerOptions().position(latLng).title("Current Location"));
                map.moveCamera(CameraUpdateFactory.newLatLng(latLng));
-               map.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng,10f));
+               map.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng,20f));
                 //Toast.makeText(this, "Usao u latlong", Toast.LENGTH_SHORT );
             }
         }
@@ -837,6 +873,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
         }
         else if (v.getId() == R.id.info_window_see_details) {
 
+            info_window_container.setVisibility(View.GONE);
             if (v.getTag() instanceof MapObject) {
 
                 MapObject objectTag = (MapObject) v.getTag();
@@ -844,10 +881,12 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
                 if (objectTag.objectType == 1 || objectTag.objectType == 3) {
                     Intent intent = new Intent(MainActivity.this, ObjectInteractionActivity.class);
                     intent.putExtra("object", objectTag);
+                    intent.putExtra("username", loggedUsername);
                     startActivity(intent);
                 } else {
                     Intent intent = new Intent(MainActivity.this, ARObjectInteractionActivity.class);
                     intent.putExtra("object", objectTag);
+                    intent.putExtra("username", loggedUsername);
                     startActivity(intent);
                 }
 
@@ -861,6 +900,35 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
 
             }
 
+
+        } else if (v.getId() == R.id.info_delete_object) {
+
+            //dialog box?
+
+            AlertDialog.Builder areYouSure = new AlertDialog.Builder(MainActivity.this);
+
+            areYouSure.setTitle("Delete object?");
+            areYouSure.setMessage("Are you sure you want to delete this object?");
+
+            areYouSure.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                }
+            });
+
+            areYouSure.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    info_window_container.setVisibility(View.GONE);
+                    Toast.makeText(MainActivity.this, "Deleting object", Toast.LENGTH_SHORT).show();
+                    MapObjectData.getInstance().deleteMapObject((MapObject) v.getTag());
+
+
+                }
+            });
+
+            AlertDialog dialog = areYouSure.create();
+            dialog.show();
 
         } else if (v.getId() == R.id.main_addnewObject) {
 
@@ -1318,8 +1386,11 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
         ArrayList<MapObject> filteredObjects = MapObjectData.getInstance().getFilteredMapObjects(object_filter, timespan, radius, loggedUsername);
 
         for (int i = 0; i < objectsMarkers.size(); i++) {
-            objectsMarkers.get(i).remove();
+            Marker m = objectsMarkers.get(i);
+            m.remove();
         }
+
+        objectsMarkers = new ArrayList<>();
 
         for (int i = 0; i < filteredObjects.size(); i++) {
             AddMarkerObject(filteredObjects.get(i));
@@ -1398,6 +1469,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
         map.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng,10f));
 
         Marker m = FindMapMarker(obj);
+
         ShowMarkerInfoWindow(m);
 
     }
@@ -1409,7 +1481,16 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
 
             if (marker.getTag() instanceof MapObject) {
 
+                info_window_see_details.setVisibility(View.VISIBLE);
+
                 MapObject objectTag = (MapObject) marker.getTag();
+
+                if (objectTag.createdBy.compareTo(loggedUsername) == 0) {
+                    info_window_delete_object.setVisibility(View.VISIBLE);
+                    info_window_delete_object.setTag(objectTag);
+                } else {
+                    info_window_delete_object.setVisibility(View.GONE);
+                }
 
                 String lat = objectTag.position.latitude;
                 String lon = objectTag.position.longitude;
@@ -1435,6 +1516,8 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
                 info_add_to_route.setVisibility(View.VISIBLE);
 
             } else {
+
+                info_window_delete_object.setVisibility(View.GONE);
 
                 String username = (String) marker.getTag();
                 User referringTo = UserData.getInstance().getUserByUsername(username);

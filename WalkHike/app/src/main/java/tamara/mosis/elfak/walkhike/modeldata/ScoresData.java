@@ -204,6 +204,29 @@ public class ScoresData {
 
     }
 
+    public void updateScoreActivity(int additionalScoreActivity, String username)
+    {
+        Scores uu = new Scores();
+        for(int i =0; i< this.Scores.size(); i++)
+        {
+            if(this.Scores.get(i).useer.compareTo(username) ==0)
+            {
+                uu = this.Scores.get(i);
+                break;
+            }
+        }
+
+
+
+        uu.weeklyActivity +=additionalScoreActivity;
+        uu.monthlyActivity +=additionalScoreActivity;
+        uu.alltimeActivity +=additionalScoreActivity;
+
+
+        db.child(FIREBASE_CHILD).child(uu.key).setValue(uu);
+
+    }
+
     public void updateScoresDates()
     {
         int additionalScoreDistance = 250;

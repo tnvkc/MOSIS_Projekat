@@ -39,12 +39,11 @@ import tamara.mosis.elfak.walkhike.R;
 import tamara.mosis.elfak.walkhike.modeldata.MapObject;
 import tamara.mosis.elfak.walkhike.modeldata.MapObjectData;
 import tamara.mosis.elfak.walkhike.modeldata.Position;
+import tamara.mosis.elfak.walkhike.modeldata.ScoresData;
 import tamara.mosis.elfak.walkhike.modeldata.User;
 import tamara.mosis.elfak.walkhike.modeldata.UserData;
 
 public class AddNewObjectActivity extends FragmentActivity implements View.OnClickListener {
-
-    static MapObjectData md;
 
     FirebaseStorage storage;
     StorageReference storageReference;
@@ -326,7 +325,8 @@ public class AddNewObjectActivity extends FragmentActivity implements View.OnCli
                             newMapObject.photo = photo;
                             uploadImage(newMapObject);
                         } else {
-                            md.getInstance().AddMapObject(newMapObject);
+                            MapObjectData.getInstance().AddMapObject(newMapObject);
+                            ScoresData.getInstance().updateScoreActivity(100, loggedUser);
                             Toast.makeText(this, "Object added", Toast.LENGTH_SHORT).show();
 
                             Intent callerIntent = getIntent();
@@ -359,7 +359,8 @@ public class AddNewObjectActivity extends FragmentActivity implements View.OnCli
                                     public void onSuccess(Uri uri) {
                                         firestorageUri = String.valueOf(uri);
                                         newMapObject.photo = firestorageUri;
-                                        md.getInstance().AddMapObject(newMapObject);
+                                        MapObjectData.getInstance().AddMapObject(newMapObject);
+                                        ScoresData.getInstance().updateScoreActivity(100, loggedUser);
                                         Toast.makeText(getApplicationContext(), "Object added", Toast.LENGTH_SHORT).show();
 
                                         Intent callerIntent = getIntent();

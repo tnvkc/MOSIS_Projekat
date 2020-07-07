@@ -58,10 +58,23 @@ public class MapObjectData {
     public ArrayList<MapObject> getFriendsMapObjects(String loggedUserUsername) {
 
         ArrayList<MapObject> list = new ArrayList<>();
+
+        User currentUser = UserData.getInstance().getUserByUsername(loggedUserUsername);
+        ArrayList<User> friendsUsers = FriendshipData.getInstance().GetUserFriends(currentUser.email);
+
+        ArrayList<String> friendsUsernames = new ArrayList<>();
+
+        for (int i = 0; i < friendsUsers.size(); i++) {
+            friendsUsernames.add(friendsUsers.get(i).username);
+        }
+
         for(int i = 0; i< this.MapObjects.size(); i++)
         {
-            if((this.MapObjects.get(i).createdBy.compareTo(loggedUserUsername) == 0) ||
-                    (this.MapObjects.get(i).sharedWith.compareTo(loggedUserUsername) == 0))
+            MapObject mo = MapObjects.get(i);
+            if(
+                    (mo.createdBy.compareTo(loggedUserUsername) == 0) ||
+                    (mo.isPublic && friendsUsernames.contains(mo.createdBy)) ||
+                    (mo.sharedWith.compareTo(loggedUserUsername) == 0))
             {
                 list.add(MapObjects.get(i));
             }
@@ -220,12 +233,20 @@ public class MapObjectData {
     }
 
     MapObjectData.ListUpdatedEventListener updateListener;
-    public void setEventListener(MapObjectData.ListUpdatedEventListener listener) {
+    public void setListUpdatedEventListener(MapObjectData.ListUpdatedEventListener listener) {
         updateListener = listener;
     }
     public interface ListUpdatedEventListener {
         void onListUpdated();
     }
+
+    /*ObjectDeletedEventListener deleteListener;
+    public void setDeleteEventListener(ObjectDeletedEventListener listener) {
+        deleteListener = listener;
+    }
+    public interface ObjectDeletedEventListener {
+        void onObjectDeleted();
+    }*/
 
     MapObjectAddedListener liistener;
     public void setNewObejctListener (MapObjectAddedListener lis)
@@ -306,6 +327,9 @@ public class MapObjectData {
                 MapObjects.remove(index);
                 recreateKeyIndexMapping();
             }
+//            if (deleteListener != null)
+//                deleteListener.onObjectDeleted();
+
             if (updateListener != null)
                 updateListener.onListUpdated();
         }
@@ -333,6 +357,24 @@ public class MapObjectData {
     }
 
     public void deleteMapObject(int index) {
+
+        db.child(FIREBASE_CHILD).child(MapObjects.get(index).key).removeValue();
+        MapObjects.remove(index);
+        recreateKeyIndexMapping();
+    }
+
+    public void deleteMapObject(MapObject mo) {
+
+        int index = -1;
+        for(int i = 0; i < MapObjects.size(); i++)
+        {
+            if(MapObjects.get(i).createdBy.compareTo(mo.createdBy) == 0 && MapObjects.get(i).datetime.compareTo(mo.datetime) == 0) {
+                index = i;
+                break;
+            }
+        }
+        if(index == -1)
+            return;
 
         db.child(FIREBASE_CHILD).child(MapObjects.get(index).key).removeValue();
         MapObjects.remove(index);
