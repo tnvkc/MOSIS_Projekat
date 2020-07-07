@@ -214,6 +214,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
     User loggedUser;
     String loggedUsername;
 
+    MapObject obj;
     //scores
     ArrayList<Scores> skorovi;
 
@@ -246,6 +247,10 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
         } else {
             //map.setMyLocationEnabled(true);
         }
+
+
+
+
 
         SharedPreferences sharedPref = getApplicationContext().getSharedPreferences( "Userdata", Context.MODE_PRIVATE);
         String username = sharedPref.getString(getString(R.string.loggedUser_username), "EMPTY");
@@ -464,6 +469,11 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
             startedService = true;
         }*/
 
+        Intent callerIntent = getIntent();
+        obj = (MapObject) callerIntent.getSerializableExtra("objekaat");
+
+
+
     }
 
     @Override
@@ -670,6 +680,10 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
         FilterUserObjects();
 
         AddUserMarker(loggedUsername);
+
+        if (obj != null) {
+            FindObjectOnMap(obj);
+        }
 
         map.setOnMarkerClickListener(this);
     }
@@ -1481,7 +1495,8 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
     protected Marker FindMapMarker(MapObject mapObject) {
 
         for (int i = 0; i < objectsMarkers.size(); i++) {
-            if (((MapObject) objectsMarkers.get(i).getTag()).equals(mapObject))
+            MapObject mm = (MapObject) objectsMarkers.get(i).getTag();
+            if ((mm.datetime+mm.createdBy).compareTo(mapObject.datetime + mapObject.createdBy) ==0)//.datetime + mapObject.createdBy
                 return objectsMarkers.get(i);
         }
         return null;

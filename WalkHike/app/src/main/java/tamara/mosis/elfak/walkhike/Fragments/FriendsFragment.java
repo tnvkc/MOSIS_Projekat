@@ -77,10 +77,10 @@ public class FriendsFragment extends Fragment implements FriendshipData.Prihvata
 
         usersListView=view.findViewById(R.id.friends_list_rv) ;
         usersList= friendshipData.getInstance().GetUserFriends(email);//new ArrayList<>();
-        usersRecyclerAdapter=new UsersRecyclerAdapter(getContext(),usersList, email);
+        usersRecyclerAdapter=new UsersRecyclerAdapter(view.getContext(),usersList, email);
 
         usersListView.setHasFixedSize(true);
-        usersListView.setLayoutManager(new LinearLayoutManager(getContext()));
+        usersListView.setLayoutManager(new LinearLayoutManager(view.getContext()));
         usersListView.setAdapter(usersRecyclerAdapter);
 
 
