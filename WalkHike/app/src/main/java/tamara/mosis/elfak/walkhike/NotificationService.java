@@ -156,6 +156,7 @@ public class NotificationService extends IntentService implements MapObjectData.
         doneObjects = new ArrayList<>();
 
         numberOfObjectNotis = 100;
+
     }
 
     void writeObjectInSharedPrefs()  //treba da se preradi da radi za MApObject a ne Pos tj friend
@@ -241,6 +242,12 @@ public class NotificationService extends IntentService implements MapObjectData.
 
 
             latLng=new LatLng(location.getLatitude(),location.getLongitude());
+            latLng = new LatLng(location.getLatitude(), location.getLongitude());
+            Position p = new Position();
+            p.latitude = "" + latLng.latitude;
+            p.longitude = "" + latLng.longitude;
+            p.desc = "User is here: ";
+            userData.getInstance().updateUserPosition(LoggedUser.email, p);
                 //Toast.makeText(this, "Usao u latlong", Toast.LENGTH_SHORT );
 
         }
@@ -513,38 +520,64 @@ public class NotificationService extends IntentService implements MapObjectData.
     }
 
     @Override
-    public void onMapObejctAdded(MapObject obj) {
+    public void onMapObjectAdded(MapObject obj, boolean novi) {
 
        // numberOfObjectNotis++;
         Position p = obj.position;
+        if(novi) {
+            float res[] = new float[5];
+            Location.distanceBetween(latLng.latitude, latLng.longitude, Double.parseDouble(obj.position.latitude), Double.parseDouble(obj.position.longitude), res);
 
-        float res[] = new float[5];
-        Location.distanceBetween(latLng.latitude, latLng.longitude, Double.parseDouble(obj.position.latitude), Double.parseDouble(obj.position.longitude), res);
+            if (res[0] < 1000) {
 
-        if (res[0] < 1000)
+                SharedPreferences sharedPref = getApplicationContext().getSharedPreferences(
+                        getString(R.string.NotiObjects), Context.MODE_PRIVATE);
+                int numOfNotis = sharedPref.getInt(getString(R.string.NotiObjectsNumber), 0);
+
+                SharedPreferences.Editor editor = sharedPref.edit();
+
+
+                editor.putString(getString(R.string.NotiObjectsFromUser) + numOfNotis, obj.createdBy);
+                editor.putString(getString(R.string.NotiObjectsDate) + numOfNotis, Calendar.getInstance().getTime().toString());
+
+                numOfNotis++;
+                editor.putInt(getString(R.string.NotiObjectsNumber), numOfNotis);
+
+                editor.commit();
+
+                if (myObjectListener != null)
+                    notifyObjectNoti();
+
+                Intent i =  new Intent(getApplicationContext(), MainActivity.class);
+                i.putExtra("objekaat", obj);
+                sendNotif("notify_" + "mapobjects", "walkhikw_mapobjects", 500, "Someone added an object near you!",
+                        "Obejct near you!", "Near you", "Object near you!", i);
+
+            }
+        }
+        else
         {
+            if(obj.createdBy.compareTo(LoggedUser.username) == 0)
+            {
+                SharedPreferences sharedPref = getApplicationContext().getSharedPreferences(
+                        getString(R.string.NotiObjects), Context.MODE_PRIVATE);
+                SharedPreferences.Editor editor = sharedPref.edit();
 
-            SharedPreferences sharedPref = getApplicationContext().getSharedPreferences(
-                    getString(R.string.NotiObjects), Context.MODE_PRIVATE);
-            int numOfNotis = sharedPref.getInt(getString(R.string.NotiObjectsNumber), 0);
+                int numOfNotis = sharedPref.getInt(getString(R.string.NotiObjectsNumber) + "reactions", 0);
+                editor.putString(getString(R.string.NotiObjectsDate)+ "reactions" + numOfNotis, Calendar.getInstance().getTime().toString());
+                numOfNotis++;
 
-            SharedPreferences.Editor editor = sharedPref.edit();
+                editor.putInt(getString(R.string.NotiObjectsNumber)+ "reactions", numOfNotis);
 
+                editor.commit();
 
-             //editor.putString(getString(R.string.NotiObjectsFromUser) + numOfNotis, );
-            editor.putString(getString(R.string.NotiObjectsDate) + numOfNotis, Calendar.getInstance().getTime().toString());
+                Intent i =  new Intent(getApplicationContext(), MainActivity.class);
+                i.putExtra("objekaat", obj);
 
-            numOfNotis++;
-            editor.putInt(getString(R.string.NotiObjectsNumber), numOfNotis);
+                sendNotif("notify_" + "mapobjects", "walkhikw_mapobjects", 600, "Someone reacted to your object!",
+                        "Someone reacted to your object!", "Someone reacted to your object!", "Someone reacted to your object!",i);
 
-            editor.commit();
-
-            if(myObjectListener != null)
-                notifyObjectNoti();
-
-            sendNotif("notify_"+"mapobjects" , "walkhikw_mapobjects",500 , "Someone added an object near you!",
-                    "Obejct near you!", "Near you", "Object near you!", new Intent(getApplicationContext(), MainActivity.class));
-
+            }
         }
     }
 

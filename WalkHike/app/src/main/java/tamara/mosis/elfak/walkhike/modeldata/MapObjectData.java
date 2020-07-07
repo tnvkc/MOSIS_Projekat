@@ -1,12 +1,10 @@
 package tamara.mosis.elfak.walkhike.modeldata;
 
-import android.graphics.Bitmap;
 import android.location.Location;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import com.google.android.gms.maps.model.LatLng;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -14,15 +12,12 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-import java.nio.charset.Charset;
 import java.text.DateFormat;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 public class MapObjectData {
@@ -58,10 +53,23 @@ public class MapObjectData {
     public ArrayList<MapObject> getFriendsMapObjects(String loggedUserUsername) {
 
         ArrayList<MapObject> list = new ArrayList<>();
+
+        User currentUser = UserData.getInstance().getUserByUsername(loggedUserUsername);
+        ArrayList<User> friendsUsers = FriendshipData.getInstance().GetUserFriends(currentUser.email);
+
+        ArrayList<String> friendsUsernames = new ArrayList<>();
+
+        for (int i = 0; i < friendsUsers.size(); i++) {
+            friendsUsernames.add(friendsUsers.get(i).username);
+        }
+
         for(int i = 0; i< this.MapObjects.size(); i++)
         {
-            if((this.MapObjects.get(i).createdBy.compareTo(loggedUserUsername) == 0) ||
-                    (this.MapObjects.get(i).sharedWith.compareTo(loggedUserUsername) == 0))
+            MapObject mo = MapObjects.get(i);
+            if(
+                    (mo.createdBy.compareTo(loggedUserUsername) == 0) ||
+                            (mo.isPublic && friendsUsernames.contains(mo.createdBy)) ||
+                            (mo.sharedWith.compareTo(loggedUserUsername) == 0))
             {
                 list.add(MapObjects.get(i));
             }
@@ -233,7 +241,7 @@ public class MapObjectData {
         this.liistener = lis;
     }
     public interface MapObjectAddedListener{
-        void onMapObejctAdded(MapObject obj);
+        void onMapObjectAdded(MapObject obj, boolean novi);
     }
 
     ReadyEventListener probaList;
@@ -277,7 +285,7 @@ public class MapObjectData {
 
                 if(liistener != null)
                 {
-                    liistener.onMapObejctAdded(myMapObject);
+                    liistener.onMapObjectAdded(myMapObject, true);
                 }
             }
         }
@@ -296,6 +304,11 @@ public class MapObjectData {
             }
             if (updateListener != null)
                 updateListener.onListUpdated();
+
+            if(liistener != null)
+            {
+                liistener.onMapObjectAdded(myMapObject, false);
+            }
         }
 
         @Override

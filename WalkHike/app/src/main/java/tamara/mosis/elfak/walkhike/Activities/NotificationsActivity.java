@@ -153,6 +153,16 @@ public class NotificationsActivity extends AppCompatActivity implements Notifica
             notifications.add(notification1);
         }
 
+        numOfNotis = sharedPref.getInt(getString(R.string.NotiObjectsNumber) + "reactions", 0);
+
+        for(int i = 0; i< numOfNotis; i++)
+        {
+
+            String dateNoti = sharedPref.getString(getString(R.string.NotiObjectsDate) + "reactions" + i, "EMPTY");
+            Notification notification1 = new Notification(2, "Someone rected to your object!", dateNoti);
+            notifications.add(notification1);
+        }
+
 
         /////////////
         notifications.sort(new Comparator<Notification>() {
