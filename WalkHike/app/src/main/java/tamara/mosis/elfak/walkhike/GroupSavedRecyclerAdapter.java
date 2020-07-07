@@ -60,20 +60,25 @@ public class GroupSavedRecyclerAdapter extends RecyclerView.Adapter<GroupSavedRe
                 (new View.OnClickListener() {
                     @Override
                     public void onClick(final View view) {
-                        /*SharedPreferences sharedPref = context.getSharedPreferences(
+                        SharedPreferences sharedPref = context.getSharedPreferences(
                                 context.getString(R.string.SavedRoutesShared), Context.MODE_PRIVATE);
+                        int num = sharedPref.getInt( context.getString(R.string.NumberOfSavedGroup), 0);
 
                         SharedPreferences.Editor editor = sharedPref.edit();
 
-                        int num = sharedPref.getInt(context.getString(R.string.NumberOfSavedGroup) + imeGrupe, 0);
 
-                        String id = objectTag;
-                        editor.putString(context.getString(R.string.SavedRoute) + imeGrupe + num, id);
-                        num++;
-                        editor.putInt(context.getString(R.string.NumberOfSavedGroup) + imeGrupe, num);
 
-                        editor.commit();*/
-                        Toast.makeText(context, "Group " + groupslist.get(position), Toast.LENGTH_SHORT).show();
+                        for(int i = 0; i<num; i++)
+                        {
+                            editor.remove( context.getString(R.string.SavedRoute) + imeGrupe + i);
+
+                        }
+
+                        editor.putInt( context.getString(R.string.NumberOfSavedGroup)+ imeGrupe, 0);
+
+
+                        editor.commit();
+                        Toast.makeText(context, "Group " + groupslist.get(position) + " cleared", Toast.LENGTH_SHORT).show();
                         // removeItem(holder.getAdapterPosition());
                         //  groupslist.remove(position);
                     }

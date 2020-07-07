@@ -236,7 +236,7 @@ public class Probe_Friendship_Activity extends AppCompatActivity  {
             @Override
             public void onClick(View v) {
 
-                Scores p = scoresData.getInstance().getScore(0);
+               // Scores p = scoresData.getInstance().getScore(0);
                 DateFormat format = new SimpleDateFormat("ddMMyyyyhhmmss");
                 Date currentDate = Calendar.getInstance().getTime();
 
@@ -245,7 +245,7 @@ public class Probe_Friendship_Activity extends AppCompatActivity  {
                 Date objectDateMonth = null;
 
 
-                try {
+                /*try {
                     objectDate = format.parse(p.datetimeWeek);
 
 
@@ -287,7 +287,24 @@ public class Probe_Friendship_Activity extends AppCompatActivity  {
                         }
 
                         scoresData.getInstance().updateResetScoresMonthly(newUpdateDate, reset);
-                    }
+
+                    }*/
+
+
+
+
+                ArrayList<User> useri = UserData.getInstance().getUsers();
+                Scores s ;
+                for(int i =0; i< useri.size(); i++) {
+                    s = new Scores();
+                    s.useer = useri.get(i).username;
+                    s.datetimeWeek = new SimpleDateFormat("ddMMyyyyhhmmss").format(Calendar.getInstance().getTime());
+                    s.datetimeMonth =new SimpleDateFormat("ddMMyyyyhhmmss").format(Calendar.getInstance().getTime());
+
+
+                    scoresData.getInstance().AddScore(s);
+                }
+
 
 
 
@@ -304,9 +321,9 @@ public class Probe_Friendship_Activity extends AppCompatActivity  {
 
                     }*/
 
-                } catch (Exception e) {
+               /* } catch (Exception e) {
 
-                }
+                }*/
 
             }
         });

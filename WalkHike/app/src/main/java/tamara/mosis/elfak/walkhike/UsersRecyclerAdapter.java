@@ -104,7 +104,7 @@ public class UsersRecyclerAdapter extends RecyclerView.Adapter<UsersRecyclerAdap
             public  void onClick(View view)
             {
                 Intent intent=new Intent(context, FriendProfileActivity.class);
-                //intent.putExtra("","");//proslediti odgovarajuceg prijatelja
+                intent.putExtra("username",usersList.get(position).username);//proslediti odgovarajuceg prijatelja
                 context.startActivity(intent);
             }
         });

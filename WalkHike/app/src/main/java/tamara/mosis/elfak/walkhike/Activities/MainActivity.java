@@ -260,11 +260,12 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
         /////////
         int indexx  = sharedPref.getInt(getString(R.string.loggedUser_index), -1);
         skorovi = scoresData.getInstance().getScores();
-        if(indexx != -1) {
-            loggedUser = userData.getInstance().getUser(indexx);
+        loggedUser = userData.getInstance().getUser(emaill);
+       /*if(indexx != -1) {
+
             if (loggedUser.email.compareTo(emaill) == 0)
                 Toast.makeText(getApplicationContext(), "Welcome " + username + ", " + emaill + "!", Toast.LENGTH_SHORT).show();
-        }
+        }*/
 
         this.loggedUsername = username;
 

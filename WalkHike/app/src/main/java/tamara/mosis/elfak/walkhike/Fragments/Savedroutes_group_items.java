@@ -94,7 +94,7 @@ public class Savedroutes_group_items extends Fragment {
         prikaz = view.findViewById(R.id.savedroutes_groupitems_textview);
         popuniObjekte();
         rec = view.findViewById(R.id.saved_routes_groupitems_recView);
-       //prikaz.setText("OVO JE FRAGMENT");
+        prikaz.setText("");
 
         recAdapter=new GroupItemsRecyclerAdapter(view.getContext(), objekti , groupName);
 
@@ -126,6 +126,10 @@ public class Savedroutes_group_items extends Fragment {
                 if(objectId.compareTo("EMPTY") != 0)
                     objekti.add(objectId);
             }
+        }
+        if(numm == 0)
+        {
+            prikaz.setText("You don't have any items in this group!");
         }
 
 

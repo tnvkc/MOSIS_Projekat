@@ -13,19 +13,19 @@
             android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp"
             android:text="TextView"
-            android:textSize="14dp" />
+            android:textSize="16dp" />
 
         <TextView
             android:id="@+id/add_group_btn"
             android:layout_width="20dp"
             android:layout_height="20dp"
             android:layout_alignParentRight="true"
-            android:layout_marginLeft="130dp"
-            android:layout_marginRight="36dp"
+            android:layout_marginLeft="100dp"
+            android:layout_marginRight="10dp"
             android:layout_toRightOf="@id/textview_groupname"
             android:includeFontPadding="false"
             android:text="+"
-            android:textSize="18sp" />
+            android:textSize="16sp" />
 
 
     </RelativeLayout>

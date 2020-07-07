@@ -3,6 +3,8 @@ package tamara.mosis.elfak.walkhike.Activities;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.appcompat.widget.Toolbar;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -10,7 +12,15 @@ import android.view.MenuItem;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import java.util.ArrayList;
+
+import tamara.mosis.elfak.walkhike.GroupItemsRecyclerAdapter;
+import tamara.mosis.elfak.walkhike.MapObjectRecyclerAdapter;
 import tamara.mosis.elfak.walkhike.R;
+import tamara.mosis.elfak.walkhike.modeldata.MapObject;
+import tamara.mosis.elfak.walkhike.modeldata.MapObjectData;
+import tamara.mosis.elfak.walkhike.modeldata.Scores;
+import tamara.mosis.elfak.walkhike.modeldata.ScoresData;
 import tamara.mosis.elfak.walkhike.modeldata.User;
 import tamara.mosis.elfak.walkhike.modeldata.UserData;
 
@@ -19,6 +29,11 @@ public class FriendProfileActivity extends AppCompatActivity {
     Toolbar toolbar;
 
     User user;
+
+    Scores score;
+    ArrayList<MapObject> objekti;
+    RecyclerView rec;
+    private MapObjectRecyclerAdapter recAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,8 +57,21 @@ public class FriendProfileActivity extends AppCompatActivity {
         String username = intent.getStringExtra("username");
 
         user = UserData.getInstance().getUserByUsername(username);
+        score = ScoresData.getInstance().getScore(username);
+        objekti = MapObjectData.getInstance().getFriendsMapObjects(username);
 
         FillUserData();
+
+        rec = findViewById(R.id.friends_profile_listview);
+        //prikaz.setText("OVO JE FRAGMENT");
+
+        recAdapter=new MapObjectRecyclerAdapter(getApplicationContext(), objekti );
+
+
+        rec.setHasFixedSize(true);
+        rec.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
+
+        rec.setAdapter(recAdapter);
 
     }
 
@@ -61,10 +89,14 @@ public class FriendProfileActivity extends AppCompatActivity {
         ImageView profile_photo = findViewById(R.id.friend_profile_profilePhoto);
         TextView username = findViewById(R.id.friend_profile_username);
         TextView total_distance = findViewById(R.id.friend_profile_total_distance);
-        TextView messages = findViewById(R.id.friend_profile_messages);
+        //TextView messages = findViewById(R.id.friend_profile_messages);
         TextView pictures = findViewById(R.id.friend_profile_pictures);
         TextView bio = findViewById(R.id.friend_profile_bio_text);
 
+        total_distance.setText("Total: distance: "+ score.alltimeDistance + ", activity: " + score.alltimeActivity);
+        pictures.setText("Total object: "+objekti.size());
+
         username.setText(user.username);
+        bio.setText(user.desc);
     }
 }

@@ -19,9 +19,13 @@ import android.widget.Toast;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
+import java.util.ArrayList;
+
 import tamara.mosis.elfak.walkhike.Fragments.FriendsFragment;
 import tamara.mosis.elfak.walkhike.R;
 import tamara.mosis.elfak.walkhike.UsersRecyclerAdapter;
+import tamara.mosis.elfak.walkhike.modeldata.MapObject;
+import tamara.mosis.elfak.walkhike.modeldata.Scores;
 
 public class FriendslistActivity extends AppCompatActivity {
 

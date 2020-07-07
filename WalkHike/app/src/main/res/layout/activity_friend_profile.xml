@@ -52,12 +52,7 @@
             android:text="Total distance:"
             android:layout_marginBottom="5dp"/>
 
-        <TextView
-            android:id="@+id/friend_profile_messages"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Messages:"
-            android:layout_marginBottom="5dp" />
+
 
         <TextView
             android:id="@+id/friend_profile_pictures"
@@ -101,15 +96,15 @@
         android:textSize="20sp"
         android:textStyle="bold" />
 
-    <ListView
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/friends_profile_listview"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginStart="30dp"
-        android:layout_marginEnd="30dp"
-        android:layout_marginTop="5dp"
-        android:layout_marginBottom="5dp"
+        android:layout_height="277dp"
         android:layout_below="@+id/friend_profile_checkpoints"
-        android:layout_centerHorizontal="true"
         android:layout_alignParentBottom="true"
-        />
+        android:layout_centerHorizontal="true"
+        android:layout_marginStart="0dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginEnd="0dp"
+        android:layout_marginBottom="14dp" />
 </RelativeLayout>

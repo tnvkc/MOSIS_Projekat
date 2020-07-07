@@ -13,6 +13,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.TextView;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -37,7 +38,7 @@ public class CompletedRoutesActivity extends AppCompatActivity {
     RecyclerView rec;
     TextView prikaz;
 
-    private ViewPager viewvpager_groups;
+    private View viewvpager_groups;
 
 
 
@@ -54,15 +55,10 @@ public class CompletedRoutesActivity extends AppCompatActivity {
         //
         //popuniObjekte();
 
-        viewvpager_groups = (ViewPager) findViewById(R.id.savedroutes_viewpager);
-        Leaderboards_Activity_Distance_ViewPagerAdapter viewPagerAdapter = new Leaderboards_Activity_Distance_ViewPagerAdapter(getSupportFragmentManager(), FragmentPagerAdapter.BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT);
-        viewPagerAdapter.AddFragment(new SavedRoutesGroupsFragment(), "Groups");
-        viewPagerAdapter.AddFragment(new Savedroutes_group_items("Prva grupa"), "Group 1"); //ovo se pojavljuje za svaku grupu
-
-
-
-
-        viewvpager_groups.setAdapter(viewPagerAdapter);
+        viewvpager_groups = (View) findViewById(R.id.savedroutes_viewpager);
+        SavedRoutesGroupsFragment firstFragment = new SavedRoutesGroupsFragment();
+        getSupportFragmentManager().beginTransaction()
+                .add(R.id.savedroutes_viewpager, firstFragment).commit();
 
        /* */
 
