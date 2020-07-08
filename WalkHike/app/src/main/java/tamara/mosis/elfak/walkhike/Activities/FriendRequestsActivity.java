@@ -40,7 +40,7 @@ public class FriendRequestsActivity extends AppCompatActivity {
         buttonDone.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(getApplicationContext(), "heloo", Toast.LENGTH_SHORT).show();
+                //Toast.makeText(getApplicationContext(), "heloo", Toast.LENGTH_SHORT).show();
                 finish();
             }
         });

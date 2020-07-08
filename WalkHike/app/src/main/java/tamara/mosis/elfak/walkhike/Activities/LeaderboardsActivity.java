@@ -84,6 +84,8 @@ public class LeaderboardsActivity extends AppCompatActivity {
         });
 
 
+
+
         //activity/distance tab-ovi:
 
         leaderboards_tablayout_activity_distance = (TabLayout) findViewById(R.id.tablayout_activity_distance);
@@ -95,4 +97,18 @@ public class LeaderboardsActivity extends AppCompatActivity {
         leaderboards_viewpager_activity_distance.setAdapter(viewPagerAdapter);
         leaderboards_tablayout_activity_distance.setupWithViewPager(leaderboards_viewpager_activity_distance);
     }
+
+  /*  @Override
+    public void onBackPressed() {
+
+        if (bottom_navigation_menu.getSelectedItemId() == R.id.map)
+        {
+            super.onBackPressed();
+            finish();
+        }
+        else
+        {
+            bottom_navigation_menu.setSelectedItemId(R.id.map);
+        }
+    }*/
 }

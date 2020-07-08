@@ -187,7 +187,7 @@ public class ScoresData {
         Scores uu = new Scores();
         for(int i =0; i< this.Scores.size(); i++)
         {
-            if(this.Scores.get(i).useer.compareTo(u.email) ==0)
+            if(this.Scores.get(i).useer.compareTo(u.username) ==0)
             {
                 uu = this.Scores.get(i);
             }
@@ -216,14 +216,15 @@ public class ScoresData {
             }
         }
 
+        if(uu != null) {
+
+            uu.weeklyActivity += additionalScoreActivity;
+            uu.monthlyActivity += additionalScoreActivity;
+            uu.alltimeActivity += additionalScoreActivity;
 
 
-        uu.weeklyActivity +=additionalScoreActivity;
-        uu.monthlyActivity +=additionalScoreActivity;
-        uu.alltimeActivity +=additionalScoreActivity;
-
-
-        db.child(FIREBASE_CHILD).child(uu.key).setValue(uu);
+            db.child(FIREBASE_CHILD).child(uu.key).setValue(uu);
+        }
 
     }
 
@@ -291,7 +292,7 @@ public class ScoresData {
         Scores uu = null;
         for(int i =0; i< this.Scores.size(); i++)
         {
-            if(this.Scores.get(i).useer.compareTo(u.email) ==0)
+            if(this.Scores.get(i).useer.compareTo(u.username) ==0)
             {
                 uu = this.Scores.get(i);
             }

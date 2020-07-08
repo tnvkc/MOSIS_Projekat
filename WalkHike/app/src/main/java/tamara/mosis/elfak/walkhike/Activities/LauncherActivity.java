@@ -120,6 +120,7 @@ public class LauncherActivity extends AppCompatActivity implements
             if(sviDataok == 5)
             {
                 go();
+                sviDataok = 0;
             }
     }
 }

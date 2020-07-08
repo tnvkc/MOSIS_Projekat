@@ -254,50 +254,54 @@ public class Probe extends AppCompatActivity {
         btnStopService.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-               // Toast.makeText(getApplicationContext(), "Stop service! ", Toast.LENGTH_SHORT).show();
-               //Intent i = new Intent(getApplicationContext(), NotificationService.class);
+                // Toast.makeText(getApplicationContext(), "Stop service! ", Toast.LENGTH_SHORT).show();
+                //Intent i = new Intent(getApplicationContext(), NotificationService.class);
 
                 //stopService(i);
+                SharedPreferences sharedPref = getApplicationContext().getSharedPreferences("Userdata", Context.MODE_PRIVATE);
+                Boolean sound = sharedPref.getBoolean(getString(R.string.loggedUser_sound), true);
+                Boolean notii = sharedPref.getBoolean(getString(R.string.loggedUser_notifications), true);
 
 
+                if (notii) {
+                    NotificationCompat.Builder mBuilder =
+                            new NotificationCompat.Builder(getApplicationContext(), "notify_001");
+                    Intent ii = new Intent(getApplicationContext(), MainActivity.class);
+                    PendingIntent pendingIntent = PendingIntent.getActivity(getApplicationContext(), 0, ii, 0);
 
-                NotificationCompat.Builder mBuilder =
-                        new NotificationCompat.Builder(getApplicationContext(), "notify_001");
-                Intent ii = new Intent(getApplicationContext(), MainActivity.class);
-                PendingIntent pendingIntent = PendingIntent.getActivity(getApplicationContext(), 0, ii, 0);
+                    NotificationCompat.BigTextStyle bigText = new NotificationCompat.BigTextStyle();
+                    bigText.bigText("Someone wants to be your friend");
+                    bigText.setBigContentTitle("New friend request");
 
-                NotificationCompat.BigTextStyle bigText = new NotificationCompat.BigTextStyle();
-                bigText.bigText("Someone wants to be your friend");
-                bigText.setBigContentTitle("New friend request");
+                    mBuilder.setContentIntent(pendingIntent);
+                    mBuilder.setSmallIcon(R.mipmap.ic_launcher);
+                    mBuilder.setContentTitle("Request");
+                    mBuilder.setContentText("friend request");
+                    mBuilder.setPriority(android.app.Notification.PRIORITY_MAX);
+                    mBuilder.setStyle(bigText);
 
-                mBuilder.setContentIntent(pendingIntent);
-                mBuilder.setSmallIcon(R.mipmap.ic_launcher);
-                mBuilder.setContentTitle("Request");
-                mBuilder.setContentText("friend request");
-                mBuilder.setPriority(android.app.Notification.PRIORITY_MAX);
-                mBuilder.setStyle(bigText);
+                    mNotificationManager =
+                            (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 
-                mNotificationManager =
-                        (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+                    // === Removed some obsoletes
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                        String channelId = "walkhikw_friends";
+                        NotificationChannel channel = new NotificationChannel(
+                                channelId,
+                                "walkhikw_friends",
+                                NotificationManager.IMPORTANCE_DEFAULT);
+                        if(!sound)
+                            channel.setSound(null, null);
 
-                // === Removed some obsoletes
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
-                {
-                    String channelId = "walkhikw_friends";
-                    NotificationChannel channel = new NotificationChannel(
-                            channelId,
-                            "walkhikw_friends",
-                            NotificationManager.IMPORTANCE_HIGH);
-                    channel.setSound(null,null);
-                    mNotificationManager.createNotificationChannel(channel);
-                    mBuilder.setChannelId(channelId);
+                        mNotificationManager.createNotificationChannel(channel);
+                        mBuilder.setChannelId(channelId);
+                    } else {
+                        if(!sound)
+                            mBuilder.setSound(null);
+                    }
+
+                    mNotificationManager.notify(0, mBuilder.build());
                 }
-                else
-                {
-                    mBuilder.setSound(null);
-                }
-
-                mNotificationManager.notify(0, mBuilder.build());
             }
         });
 

@@ -149,6 +149,7 @@ public class ProfileActivity extends AppCompatActivity {
 
                         if(firebaseUser != null)
                         {
+                            sharedPref = getApplicationContext().getSharedPreferences( "Userdata", Context.MODE_PRIVATE);
                             SharedPreferences.Editor editor = sharedPref.edit();
 
                             editor.remove(getString(R.string.loggedUser_email));
