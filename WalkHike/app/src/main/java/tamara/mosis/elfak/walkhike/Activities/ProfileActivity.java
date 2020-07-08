@@ -158,7 +158,11 @@ public class ProfileActivity extends AppCompatActivity {
                             editor.remove(getString(R.string.loggedUser_index));
                             editor.commit();
 
+                            clearAllShared();
+
                             mfirebaseAuth.signOut();
+
+
 
                             Toast.makeText(getApplicationContext(), "LOGGED OUT", Toast.LENGTH_SHORT).show();
 
@@ -206,5 +210,79 @@ public class ProfileActivity extends AppCompatActivity {
                 break;
             }
         }
+    }
+
+    void clearAllShared()
+    {
+        SharedPreferences sharedPref = getApplicationContext().getSharedPreferences(
+                getString(R.string.NotificationsFriend), Context.MODE_PRIVATE);
+        int numOfNotis = sharedPref.getInt(getString(R.string.NotificationsNumber), 0);
+
+        SharedPreferences.Editor editor = sharedPref.edit();
+        for(int i = 0; i< numOfNotis; i++)
+        {
+            editor.remove(getString(R.string.NotificationsFromUser) + i);
+            editor.remove(getString(R.string.NotificationsDate) + i);
+
+        }
+        editor.putInt(getString(R.string.NotificationsNumber), 0);
+        editor.commit();
+
+
+        SharedPreferences sharedPref2 = getApplicationContext().getSharedPreferences(
+                getString(R.string.NotiObjects), Context.MODE_PRIVATE);
+        numOfNotis = sharedPref.getInt(getString(R.string.NotiObjectsNumber), 0);
+        editor = sharedPref2.edit();
+
+        for(int i = 0; i< numOfNotis; i++)
+        {
+
+            editor.remove(getString(R.string.NotiObjectsFromUser) + i);
+            editor.remove(getString(R.string.NotiObjectsDate) + i);
+        }
+        editor.putInt(getString(R.string.NotiObjectsNumber), 0);
+
+        numOfNotis = sharedPref2.getInt(getString(R.string.NotiObjectsNumber) + "reactions", 0);
+
+        for(int i = 0; i< numOfNotis; i++)
+        {
+
+            editor.remove(getString(R.string.NotiObjectsDate) + "reactions" + i);
+        }
+        editor.putInt(getString(R.string.NotiObjectsNumber) + "reactions", 0);
+        editor.commit();
+
+
+        sharedPref = getSharedPreferences(
+                getString(R.string.SavedRoutesShared), Context.MODE_PRIVATE);
+
+        int numm= sharedPref.getInt( getString(R.string.NumberOfSavedTotal), 0);
+        editor = sharedPref.edit();
+
+        for(int j = 0; j < numm; j++)
+        {
+            String s = sharedPref.getString(getString(R.string.SavedRoutesGroup) + j, "EMPTY");
+            if(s.compareTo("EMPTY") != 0){
+                int num = sharedPref.getInt( getString(R.string.NumberOfSavedGroup) + s, 0);
+                for(int i = 0; i<num; i++)
+                {
+                    editor.remove(getString(R.string.SavedRoute) + s + i);
+
+                }
+
+                editor.remove(getString(R.string.SavedRoutesGroup) + j);
+                editor.remove(getString(R.string.NumberOfSavedGroup) + s);
+
+
+            }
+
+        }
+
+        editor.remove( getString(R.string.NumberOfSavedTotal));
+
+
+        editor.commit();
+
+
     }
 }
