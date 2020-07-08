@@ -2,6 +2,8 @@ package tamara.mosis.elfak.walkhike.Activities;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatDelegate;
+
+import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.FragmentActivity;
 
 import android.app.Activity;
@@ -49,6 +51,8 @@ public class AddNewObjectActivity extends FragmentActivity implements View.OnCli
     StorageReference storageReference;
 
     String firestorageUri = null;
+
+    Toolbar toolbar;
 
     private int state = 0;
     Button btnPrev, btnNext;
@@ -124,6 +128,13 @@ public class AddNewObjectActivity extends FragmentActivity implements View.OnCli
 
         storage = FirebaseStorage.getInstance();
         storageReference = storage.getReference();
+
+        toolbar = (Toolbar) findViewById(R.id.add_object_toolbar);
+//        setSupportActionBar(toolbar);
+//
+//        getSupportActionBar().setDisplayShowTitleEnabled(true);
+//        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+//        getSupportActionBar().setDisplayShowHomeEnabled(true);
 
         progressBar = findViewById(R.id.progressBar);
         progressBar.setMax(300);

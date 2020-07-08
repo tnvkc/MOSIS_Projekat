@@ -9,9 +9,10 @@
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/add_object_toolbar"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:minHeight="?attr/actionBarSize"
-        android:background="?attr/toolbarColor">
+        android:layout_height="?attr/actionBarSize"
+        android:layout_alignParentTop="true"
+        android:background="?attr/toolbarColor"
+        android:minHeight="?attr/actionBarSize">
     </androidx.appcompat.widget.Toolbar>
 
    <ProgressBar
