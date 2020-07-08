@@ -51,7 +51,7 @@ import tamara.mosis.elfak.walkhike.modeldata.User;
 import tamara.mosis.elfak.walkhike.modeldata.UserData;
 
 public class NotificationService extends IntentService implements MapObjectData.MapObjectAddedListener,FriendshipData.NewItemListUpdatedEventListener,
-        ScoresData.ListUpdatedEventListener,    GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener {
+        ScoresData.ListUpdatedEventListener,    GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener , UserData.onUpdateUserListener{
 
     boolean running = false;
     int timeee = 5;
@@ -120,6 +120,7 @@ public class NotificationService extends IntentService implements MapObjectData.
         MoD.getInstance().setNewObejctListener(this);
         friendshipData.getInstance().setNewItemEventListener(this);
         scoresData.getInstance().setEventListener(this);
+        userData.getInstance().setUserPostListener(this);
 
         Log.v("timer", "service started");
         meters = 0;
@@ -201,6 +202,8 @@ public class NotificationService extends IntentService implements MapObjectData.
         MoD.getInstance().setNewObejctListener(null);
         friendshipData.getInstance().setNewItemEventListener(null);
         scoresData.getInstance().setEventListener(null);
+
+        userData.getInstance().setUserPostListener(null);
         Log.v("timer", "service destroyed");
     }
 
@@ -577,38 +580,41 @@ public class NotificationService extends IntentService implements MapObjectData.
             float res[] = new float[5];
             Location.distanceBetween(latLng.latitude, latLng.longitude, Double.parseDouble(obj.position.latitude), Double.parseDouble(obj.position.longitude), res);
 
-            if (res[0] < 1000) {
+            if(  (obj.isPublic && friendsUsers.contains(obj.createdBy)) ||
+                    (!obj.isPublic && obj.sharedWith.compareTo(LoggedUser.username) == 0)) {
+                if (res[0] < 1000) {
 
-                SharedPreferences sharedPref = getApplicationContext().getSharedPreferences(
-                        getString(R.string.NotiObjects), Context.MODE_PRIVATE);
-                int numOfNotis = sharedPref.getInt(getString(R.string.NotiObjectsNumber), 0);
+                    SharedPreferences sharedPref = getApplicationContext().getSharedPreferences(
+                            getString(R.string.NotiObjects), Context.MODE_PRIVATE);
+                    int numOfNotis = sharedPref.getInt(getString(R.string.NotiObjectsNumber), 0);
 
-                SharedPreferences.Editor editor = sharedPref.edit();
+                    SharedPreferences.Editor editor = sharedPref.edit();
 
 
-                editor.putString(getString(R.string.NotiObjectsFromUser) + numOfNotis, obj.createdBy);
-                editor.putString(getString(R.string.NotiObjectsDate) + numOfNotis, Calendar.getInstance().getTime().toString());
+                    editor.putString(getString(R.string.NotiObjectsFromUser) + numOfNotis, obj.createdBy);
+                    editor.putString(getString(R.string.NotiObjectsDate) + numOfNotis, Calendar.getInstance().getTime().toString());
 
-                numOfNotis++;
-                editor.putInt(getString(R.string.NotiObjectsNumber), numOfNotis);
+                    numOfNotis++;
+                    editor.putInt(getString(R.string.NotiObjectsNumber), numOfNotis);
 
-                editor.commit();
+                    editor.commit();
 
-                if (myObjectListener != null)
-                    notifyObjectNoti();
+                    if (myObjectListener != null)
+                        notifyObjectNoti();
 
-                Intent i =  new Intent(getApplicationContext(), MainActivity.class);
-                i.putExtra("objekaat", obj);
+                    Intent i = new Intent(getApplicationContext(), MainActivity.class);
+                    i.putExtra("objekaat", obj);
 
-                SharedPreferences sharedPref1 = getApplicationContext().getSharedPreferences("Userdata", Context.MODE_PRIVATE);
-                Boolean sound = sharedPref1.getBoolean(getString(R.string.loggedUser_sound), true);
-                Boolean notii = sharedPref1.getBoolean(getString(R.string.loggedUser_notifications), true);
+                    SharedPreferences sharedPref1 = getApplicationContext().getSharedPreferences("Userdata", Context.MODE_PRIVATE);
+                    Boolean sound = sharedPref1.getBoolean(getString(R.string.loggedUser_sound), true);
+                    Boolean notii = sharedPref1.getBoolean(getString(R.string.loggedUser_notifications), true);
 
-                if(notii) {
-                    sendNotif("notify_" + "mapobjects", "walkhikw_mapobjects", 500, "Someone added an object near you!",
-                            "Obejct near you!", "Near you", "Object near you!", i, sound);
+                    if (notii) {
+                        sendNotif("notify_" + "mapobjects", "walkhikw_mapobjects", 500, "Someone added an object near you!",
+                                "Obejct near you!", "Near you", "Object near you!", i, sound);
+                    }
+
                 }
-
             }
         }
         else
@@ -661,6 +667,8 @@ public class NotificationService extends IntentService implements MapObjectData.
         myListener.onNewFriendship();
     }
 
+
+
     public interface ListenerForFriendNotis{
         void onNewFriendship();
     }
@@ -689,7 +697,10 @@ public class NotificationService extends IntentService implements MapObjectData.
 
 
 
-
+    @Override
+    public void onUserUpdated() {
+        findNearbyUsers();
+    }
 
 
 

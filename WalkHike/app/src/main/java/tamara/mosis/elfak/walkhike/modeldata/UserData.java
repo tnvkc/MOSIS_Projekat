@@ -55,6 +55,13 @@ public class UserData {
         void onUserAdded(String username);
     }
 
+    tamara.mosis.elfak.walkhike.modeldata.UserData.onUpdateUserListener updateUserListener;
+    public void setUserPostListener(tamara.mosis.elfak.walkhike.modeldata.UserData.onUpdateUserListener listener) {
+        updateUserListener = listener;
+    }
+    public interface onUpdateUserListener {
+        void onUserUpdated();
+    }
 
     ReadyEventListener probaList;
     public void setReadyList(ReadyEventListener listener) {
@@ -112,6 +119,11 @@ public class UserData {
             }
             if (updateListener != null) {
                 updateListener.onSingleUserUpdated(myUser.username);
+            }
+
+            if(updateUserListener != null)
+            {
+                updateUserListener.onUserUpdated();
             }
         }
 
