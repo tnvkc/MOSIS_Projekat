@@ -111,8 +111,7 @@ public class CompletedRoutesActivity extends AppCompatActivity {
         getSupportActionBar().setTitle("Saved objects");
 
         getSupportActionBar().setDisplayShowTitleEnabled(true);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setDisplayShowHomeEnabled(true);
+
 
         //prikaz = findViewById(R.id.savedroutes_textview);
         //

@@ -42,8 +42,7 @@ public class LeaderboardsActivity extends AppCompatActivity {
         getSupportActionBar().setTitle("Leaderboards");
 
         getSupportActionBar().setDisplayShowTitleEnabled(true);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setDisplayShowHomeEnabled(true);
+
 
         bottom_navigation_menu = findViewById(R.id.bottom_navigation_menu);
         bottom_navigation_menu.setSelectedItemId(R.id.leaderboard);

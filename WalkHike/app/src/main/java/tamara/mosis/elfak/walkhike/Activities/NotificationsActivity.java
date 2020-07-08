@@ -49,8 +49,7 @@ public class NotificationsActivity extends AppCompatActivity implements Notifica
         getSupportActionBar().setTitle("Notifications");
 
         getSupportActionBar().setDisplayShowTitleEnabled(true);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setDisplayShowHomeEnabled(true);
+
 
         notification_list = findViewById(R.id.notification_list);
 
