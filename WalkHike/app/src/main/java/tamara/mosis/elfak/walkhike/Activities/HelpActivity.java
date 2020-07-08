@@ -4,8 +4,18 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.appcompat.widget.Toolbar;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import org.w3c.dom.Text;
 
 import tamara.mosis.elfak.walkhike.R;
 
@@ -14,6 +24,8 @@ public class HelpActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         Toolbar toolbar;
+        Button sendBtn;
+        EditText txtQuestion;
 
         super.onCreate(savedInstanceState);
         if (AppCompatDelegate.getDefaultNightMode() == AppCompatDelegate.MODE_NIGHT_YES)
@@ -28,6 +40,35 @@ public class HelpActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayShowTitleEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
+
+        txtQuestion=findViewById(R.id.editTextQuestion);
+        sendBtn=findViewById(R.id.buttonSendQuestion);
+        sendBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                    String[] TO = {"dragana.korunovic@gmail.com"};
+                    Intent emailIntent = new Intent(Intent.ACTION_SEND);
+                    emailIntent.setData(Uri.parse("mailto:"));
+                    emailIntent.setType("text/plain");
+
+                    emailIntent.putExtra(Intent.EXTRA_EMAIL, TO);
+                    emailIntent.putExtra(Intent.EXTRA_SUBJECT, "User question");
+                    emailIntent.putExtra(Intent.EXTRA_TEXT, txtQuestion.getText().toString());
+
+                    try {
+                        startActivity(Intent.createChooser(emailIntent, "Send email..."));
+                        finish();
+
+                    } catch (android.content.ActivityNotFoundException ex) {
+                        Toast.makeText(HelpActivity.this,
+                                "There is no email client installed.", Toast.LENGTH_SHORT).show();
+                    }
+                Toast.makeText(HelpActivity.this,
+                        "Mail successfully sent.", Toast.LENGTH_SHORT).show();
+
+            }
+        });
     }
 
     @Override
