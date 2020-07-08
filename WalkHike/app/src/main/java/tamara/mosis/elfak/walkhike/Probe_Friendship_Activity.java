@@ -292,8 +292,9 @@ public class Probe_Friendship_Activity extends AppCompatActivity  {
 
 
 
+                scoresData.getInstance().updateScoresDates();
 
-                ArrayList<User> useri = UserData.getInstance().getUsers();
+                /*ArrayList<User> useri = UserData.getInstance().getUsers();
                 Scores s ;
                 for(int i =0; i< useri.size(); i++) {
                     s = new Scores();
@@ -303,7 +304,7 @@ public class Probe_Friendship_Activity extends AppCompatActivity  {
 
 
                     scoresData.getInstance().AddScore(s);
-                }
+                }*/
 
 
 

@@ -24,7 +24,12 @@ import tamara.mosis.elfak.walkhike.modeldata.UserData;
 import android.os.Handler;
 import android.util.Log;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.concurrent.TimeUnit;
 
 public class LauncherActivity extends AppCompatActivity implements
         PositionsData.ReadyEventListener, UserData.ReadyEventListener, ScoresData.ReadyEventListener, MapObjectData.ReadyEventListener, FriendshipData.ReadyEventListener {
@@ -58,7 +63,7 @@ public class LauncherActivity extends AppCompatActivity implements
         MapObjectData.getInstance().setReadyList(this);
         ScoresData.getInstance().setReadyList(this);
 
-        proveriScores();
+
 
 
         if(UserData.getInstance().getUsers().size() > 0 && FriendshipData.getInstance().getFriendships().size() >0
@@ -75,6 +80,7 @@ public class LauncherActivity extends AppCompatActivity implements
 
     void go()
     {
+        proveriScores();
 
         SharedPreferences sharedPref = getApplicationContext().getSharedPreferences( "Userdata", Context.MODE_PRIVATE);
         String username = sharedPref.getString(getString(R.string.loggedUser_username), "EMPTY");
@@ -134,6 +140,62 @@ public class LauncherActivity extends AppCompatActivity implements
 
     void proveriScores()
     {
+        DateFormat format = new SimpleDateFormat("ddMMyyyyhhmmss");
+        Date currentDate = Calendar.getInstance().getTime();
 
+
+        Date objectDate = null;
+        Date objectDateMonth = null;
+        Scores p = null;
+        if(scoresData.getInstance().getScores().size() >0)
+                p  = scoresData.getInstance().getScore(0);
+
+        if(p != null) {
+            try {
+                objectDate = format.parse(p.datetimeWeek);
+
+
+                long difference = currentDate.getTime() - objectDate.getTime();
+                long dayDifference = TimeUnit.DAYS.convert(difference, TimeUnit.MILLISECONDS);
+
+                if (dayDifference > 7) {
+                    int dayOftheweek = Calendar.getInstance().get(Calendar.DAY_OF_WEEK);
+
+                    if (dayOftheweek == 1) //pomera se jer je kod njih prvi dan u nedelji nedelja, pa je SUNDAY = 1, MONDAY = 2 itd
+                        dayOftheweek = 7;
+                    String newDate = new SimpleDateFormat("ddMMyyyy").format(Calendar.getInstance().getTime().getTime() - (dayOftheweek - 2) * 24 * 60 * 60 * 1000);
+                    newDate += "000000";
+                    scoresData.getInstance().updateResetScoresWeekly(newDate);
+                }
+
+
+                objectDateMonth = format.parse(p.datetimeMonth);
+
+                int currentMonth = Calendar.getInstance().get(Calendar.MONTH);
+                int currentYear = Calendar.getInstance().get(Calendar.YEAR);
+
+                int lastUpdateMonth = Integer.parseInt(p.datetimeMonth.substring(2, 3));
+                int lastUpdateYear = Integer.parseInt(p.datetimeMonth.substring(4, 7));
+
+                String newUpdateDate = "";
+                boolean reset = false;
+
+                if (currentMonth != lastUpdateMonth || currentYear != lastUpdateYear) {
+
+                    if (currentMonth < 10)
+                        newUpdateDate = "010" + String.valueOf(currentMonth) + String.valueOf(currentYear) + "000000";
+                    else
+                        newUpdateDate = "01" + String.valueOf(currentMonth) + String.valueOf(currentYear) + "000000";
+
+                    reset = true;
+
+
+                    scoresData.getInstance().updateResetScoresMonthly(newUpdateDate, reset);
+                }
+
+            } catch (Exception e) {
+
+            }
+        }
     }
 }

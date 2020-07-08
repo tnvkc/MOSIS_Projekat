@@ -37,6 +37,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import tamara.mosis.elfak.walkhike.CustomListView;
+import tamara.mosis.elfak.walkhike.NotificationService;
 import tamara.mosis.elfak.walkhike.R;
 import tamara.mosis.elfak.walkhike.modeldata.Scores;
 import tamara.mosis.elfak.walkhike.modeldata.ScoresData;
@@ -163,7 +164,9 @@ public class ProfileActivity extends AppCompatActivity {
                             mfirebaseAuth.signOut();
 
 
+                            Intent i = new Intent(context, NotificationService.class);
 
+                            context.stopService(i);
                             Toast.makeText(getApplicationContext(), "LOGGED OUT", Toast.LENGTH_SHORT).show();
 
                             intent=new Intent(getApplicationContext(), LoginActivity.class);

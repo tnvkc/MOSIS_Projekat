@@ -47,6 +47,8 @@ public class FriendsFragment extends Fragment implements FriendshipData.Prihvata
     UserData userdata;
     private List<User> users;
     TextView prikaz;
+    View view;
+    String email;
 
     public FriendsFragment() {
         // Required empty public constructor
@@ -59,7 +61,7 @@ public class FriendsFragment extends Fragment implements FriendshipData.Prihvata
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view= inflater.inflate(R.layout.fragment_friends, container, false);
+        view= inflater.inflate(R.layout.fragment_friends, container, false);
         //friendshipData.getInstance().getFriendships();
         firebaseFirestore=firebaseFirestore.getInstance();
 
@@ -67,7 +69,7 @@ public class FriendsFragment extends Fragment implements FriendshipData.Prihvata
         FriendshipData.getInstance().setPrihvatanjePrijateljaEventListener(this);
         SharedPreferences sharedPref = getContext().getSharedPreferences( "Userdata", Context.MODE_PRIVATE);
         String username = sharedPref.getString(getString(R.string.loggedUser_username), "EMPTY");
-        String email = sharedPref.getString(getString(R.string.loggedUser_email), "EMPTY");
+        email = sharedPref.getString(getString(R.string.loggedUser_email), "EMPTY");
 
         int indexx  = sharedPref.getInt(getString(R.string.loggedUser_index), -1);
 
@@ -123,6 +125,11 @@ public class FriendsFragment extends Fragment implements FriendshipData.Prihvata
             {
                 usersList.add(UserData.getInstance().getUser(f.toUser.email));
             }
+            usersRecyclerAdapter=new UsersRecyclerAdapter(view.getContext(),usersList, email);
+
+            usersListView.setHasFixedSize(true);
+            usersListView.setLayoutManager(new LinearLayoutManager(view.getContext()));
+            usersListView.setAdapter(usersRecyclerAdapter);
         }
     }
 

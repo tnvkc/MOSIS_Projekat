@@ -62,7 +62,7 @@ public class UsersRecyclerAdapter extends RecyclerView.Adapter<UsersRecyclerAdap
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         final String username=usersList.get(position).username;
         final String email=usersList.get(position).email;
-        holder.username_view.setText(username +", " + email);
+        holder.username_view.setText(username);
 
         String imgUrl = UserData.getInstance().getUserByUsername(username).image;
 
