@@ -50,7 +50,7 @@ public class HelpActivity extends AppCompatActivity {
                     String[] TO = {"dragana.korunovic@gmail.com"};
                     Intent emailIntent = new Intent(Intent.ACTION_SEND);
                     emailIntent.setData(Uri.parse("mailto:"));
-                    emailIntent.setType("text/plain");
+                    emailIntent.setType("message/rfc822");
 
                     emailIntent.putExtra(Intent.EXTRA_EMAIL, TO);
                     emailIntent.putExtra(Intent.EXTRA_SUBJECT, "User question");
@@ -64,8 +64,7 @@ public class HelpActivity extends AppCompatActivity {
                         Toast.makeText(HelpActivity.this,
                                 "There is no email client installed.", Toast.LENGTH_SHORT).show();
                     }
-                Toast.makeText(HelpActivity.this,
-                        "Mail successfully sent.", Toast.LENGTH_SHORT).show();
+
 
             }
         });

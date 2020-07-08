@@ -9,7 +9,7 @@
         android:id="@+id/new_profile_picture_toolbar"
         android:layout_width="match_parent"
         android:layout_height="56dp"
-        android:background="@color/colorPrimary"
+        android:background="?attr/toolbarColor"
         android:layout_alignParentTop="true"
         app:layout_constraintTop_toTopOf="parent"
         tools:layout_editor_absoluteX="0dp">
