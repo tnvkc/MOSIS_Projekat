@@ -86,7 +86,7 @@
         android:id="@+id/object_interaction_reaction_text"
         android:layout_centerHorizontal="true"
         android:layout_below="@+id/object_interaction_details_layout"
-        android:layout_marginTop="30dp"
+        android:layout_marginTop="15dp"
         android:layout_marginStart="20dp"
         android:text="What did you think of this object?"
         android:textSize="18dp"/>
@@ -232,6 +232,6 @@
         android:layout_centerHorizontal="true"
         android:text="submit"
         android:layout_below="@+id/object_interaction_reactions_num_layout"
-        android:layout_marginTop="25dp"/>
+        android:layout_marginTop="10dp"/>
 
 </RelativeLayout>
