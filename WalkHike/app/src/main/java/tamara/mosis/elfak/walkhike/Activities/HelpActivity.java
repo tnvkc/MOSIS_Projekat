@@ -57,13 +57,15 @@ public class HelpActivity extends AppCompatActivity {
                     emailIntent.putExtra(Intent.EXTRA_TEXT, txtQuestion.getText().toString());
 
                     try {
-                        startActivity(Intent.createChooser(emailIntent, "Send mail..."));
+                        startActivity(Intent.createChooser(emailIntent, "Send email..."));
                         finish();
-                        Log.i("Finished sending email...", "");
+
                     } catch (android.content.ActivityNotFoundException ex) {
                         Toast.makeText(HelpActivity.this,
                                 "There is no email client installed.", Toast.LENGTH_SHORT).show();
                     }
+                Toast.makeText(HelpActivity.this,
+                        "Mail successfully sent.", Toast.LENGTH_SHORT).show();
 
             }
         });
