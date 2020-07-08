@@ -1779,8 +1779,9 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
 
                 AddUserMarker(username);
 
-                map.animateCamera(CameraUpdateFactory.newLatLng(new LatLng(Double.parseDouble(loggedUser.UserPosition.latitude),
-                        Double.parseDouble(loggedUser.UserPosition.longitude))));
+                map.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(Double.parseDouble(loggedUser.UserPosition.latitude),
+                        Double.parseDouble(loggedUser.UserPosition.longitude)),20f));
+
 
             } else {
                 //FilterUserObjects();
