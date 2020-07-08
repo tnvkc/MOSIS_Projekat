@@ -851,7 +851,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
 
         map.setOnMarkerClickListener(this);
 
-        new Handler().postDelayed(new Runnable() {
+       /* new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
 
@@ -862,7 +862,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
             }
 
             //startedService = true;
-        }, 200);
+        }, 200);*/
     }
 
     @Override

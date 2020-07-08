@@ -289,7 +289,7 @@ public class Probe extends AppCompatActivity {
                         NotificationChannel channel = new NotificationChannel(
                                 channelId,
                                 "walkhikw_friends",
-                                NotificationManager.IMPORTANCE_HIGH);
+                                NotificationManager.IMPORTANCE_DEFAULT);
                         if(!sound)
                             channel.setSound(null, null);
 
