@@ -10,14 +10,28 @@
         android:layout_width="match_parent"
         android:layout_height="50dp">
 
-        <ImageView
+        <com.mikhaellopez.circularimageview.CircularImageView
             android:id="@+id/imageViewFriendPhoto"
             android:layout_width="38dp"
             android:layout_height="38dp"
-            android:layout_centerVertical="true"
-            android:layout_marginLeft="2dp"
-            android:layout_alignParentLeft="true"
+            android:src="@drawable/girl_1"
+            app:civ_border_color="#FFFFFF"
+            app:civ_border_width="1dp"
+            app:civ_shadow="true"
+            app:civ_shadow_radius="0dp"
+            app:civ_shadow_color="#3f51b5"
+            android:layout_marginStart="4dp"
+            android:layout_marginEnd="4dp"
             />
+
+<!--        <ImageView-->
+<!--            android:id="@+id/imageViewFriendPhoto"-->
+<!--            android:layout_width="38dp"-->
+<!--            android:layout_height="38dp"-->
+<!--            android:layout_centerVertical="true"-->
+<!--            android:layout_marginLeft="2dp"-->
+<!--            android:layout_alignParentLeft="true"-->
+<!--            />-->
         <TextView
             android:id="@+id/textViewAddUser"
             android:layout_width="180dp"
@@ -26,8 +40,8 @@
             android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp"
             android:text="TextView"
-            android:layout_toRightOf="@id/imageViewFriendPhoto"
-            android:textSize="18dp" />
+            android:layout_toEndOf="@id/imageViewFriendPhoto"
+            android:textSize="18sp" />
 
         <Button
             android:id="@+id/addFriendButton"

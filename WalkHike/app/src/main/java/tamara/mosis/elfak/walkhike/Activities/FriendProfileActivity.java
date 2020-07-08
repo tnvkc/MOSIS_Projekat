@@ -15,6 +15,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.mikhaellopez.circularimageview.CircularImageView;
 
 import java.util.ArrayList;
 
@@ -92,7 +93,9 @@ public class FriendProfileActivity extends AppCompatActivity {
 
     private void FillUserData() {
 
-        ImageView profile_photo = findViewById(R.id.friend_profile_profilePhoto);
+        //ImageView profile_photo = findViewById(R.id.friend_profile_profilePhoto);
+        CircularImageView profilePic = findViewById(R.id.friend_profile_profilePhoto);
+
         TextView username = findViewById(R.id.friend_profile_username);
         TextView total_distance = findViewById(R.id.friend_profile_total_distance);
         //TextView messages = findViewById(R.id.friend_profile_messages);
@@ -100,9 +103,9 @@ public class FriendProfileActivity extends AppCompatActivity {
         TextView bio = findViewById(R.id.friend_profile_bio_text);
 
         if (user.image != null && !(user.image.compareTo("") == 0)) {
-            Glide.with(this).load(user.image).into(profile_photo);
+            Glide.with(this).load(user.image).into(profilePic);
         } else {
-            profile_photo.setImageResource(R.drawable.ic_account);
+            profilePic.setImageResource(R.drawable.ic_account);
         }
 
         total_distance.setText("Total: distance: "+ score.alltimeDistance + ", activity: " + score.alltimeActivity);
