@@ -70,44 +70,6 @@ public class Leaderboards_AllTime extends Fragment {
 
 
 
-
-     /*   Leaderboard_Entry entry1;
-        Leaderboard_Entry entry2;
-        Leaderboard_Entry entry3;
-        Leaderboard_Entry entry4;
-        Leaderboard_Entry entry5;
-        Leaderboard_Entry entry6;
-        Leaderboard_Entry entry7;
-        Leaderboard_Entry entry8;
-        Leaderboard_Entry entry9;
-        Leaderboard_Entry entry10;*/
-
-        if (activity_or_distance == 1) {
-            //activity tab
-            /*entry1 = new Leaderboard_Entry_Activity("Marko Rakic", 2226580);
-            entry2 = new Leaderboard_Entry_Activity("Nina Velickovic", 2106002);
-            entry3 = new Leaderboard_Entry_Activity("Jovan Milic", 592220);
-            entry4 = new Leaderboard_Entry_Activity("Dusica Nikolic", 311890);
-            entry5 = new Leaderboard_Entry_Activity("Stefan Vukadinovic", 11400);
-            entry6 = new Leaderboard_Entry_Activity("Jelena Jelic", 10220);
-            entry7 = new Leaderboard_Entry_Activity("Dragan Dragic", 8814);
-            entry8 = new Leaderboard_Entry_Activity("Sara Minic", 1532);
-            entry9 = new Leaderboard_Entry_Activity("Luka Vukic",  1222);
-            entry10 = new Leaderboard_Entry_Activity("Petar Nakic", 10);*/
-        } else {
-            //distance tab
-           /* entry1 = new Leaderboard_Entry_Distance("Milica Vukic", 2223580.0);
-            entry2 = new Leaderboard_Entry_Distance("Jovan Milic", 1112390.2);
-            entry3 = new Leaderboard_Entry_Distance("Nina Velickovic",  222222.93);
-            entry4 = new Leaderboard_Entry_Distance("Dusica Nikolic",  121005.0);
-            entry5 = new Leaderboard_Entry_Distance("Sara Minic",  1480.9);
-            entry6 = new Leaderboard_Entry_Distance("Jelena Jelic", 1508.8);
-            entry7 = new Leaderboard_Entry_Distance("Dusan Jovic", 1507.0);
-            entry8 = new Leaderboard_Entry_Distance("Sandra Nikolic", 1444.4);
-            entry9 = new Leaderboard_Entry_Distance("Lela Rakic", 1340.9);
-            entry10 = new Leaderboard_Entry_Distance("Petar Nakic", 10);*/
-        }
-
         ArrayList<Leaderboard_Entry> entries = new ArrayList<>();
 
         for(int i =0; i<skorovi.size(); i++)

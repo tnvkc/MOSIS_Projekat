@@ -308,7 +308,7 @@ public class NotificationService extends IntentService implements MapObjectData.
 
                 findNearbyObjects();
             }
-            
+
 
             //findNearbyUsers();
             //PD.getInstance().updatePlace(1, p.desc, p.longitude, p.latitude);

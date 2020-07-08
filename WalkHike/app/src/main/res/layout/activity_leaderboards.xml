@@ -10,20 +10,30 @@
         android:id="@+id/leaderboards_toolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:minHeight="?attr/actionBarSize"
-        android:background="?attr/toolbarColor"></androidx.appcompat.widget.Toolbar>
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="0dp"
+        android:layout_marginBottom="0dp"
+        android:background="?attr/toolbarColor"
+        android:minHeight="?attr/actionBarSize">
+    </androidx.appcompat.widget.Toolbar>
 
     <com.google.android.material.tabs.TabLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:tabGravity="fill"
         app:tabMode="fixed"
+        android:layout_below="@+id/leaderboards_toolbar"
         android:id="@+id/tablayout_activity_distance"/>
+
     <androidx.viewpager.widget.ViewPager
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
         android:id="@+id/viewpager_acivity_distance"
-        android:layout_below="@+id/tablayout_activity_distance"/>
+        android:layout_width="match_parent"
+        android:layout_height="600dp"
+        android:layout_above="@+id/bottom_navigation_menu"
+        android:layout_below="@+id/tablayout_activity_distance"
+        android:layout_marginTop="0dp"
+        android:layout_alignStart="@+id/tablayout_activity_distance"
+        />
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottom_navigation_menu"

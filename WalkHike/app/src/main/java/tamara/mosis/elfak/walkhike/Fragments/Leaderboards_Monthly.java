@@ -60,56 +60,6 @@ public class Leaderboards_Monthly extends Fragment {
 
     private ArrayList<Leaderboard_Entry> prepareTestData() {
 
-        /*Leaderboard_Entry entry1;
-        Leaderboard_Entry entry2;
-        Leaderboard_Entry entry3;
-        Leaderboard_Entry entry4;
-        Leaderboard_Entry entry5;
-        Leaderboard_Entry entry6;
-        Leaderboard_Entry entry7;
-        Leaderboard_Entry entry8;
-        Leaderboard_Entry entry9;
-        Leaderboard_Entry entry10;
-
-        if (activity_or_distance == 1) {
-            //activity tab
-            entry1 = new Leaderboard_Entry_Activity("Josif Pancic", 30080);
-            entry2 = new Leaderboard_Entry_Activity("Nadezda Petrovic", 21002);
-            entry3 = new Leaderboard_Entry_Activity("Nikola Tesla", 2220);
-            entry4 = new Leaderboard_Entry_Activity("Albert Ajnstajn", 1890);
-            entry5 = new Leaderboard_Entry_Activity("Fridrih Nice", 114);
-            entry6 = new Leaderboard_Entry_Activity("Mihajlo Petrovic", 102);
-            entry7 = new Leaderboard_Entry_Activity("Milutin Milankovic", 14);
-            entry8 = new Leaderboard_Entry_Activity("Ivo Andric", 0);
-            entry9 = new Leaderboard_Entry_Activity("Desanka Maksimovic",  0);
-            entry10 = new Leaderboard_Entry_Activity("Aristotel", 0);
-        } else {
-            //distance tab
-            entry1 = new Leaderboard_Entry_Distance("Jelena Nikolic", 39580.0);
-            entry2 = new Leaderboard_Entry_Distance("Dragana Miletic", 25390.2);
-            entry3 = new Leaderboard_Entry_Distance("Nina Velickovic", 22222.93);
-            entry4 = new Leaderboard_Entry_Distance("Dusica Nikolic", 10005.0);
-            entry5 = new Leaderboard_Entry_Distance("Sara Minic", 1480.9);
-            entry6 = new Leaderboard_Entry_Distance("Jelena Jelic", 508.8);
-            entry7 = new Leaderboard_Entry_Distance("Dusan Jovic", 507.0);
-            entry8 = new Leaderboard_Entry_Distance("Sandra Nikolic", 44.4);
-            entry9 = new Leaderboard_Entry_Distance("Lela Rakic", 40.9);
-            entry10 = new Leaderboard_Entry_Distance("Petar Nakic", 10);
-        }
-
-        ArrayList<Leaderboard_Entry> entries = new ArrayList<>();
-        entries.add(entry1);
-        entries.add(entry2);
-        entries.add(entry3);
-        entries.add(entry4);
-        entries.add(entry5);
-        entries.add(entry6);
-        entries.add(entry7);
-        entries.add(entry8);
-        entries.add(entry9);
-        entries.add(entry10);
-
-        return entries;*/
         ArrayList<Leaderboard_Entry> entries = new ArrayList<>();
 
         for(int i =0; i<skorovi.size(); i++)
