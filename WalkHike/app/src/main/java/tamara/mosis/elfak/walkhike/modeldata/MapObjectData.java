@@ -227,6 +227,19 @@ public class MapObjectData {
         return m;
     }
 
+    public ArrayList<MapObject> getObjectsFromUser(String username, String loggedUser)
+    {
+        ArrayList<MapObject> list = new ArrayList<>();
+
+        for(int i = 0; i< this.MapObjects.size(); i++) {
+
+            MapObject mo = this.MapObjects.get(i);
+            if (mo.createdBy.compareTo(username) == 0 && (mo.isPublic || (!mo.isPublic && mo.sharedWith.compareTo(loggedUser) ==0)))
+                list.add(this.MapObjects.get(i));
+        }
+        return list;
+    }
+
     MapObjectData.ListUpdatedEventListener updateListener;
     public void setListUpdatedEventListener(MapObjectData.ListUpdatedEventListener listener) {
         updateListener = listener;

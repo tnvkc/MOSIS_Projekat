@@ -233,6 +233,13 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
     }
 
     @Override
+    public void onDestroy() {
+
+        UserData.getInstance().setEventListener(null);
+        super.onDestroy();
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (AppCompatDelegate.getDefaultNightMode() == AppCompatDelegate.MODE_NIGHT_YES)
@@ -752,17 +759,26 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
             }
         });
 
-        FilterMapObjects();
-        FilterUserObjects();
+
         AddUserMarker(loggedUsername);
 
         if (obj != null) {
+            object_filter = 0x0f;
+            timespan =0;
+            radius = 10000;
+             FilterMapObjects();
+            //FilterUserObjects();
             FindObjectOnMap(obj);
+
         }
+        else{
+
+        FilterMapObjects();
+        FilterUserObjects();}
 
         map.setOnMarkerClickListener(this);
 
-       /* new Handler().postDelayed(new Runnable() {
+        new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
 
@@ -773,7 +789,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
             }
 
             //startedService = true;
-        }, 200);*/
+        }, 200);
     }
 
     @Override
@@ -1628,7 +1644,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
                 String lat = objectTag.position.latitude;
                 String lon = objectTag.position.longitude;
 
-                if (!MapObjectData.getInstance().isCloserThanRadius(objectTag.position, 2, loggedUsername)) {
+                if (!MapObjectData.getInstance().isCloserThanRadius(objectTag.position,10 , loggedUsername)) {
                     info_window_see_details.setEnabled(false);
                 } else {
                     info_window_see_details.setEnabled(true);
@@ -1740,6 +1756,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
                 new SearchResultsListAdapter(getApplicationContext(), R.layout.list_member_search_result, objs, MainActivity.this);
 
         searchResultsListView.setAdapter(listAdapter);
+
 
     }
 

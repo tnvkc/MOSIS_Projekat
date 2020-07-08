@@ -148,12 +148,12 @@ public class NotificationService extends IntentService implements MapObjectData.
         LoggedUser.email = email;
 
         positions = PD.getInstance().getPositions();
-        users = userData.getInstance().getUsers();
+        users = friendshipData.getInstance().GetUserFriends(username);
         doneUsers = new ArrayList<>();
-        doneUsers.add(email);
+        //doneUsers.add(email);
         //DonePositions = new ArrayList<>();
 
-        objects = MapObjectData.getInstance().getMapObjects();
+        objects = MapObjectData.getInstance().getFriendsMapObjects(username);
         doneObjects = new ArrayList<>();
 
         numberOfObjectNotis = 100;

@@ -58,6 +58,7 @@ public class LauncherActivity extends AppCompatActivity implements
         MapObjectData.getInstance().setReadyList(this);
         ScoresData.getInstance().setReadyList(this);
 
+        proveriScores();
 
 
         if(UserData.getInstance().getUsers().size() > 0 && FriendshipData.getInstance().getFriendships().size() >0
@@ -65,6 +66,8 @@ public class LauncherActivity extends AppCompatActivity implements
         {
             go();
         }
+
+
 
 
 
@@ -127,5 +130,10 @@ public class LauncherActivity extends AppCompatActivity implements
                 go();
                 sviDataok = 0;
             }
+    }
+
+    void proveriScores()
+    {
+
     }
 }

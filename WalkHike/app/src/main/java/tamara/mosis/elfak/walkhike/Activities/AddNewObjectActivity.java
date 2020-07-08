@@ -1,6 +1,7 @@
 package tamara.mosis.elfak.walkhike.Activities;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
 
 import androidx.appcompat.widget.Toolbar;
@@ -130,6 +131,7 @@ public class AddNewObjectActivity extends FragmentActivity implements View.OnCli
         storageReference = storage.getReference();
 
         toolbar = (Toolbar) findViewById(R.id.add_object_toolbar);
+
 //        setSupportActionBar(toolbar);
 //
 //        getSupportActionBar().setDisplayShowTitleEnabled(true);

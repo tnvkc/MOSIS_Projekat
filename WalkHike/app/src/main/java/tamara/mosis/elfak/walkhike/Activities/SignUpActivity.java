@@ -154,7 +154,7 @@
         userData.getInstance().AddUser(u);
         Scores s ;
         s = new Scores();
-        s.useer = email;
+        s.useer = name;
         Scores ss = scoresData.getInstance().getScore(0);
         if(ss != null)
             s.datetimeWeek = ss.datetimeWeek;

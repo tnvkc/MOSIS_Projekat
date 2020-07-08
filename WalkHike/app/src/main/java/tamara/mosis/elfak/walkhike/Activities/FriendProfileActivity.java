@@ -6,11 +6,15 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.bumptech.glide.Glide;
 
 import java.util.ArrayList;
 
@@ -55,10 +59,12 @@ public class FriendProfileActivity extends AppCompatActivity {
 
         Intent intent = getIntent();
         String username = intent.getStringExtra("username");
+        SharedPreferences sharedPref = getApplicationContext().getSharedPreferences( "Userdata", Context.MODE_PRIVATE);
+        String usernamelogged = sharedPref.getString(getString(R.string.loggedUser_username), "EMPTY");
 
         user = UserData.getInstance().getUserByUsername(username);
         score = ScoresData.getInstance().getScore(username);
-        objekti = MapObjectData.getInstance().getFriendsMapObjects(username);
+        objekti = MapObjectData.getInstance().getObjectsFromUser(username, usernamelogged);
 
         FillUserData();
 
@@ -92,6 +98,12 @@ public class FriendProfileActivity extends AppCompatActivity {
         //TextView messages = findViewById(R.id.friend_profile_messages);
         TextView pictures = findViewById(R.id.friend_profile_pictures);
         TextView bio = findViewById(R.id.friend_profile_bio_text);
+
+        if (user.image != null && !(user.image.compareTo("") == 0)) {
+            Glide.with(this).load(user.image).into(profile_photo);
+        } else {
+            profile_photo.setImageResource(R.drawable.ic_account);
+        }
 
         total_distance.setText("Total: distance: "+ score.alltimeDistance + ", activity: " + score.alltimeActivity);
         pictures.setText("Total object: "+objekti.size());
