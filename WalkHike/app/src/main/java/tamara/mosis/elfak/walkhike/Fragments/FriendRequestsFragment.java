@@ -117,6 +117,13 @@ public class FriendRequestsFragment extends Fragment implements FriendshipData.L
     }
 
     @Override
+    public void onDestroy() {
+        super.onDestroy();
+        friendshipData.getInstance().setEventListener(null);
+    }
+
+
+    @Override
     public void onStart()
     {
         super.onStart();

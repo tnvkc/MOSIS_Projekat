@@ -93,6 +93,12 @@ public class FriendsFragment extends Fragment implements FriendshipData.Prihvata
         return view;
     }
 
+    @Override
+    public void onDestroy() {
+        FriendshipData.getInstance().setPrihvatanjePrijateljaEventListener(null);
+        super.onDestroy();
+    }
+
     void showFriendships()
     {
 

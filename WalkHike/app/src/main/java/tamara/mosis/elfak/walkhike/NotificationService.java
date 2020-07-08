@@ -198,6 +198,9 @@ public class NotificationService extends IntentService implements MapObjectData.
     public void onDestroy() {
         super.onDestroy();
         running = false;
+        MoD.getInstance().setNewObejctListener(null);
+        friendshipData.getInstance().setNewItemEventListener(null);
+        scoresData.getInstance().setEventListener(null);
         Log.v("timer", "service destroyed");
     }
 

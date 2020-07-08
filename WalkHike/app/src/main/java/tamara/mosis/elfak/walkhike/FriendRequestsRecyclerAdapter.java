@@ -64,7 +64,7 @@ public class FriendRequestsRecyclerAdapter extends RecyclerView.Adapter<FriendRe
             //final String user_id=usersList.get(position).userId;
         }
         else
-        {   username=users.get(position).fromUser.username + users.get(position).fromUser.email;
+        {   username=users.get(position).fromUser.username;
             holder.username_view.setText(username);
 
             String imgUrl = users.get(position).fromUser.image;

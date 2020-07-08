@@ -78,6 +78,16 @@ public class LauncherActivity extends AppCompatActivity implements
 
     }
 
+    @Override
+    protected void onDestroy() {
+        PositionsData.getInstance().setReadyList(null);
+        UserData.getInstance().setReadyList(null);
+        FriendshipData.getInstance().setReadyList(null);
+        MapObjectData.getInstance().setReadyList(null);
+        ScoresData.getInstance().setReadyList(null);
+        super.onDestroy();
+    }
+
     void go()
     {
         proveriScores();

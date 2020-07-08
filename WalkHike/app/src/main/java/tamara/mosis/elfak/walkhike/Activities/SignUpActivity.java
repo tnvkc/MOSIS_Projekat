@@ -155,11 +155,15 @@
         Scores s ;
         s = new Scores();
         s.useer = name;
-        Scores ss = scoresData.getInstance().getScore(0);
-        if(ss != null)
-            s.datetimeWeek = ss.datetimeWeek;
+
+            if(scoresData.getInstance().getScores() != null)
+            {
+                Scores ss = scoresData.getInstance().getScore(0);
+
+                s.datetimeWeek = ss.datetimeWeek;
+            }
             else
-            s.datetimeWeek = new SimpleDateFormat("ddMMyyyyhhmmss").format(Calendar.getInstance().getTime());
+                s.datetimeWeek = new SimpleDateFormat("ddMMyyyyhhmmss").format(Calendar.getInstance().getTime());
 
             scoresData.getInstance().AddScore(s);
 

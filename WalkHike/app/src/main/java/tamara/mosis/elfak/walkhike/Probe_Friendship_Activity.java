@@ -210,9 +210,17 @@ public class Probe_Friendship_Activity extends AppCompatActivity  {
                     }
                 }*/
 
-                scoresData.getInstance().updateScoresDates();
+                ArrayList<User> useri = UserData.getInstance().getUsers();
+                Scores s ;
+                for(int i =0; i< useri.size(); i++) {
+                    s = new Scores();
+                    s.useer = useri.get(i).username;
+                    s.datetimeWeek = new SimpleDateFormat("ddMMyyyyhhmmss").format(Calendar.getInstance().getTime());
+                    s.datetimeMonth =new SimpleDateFormat("ddMMyyyyhhmmss").format(Calendar.getInstance().getTime());
 
 
+                    scoresData.getInstance().AddScore(s);
+                }
 
             }
         });
@@ -294,17 +302,7 @@ public class Probe_Friendship_Activity extends AppCompatActivity  {
 
                 scoresData.getInstance().updateScoresDates();
 
-                /*ArrayList<User> useri = UserData.getInstance().getUsers();
-                Scores s ;
-                for(int i =0; i< useri.size(); i++) {
-                    s = new Scores();
-                    s.useer = useri.get(i).username;
-                    s.datetimeWeek = new SimpleDateFormat("ddMMyyyyhhmmss").format(Calendar.getInstance().getTime());
-                    s.datetimeMonth =new SimpleDateFormat("ddMMyyyyhhmmss").format(Calendar.getInstance().getTime());
 
-
-                    scoresData.getInstance().AddScore(s);
-                }*/
 
 
 

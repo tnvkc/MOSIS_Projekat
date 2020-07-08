@@ -821,7 +821,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
                     GetLocationData();
 
                     startServicee();
-                    AddUserMarker(loggedUsername);
+                   // AddUserMarker(loggedUsername);
 
                 } else {
                     return;
