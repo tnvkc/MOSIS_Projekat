@@ -84,7 +84,7 @@ public class Leaderboards_Activity extends Fragment {
         for(int i = 0; i< prijatelji.size(); i++)
         {
             Scores s = null;
-            s = scoresData.getInstance().getScore(prijatelji.get(i).email);
+            s = scoresData.getInstance().getScore(prijatelji.get(i).username);
             if(s != null)
             {
                 skorovi.add(s);

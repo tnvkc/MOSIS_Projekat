@@ -69,7 +69,7 @@ public class MapObjectData {
             if(
                     (mo.createdBy.compareTo(loggedUserUsername) == 0) ||
                     (mo.isPublic && friendsUsernames.contains(mo.createdBy)) ||
-                    (mo.sharedWith.compareTo(loggedUserUsername) == 0))
+                    (!mo.isPublic && mo.sharedWith.compareTo(loggedUserUsername) == 0))
             {
                 list.add(MapObjects.get(i));
             }

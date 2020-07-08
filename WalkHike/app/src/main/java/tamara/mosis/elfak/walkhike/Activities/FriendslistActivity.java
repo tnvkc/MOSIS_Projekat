@@ -61,11 +61,6 @@ public class FriendslistActivity extends AppCompatActivity {
         }
         Toast.makeText(getApplicationContext(), "klik na menu", Toast.LENGTH_SHORT);
 
-        if (item.getItemId() == android.R.id.home) {
-
-            finish();
-        }
-
         return super.onOptionsItemSelected(item);
     }
 
@@ -83,9 +78,6 @@ public class FriendslistActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle("Friends");
         getSupportActionBar().setDisplayShowTitleEnabled(true);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setDisplayShowHomeEnabled(true);
-
 
 
         searchView=findViewById(R.id.search_bar);
