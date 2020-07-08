@@ -140,15 +140,11 @@ public class ARObjectInteractionActivity extends AppCompatActivity implements Vi
 
             if (currentUser.compareTo(obj.createdBy) == 0) {
 
-                obj_interaction_reaction_great.setClickable(false);
-                obj_interaction_reaction_great.setFocusable(false);
-                obj_interaction_reaction_meh.setClickable(false);
-                obj_interaction_reaction_meh.setFocusable(false);
-                obj_interaction_reaction_boo.setClickable(false);
-                obj_interaction_reaction_boo.setFocusable(false);
+                obj_interaction_close.setText("Close");
 
             } else {
 
+                obj_interaction_close.setText("Submit");
                 String object_key = obj.createdBy + obj.datetime;
 
                 SharedPreferences sharedPref = getApplicationContext()
@@ -221,49 +217,63 @@ public class ARObjectInteractionActivity extends AppCompatActivity implements Vi
     @Override
     public void onClick(View v) {
 
+
         if (v.getId() == R.id.object_interaction_great) {
+
+            if (currentUser.compareTo(obj.createdBy) == 0)
+                return;
 
             ReactGreat();
             SetReactionStrings();
 
         } else if (v.getId() == R.id.object_interaction_meh) {
 
+            if (currentUser.compareTo(obj.createdBy) == 0)
+                return;
+
             ReactMeh();
             SetReactionStrings();
 
         } else if (v.getId() == R.id.object_interaction_boo) {
+
+            if (currentUser.compareTo(obj.createdBy) == 0)
+                return;
 
             ReactBoo();
             SetReactionStrings();
 
         } else if (v.getId() == R.id.ar_object_interaction_close) {
 
-            String reaction = "";
-            if (obj.reactionsGreat != great)
-                reaction = "great";
-            else if (obj.reactionsMeh != meh)
-                reaction = "meh";
-            else
-                reaction = "boo";
+            if (currentUser.compareTo(obj.createdBy) != 0) {
 
-            obj.reactionsGreat = great;
-            obj.reactionsMeh = meh;
-            obj.reactionsBoo = boo;
 
-            MapObjectData.getInstance().UpdateMapObjectReaction(obj); //to do
+                String reaction = "";
+                if (obj.reactionsGreat != great)
+                    reaction = "great";
+                else if (obj.reactionsMeh != meh)
+                    reaction = "meh";
+                else
+                    reaction = "boo";
 
-            String object_key = obj.createdBy + obj.datetime;
+                obj.reactionsGreat = great;
+                obj.reactionsMeh = meh;
+                obj.reactionsBoo = boo;
 
-            SharedPreferences sharedPref = getApplicationContext().getSharedPreferences(
-                    getString(R.string.ReactedObjectsPrefs), Context.MODE_PRIVATE);
+                MapObjectData.getInstance().UpdateMapObjectReaction(obj); //to do
 
-            SharedPreferences.Editor editor = sharedPref.edit();
+                String object_key = obj.createdBy + obj.datetime;
 
-            editor.putString(object_key, reaction);
-            editor.apply();
+                SharedPreferences sharedPref = getApplicationContext().getSharedPreferences(
+                        getString(R.string.ReactedObjectsPrefs), Context.MODE_PRIVATE);
 
-            //update user activity scores
-            ScoresData.getInstance().updateScoreActivity(100, currentUser);
+                SharedPreferences.Editor editor = sharedPref.edit();
+
+                editor.putString(object_key, reaction);
+                editor.apply();
+
+                //update user activity scores
+                ScoresData.getInstance().updateScoreActivity(100, currentUser);
+            }
 
             Toast.makeText(this, "Current reactions " + great + ", " + meh + ", " + boo, Toast.LENGTH_SHORT).show();
             finish();

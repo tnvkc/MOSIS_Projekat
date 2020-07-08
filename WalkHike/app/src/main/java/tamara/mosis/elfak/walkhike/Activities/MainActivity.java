@@ -522,6 +522,8 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
             if (resultCode == RESULT_OK) {
                 MapObject result = (MapObject) data.getSerializableExtra("map_object");
                 AddMarkerObject(result);
+
+
             }
         }
         super.onActivityResult(requestCode, resultCode, data);
@@ -969,6 +971,11 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
 
             info_window_container.setVisibility(View.GONE);
             info_window_container_groups.setVisibility(View.GONE);
+
+            filter_icon.setVisibility(View.VISIBLE);
+            filter_radius.setVisibility(View.VISIBLE);
+            filter_users.setVisibility(View.VISIBLE);
+
             if (v.getTag() instanceof MapObject) {
 
                 MapObject objectTag = (MapObject) v.getTag();
@@ -978,15 +985,14 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
                     intent.putExtra("object", objectTag);
                     intent.putExtra("username", loggedUsername);
                     startActivity(intent);
-                    finish();
+                    //finish();
                 } else {
                     Intent intent = new Intent(MainActivity.this, ARObjectInteractionActivity.class);
                     intent.putExtra("object", objectTag);
                     intent.putExtra("username", loggedUsername);
                     startActivity(intent);
-                    finish();
+                    //finish();
                 }
-
             } else {
 
                 String username = (String) v.getTag();
@@ -1033,6 +1039,9 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
 
             info_window_container.setVisibility(View.GONE);
             info_window_container_groups.setVisibility(View.GONE);
+            filter_icon.setVisibility(View.VISIBLE);
+            filter_radius.setVisibility(View.VISIBLE);
+            filter_users.setVisibility(View.VISIBLE);
 
             Intent intent=new Intent(getApplicationContext(), AddNewObjectActivity.class);
             Bundle bundle = new Bundle();
@@ -1599,7 +1608,6 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
             filter_objects_opened = false;
             filter_timespan_opened = false;
             filter_by_distance_opened = false;
-            filter_by_distance_seekbar.setVisibility(View.GONE);
             filter_users.setVisibility(View.GONE);
 
             info_window_container.setVisibility(View.VISIBLE);
