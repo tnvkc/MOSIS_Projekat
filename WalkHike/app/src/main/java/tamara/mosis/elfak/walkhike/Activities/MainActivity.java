@@ -775,6 +775,29 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
 
         map.setOnMarkerClickListener(this);
 
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        switch (requestCode) {
+            case PERMISSION_CODE:
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    map.setMyLocationEnabled(true);
+                    GetLocationData();
+
+                    startServicee();
+                    AddUserMarker(loggedUsername);
+
+                } else {
+                    return;
+                }
+        }
+    }
+
+    private void startServicee()
+    {
+        Toast.makeText(getApplicationContext(), "Started service", Toast.LENGTH_SHORT).show();
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
@@ -787,30 +810,23 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
 
             //startedService = true;
         }, 200);
-    }
 
-    @Override
-    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        switch (requestCode) {
-            case PERMISSION_CODE:
-                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    map.setMyLocationEnabled(true);
-                } else {
-                    return;
-                }
-        }
     }
 
     private void getDeviceLocation() {
-        locationManager = (LocationManager) getSystemService(Service.LOCATION_SERVICE);
-        isGpsProvider = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
-        isNetworkProvider = locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
-        if (!isGpsProvider && !isNetworkProvider) {
+        //locationManager = (LocationManager) getSystemService(Service.LOCATION_SERVICE);
+        //isGpsProvider = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
+        //isNetworkProvider = locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
+       // if (!isGpsProvider && !isNetworkProvider) {
             //showing setting for enable gps
-            return;
+
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
+                && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, PERMISSION_CODE);
+
         } else {
             GetLocationData();
+            startServicee();
         }
     }
 
@@ -955,19 +971,9 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
 
 
             if(!startedService) {
-                new Handler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-
-                        Intent i = new Intent(getApplicationContext(), NotificationService.class);
-                        i.putExtra("timer",10);
-                        startService(i);
-                        Log.v("service", "service started from main");
-                    }
-
-                    //startedService = true;
-                }, 200);
+                startServicee();
                 startedService = true;
+
             }
             else {
                 Toast.makeText(getApplicationContext(), "Stop service", Toast.LENGTH_SHORT).show();
@@ -1603,8 +1609,8 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
         map.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng,20f));
 
         Marker m = FindMapMarker(obj);
-
-        ShowMarkerInfoWindow(m);
+        if(m !=null)
+            ShowMarkerInfoWindow(m);
 
     }
 

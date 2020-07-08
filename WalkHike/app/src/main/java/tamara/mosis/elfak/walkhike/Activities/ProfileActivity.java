@@ -153,11 +153,15 @@ public class ProfileActivity extends AppCompatActivity {
                             sharedPref = getApplicationContext().getSharedPreferences( "Userdata", Context.MODE_PRIVATE);
                             SharedPreferences.Editor editor = sharedPref.edit();
 
-                            editor.remove(getString(R.string.loggedUser_email));
                             editor.remove(getString(R.string.loggedUser_username));
+                            editor.remove(getString(R.string.loggedUser_email));
                             editor.remove("userImage");
                             editor.remove(getString(R.string.loggedUser_index));
                             editor.commit();
+                          //  SharedPreferences sharedPref = getApplicationContext().getSharedPreferences( "Userdata", Context.MODE_PRIVATE);
+                           // String username = sharedPref.getString(getString(R.string.loggedUser_username), "EMPTY");
+                            //String emaill = sharedPref.getString(getString(R.string.loggedUser_email), "EMPTY");
+
 
                             clearAllShared();
 

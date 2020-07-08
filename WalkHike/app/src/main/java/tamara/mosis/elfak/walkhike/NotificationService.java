@@ -148,7 +148,7 @@ public class NotificationService extends IntentService implements MapObjectData.
         LoggedUser.email = email;
 
         positions = PD.getInstance().getPositions();
-        users = friendshipData.getInstance().GetUserFriends(username);
+        users = friendshipData.getInstance().GetUserFriends(email);
         doneUsers = new ArrayList<>();
         //doneUsers.add(email);
         //DonePositions = new ArrayList<>();
@@ -226,11 +226,12 @@ public class NotificationService extends IntentService implements MapObjectData.
         isNetworkProvider = locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
         if (!isGpsProvider && !isNetworkProvider) {
             //showing setting for enable gps
+
             return;
+
         } else {
+
             GetLocationData();
-
-
         }
     }
 
@@ -538,16 +539,16 @@ public class NotificationService extends IntentService implements MapObjectData.
                     NotificationManager.IMPORTANCE_HIGH);
 
 
-            if(!sound)
-                channel.setSound(null, null);
+            //if(!sound)
+              //  channel.setSound(null, null);
 
 
             mNotificationManager.createNotificationChannel(channel);
             mBuilder.setChannelId(channelId);
         }
         else {
-            if(!sound)
-                mBuilder.setSound(null);
+            //if(!sound)
+               // mBuilder.setSound(null);
         }
 
         mNotificationManager.notify(iid, mBuilder.build());

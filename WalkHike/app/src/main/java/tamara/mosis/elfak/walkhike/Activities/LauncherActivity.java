@@ -82,7 +82,7 @@ public class LauncherActivity extends AppCompatActivity implements
     {
         proveriScores();
 
-        SharedPreferences sharedPref = getApplicationContext().getSharedPreferences( "Userdata", Context.MODE_PRIVATE);
+        SharedPreferences  sharedPref = getApplicationContext().getSharedPreferences( "Userdata", Context.MODE_PRIVATE);
         String username = sharedPref.getString(getString(R.string.loggedUser_username), "EMPTY");
         String emaill = sharedPref.getString(getString(R.string.loggedUser_email), "EMPTY");
         String image = sharedPref.getString(getString(R.string.loggedUser_image), "EMPTY");
