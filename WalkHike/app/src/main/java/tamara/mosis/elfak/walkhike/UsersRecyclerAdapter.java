@@ -19,6 +19,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
+import com.mikhaellopez.circularimageview.CircularImageView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,6 +28,7 @@ import tamara.mosis.elfak.walkhike.Activities.FriendProfileActivity;
 import tamara.mosis.elfak.walkhike.modeldata.Friendship;
 import tamara.mosis.elfak.walkhike.modeldata.FriendshipData;
 import tamara.mosis.elfak.walkhike.modeldata.User;
+import tamara.mosis.elfak.walkhike.modeldata.UserData;
 
 
 public class UsersRecyclerAdapter extends RecyclerView.Adapter<UsersRecyclerAdapter.ViewHolder>
@@ -62,10 +64,14 @@ public class UsersRecyclerAdapter extends RecyclerView.Adapter<UsersRecyclerAdap
         final String email=usersList.get(position).email;
         holder.username_view.setText(username);
 
-        String imgUrl = usersList.get(position).image;
-        RequestOptions placeholderOpt = new RequestOptions();
-        placeholderOpt.placeholder(R.drawable.girl_1);
-        Glide.with(context).setDefaultRequestOptions(placeholderOpt).load(imgUrl).into(holder.image_view);
+        String imgUrl = UserData.getInstance().getUserByUsername(username).image;
+
+        if (imgUrl != null && imgUrl.compareTo("") != 0) {
+            Glide.with(context).load(imgUrl).into(holder.image_view);
+        } else {
+            holder.image_view.setImageResource(R.drawable.ic_account);
+        }
+
 
         holder.removeFriendButton.setOnClickListener(new View.OnClickListener()
         {
@@ -135,14 +141,14 @@ public class UsersRecyclerAdapter extends RecyclerView.Adapter<UsersRecyclerAdap
     public class ViewHolder extends RecyclerView.ViewHolder
     {
         private View vie;
-        private ImageView image_view;
+        private CircularImageView image_view;
         private TextView username_view;
         private Button removeFriendButton;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             vie=itemView;
-            image_view=vie.findViewById(R.id.imageViewFriendPhoto);
+            image_view= (CircularImageView) vie.findViewById(R.id.imageViewFriendPhoto);
             username_view=(TextView)vie.findViewById(R.id.textViewAddUser);
             removeFriendButton=(Button)vie.findViewById(R.id.addFriendButton);
             removeFriendButton.setText("remove");

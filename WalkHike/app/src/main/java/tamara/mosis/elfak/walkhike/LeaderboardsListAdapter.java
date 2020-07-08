@@ -12,6 +12,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.bumptech.glide.Glide;
+import com.mikhaellopez.circularimageview.CircularImageView;
 
 import java.util.ArrayList;
 
@@ -37,7 +38,8 @@ public class LeaderboardsListAdapter extends ArrayAdapter<Leaderboard_Entry> {
         LayoutInflater inflater = LayoutInflater.from(context);
         convertView = inflater.inflate(resource, parent, false);
 
-        ImageView user_image_iv = (ImageView) convertView.findViewById(R.id.leaderboard_user_image);
+        CircularImageView user_image_iv = (CircularImageView) convertView.findViewById(R.id.leaderboard_user_image);
+        //ImageView user_image_iv = (ImageView) convertView.findViewById(R.id.leaderboard_user_image);
         TextView user_name_tv = (TextView) convertView.findViewById(R.id.leaderboard_user_name);
         TextView points_tv = (TextView) convertView.findViewById(R.id.leaderboard_entry_points);
 
