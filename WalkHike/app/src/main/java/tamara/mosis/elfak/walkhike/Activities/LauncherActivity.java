@@ -60,6 +60,11 @@ public class LauncherActivity extends AppCompatActivity implements
 
 
 
+        if(UserData.getInstance().getUsers().size() > 0 && FriendshipData.getInstance().getFriendships().size() >0
+                && MapObjectData.getInstance().getMapObjects().size() >0 && ScoresData.getInstance().getScores().size() >0)
+        {
+            go();
+        }
 
 
 

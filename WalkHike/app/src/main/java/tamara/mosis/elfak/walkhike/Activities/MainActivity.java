@@ -110,7 +110,8 @@ import tamara.mosis.elfak.walkhike.modeldata.Position;
 
 public class MainActivity extends AppCompatActivity implements GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener, LocationListener, OnMapReadyCallback, View.OnClickListener,
-        BottomNavigationView.OnNavigationItemSelectedListener, GoogleMap.OnMarkerClickListener, TextWatcher {
+        BottomNavigationView.OnNavigationItemSelectedListener, GoogleMap.OnMarkerClickListener, TextWatcher,
+        UserData.UpdateEventListener{
 
     private FirebaseAuth mfirebaseAuth;
     private static final int PERMISSION_CODE = 1;
@@ -254,104 +255,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
             }
         });
 
-        UserData.getInstance().setEventListener(new UserData.UpdateEventListener() {
-            @Override
-            public void onListUpdated() {
-                FilterUserObjects();
-            }
-
-            @Override
-            public void onSingleUserUpdated(String username) {
-                if (map != null) {
-
-                    if (loggedUsername.compareTo(username) == 0) {
-
-                        userMarker.remove();
-                        loggedUser = UserData.getInstance().getUserByUsername(username);
-//                    location = new Location("");
-//                    location.setLatitude(Double.parseDouble(loggedUser.UserPosition.latitude));
-//                    location.setLongitude(Double.parseDouble(loggedUser.UserPosition.longitude));
-
-                        AddUserMarker(username);
-
-                        map.animateCamera(CameraUpdateFactory.newLatLng(new LatLng(Double.parseDouble(loggedUser.UserPosition.latitude),
-                                Double.parseDouble(loggedUser.UserPosition.longitude))));
-
-                    } else {
-                        //FilterUserObjects();
-
-                        Marker thisUserMarker = null;
-                        for (int i = 0; i < usersMarkers.size(); i++) {
-                            if (((String) usersMarkers.get(i).getTag()).compareTo(username) == 0) {
-                                thisUserMarker = usersMarkers.get(i);
-                                break;
-                            }
-                        }
-
-                        if (thisUserMarker != null) {
-                            thisUserMarker.remove();
-                            usersMarkers.remove(thisUserMarker);
-
-                            User friendUser = UserData.getInstance().getUserByUsername(username);
-
-                            Position currentUserPosition = loggedUser.UserPosition;
-                            double current_lat = Double.parseDouble(currentUserPosition.latitude);
-                            double current_lon = Double.parseDouble(currentUserPosition.longitude);
-
-                            Position friendUserPosition = friendUser.UserPosition;
-                            double friend_lat = Double.parseDouble(friendUserPosition.latitude);
-                            double friend_lon = Double.parseDouble(friendUserPosition.longitude);
-
-                            float dist[] = new float[1];
-                            Location.distanceBetween(current_lat, current_lon, friend_lat, friend_lon, dist);
-
-                            if (dist[0] <= radius) {
-                                AddUserMarker(username);
-                            }
-
-                        }
-                    }
-                }
-            }
-
-            @Override
-            public void onUserAdded(String username) {
-                FilterUserObjects();
-            }
-
-            /*@Override
-            public void onListUpdated(User user) {
-
-                double lat = Double.parseDouble(user.UserPosition.latitude);
-                double lon = Double.parseDouble(user.UserPosition.longitude);
-
-                if (user.username.compareTo(loggedUsername) == 0) {
-
-                    userMarker.setPosition(new LatLng(lat, lon));
-                    loggedUser = user;
-                    userMarker.setTag(user);
-
-//                    location = new Location();
-//                    location.setLatitude(lat);
-//                    location.setLongitude(lon);
-
-                    map.animateCamera(CameraUpdateFactory.newLatLng(new LatLng(lat, lon)));
-
-                } else {
-
-                    for (int i = 0; i < usersMarkers.size(); i++) {
-
-                        Marker currentMarker = usersMarkers.get(i);
-
-                        if (((User) currentMarker.getTag()) != null && ((User) currentMarker.getTag()).username.compareTo(user.username) == 0) {
-                            currentMarker.setPosition(new LatLng(lat, lon));
-                            currentMarker.setTag(user);
-                        }
-                    }
-
-                }
-            }*/
-        });
+       UserData.getInstance().setEventListener(this);
 
         setContentView(R.layout.activity_main);
         mfirebaseAuth=FirebaseAuth.getInstance();
@@ -1036,11 +940,18 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
 
 
             if(!startedService) {
-                Toast.makeText(getApplicationContext(), "Start service", Toast.LENGTH_SHORT).show();
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
 
-                Intent i = new Intent(getApplicationContext(), NotificationService.class);
-                i.putExtra("timer", 10);
-                startService(i);
+                        Intent i = new Intent(getApplicationContext(), NotificationService.class);
+                        i.putExtra("timer",10);
+                        startService(i);
+                        Log.v("service", "service started from main");
+                    }
+
+                    //startedService = true;
+                }, 200);
                 startedService = true;
             }
             else {
@@ -1823,4 +1734,69 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
         searchResultsListView.setAdapter(listAdapter);
 
     }
+
+    @Override
+    public void onListUpdated() {
+        FilterUserObjects();
+    }
+
+    @Override
+    public void onSingleUserUpdated(String username) {
+        if (map != null) {
+
+            if (loggedUsername.compareTo(username) == 0) {
+
+                userMarker.remove();
+                loggedUser = UserData.getInstance().getUserByUsername(username);
+//                    location = new Location("");
+//                    location.setLatitude(Double.parseDouble(loggedUser.UserPosition.latitude));
+//                    location.setLongitude(Double.parseDouble(loggedUser.UserPosition.longitude));
+
+                AddUserMarker(username);
+
+                map.animateCamera(CameraUpdateFactory.newLatLng(new LatLng(Double.parseDouble(loggedUser.UserPosition.latitude),
+                        Double.parseDouble(loggedUser.UserPosition.longitude))));
+
+            } else {
+                //FilterUserObjects();
+
+                Marker thisUserMarker = null;
+                for (int i = 0; i < usersMarkers.size(); i++) {
+                    if (((String) usersMarkers.get(i).getTag()).compareTo(username) == 0) {
+                        thisUserMarker = usersMarkers.get(i);
+                        break;
+                    }
+                }
+
+                if (thisUserMarker != null) {
+                    thisUserMarker.remove();
+                    usersMarkers.remove(thisUserMarker);
+
+                    User friendUser = UserData.getInstance().getUserByUsername(username);
+
+                    Position currentUserPosition = loggedUser.UserPosition;
+                    double current_lat = Double.parseDouble(currentUserPosition.latitude);
+                    double current_lon = Double.parseDouble(currentUserPosition.longitude);
+
+                    Position friendUserPosition = friendUser.UserPosition;
+                    double friend_lat = Double.parseDouble(friendUserPosition.latitude);
+                    double friend_lon = Double.parseDouble(friendUserPosition.longitude);
+
+                    float dist[] = new float[1];
+                    Location.distanceBetween(current_lat, current_lon, friend_lat, friend_lon, dist);
+
+                    if (dist[0] <= radius) {
+                        AddUserMarker(username);
+                    }
+
+                }
+            }
+        }
+    }
+
+    @Override
+    public void onUserAdded(String username) {
+        FilterUserObjects();
+    }
+
 }
