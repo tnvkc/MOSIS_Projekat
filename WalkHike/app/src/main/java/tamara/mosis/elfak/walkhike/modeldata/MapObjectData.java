@@ -97,7 +97,7 @@ public class MapObjectData {
         return list;
     }
 
-    private boolean isCloserThanRadius(Position position, int radius, String username) {
+    public boolean isCloserThanRadius(Position position, int radius, String username) {
 
         Position currentUserPosition = UserData.getInstance().getUserByUsername(username).UserPosition;
         double current_lat = Double.parseDouble(currentUserPosition.latitude);

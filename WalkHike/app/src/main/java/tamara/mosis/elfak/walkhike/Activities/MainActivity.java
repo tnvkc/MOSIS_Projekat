@@ -821,6 +821,11 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
                 filter_timespan_opened = false;
                 layout_filter_options.setVisibility(View.GONE);
                 filter_opened = false;
+                filter_icon.setVisibility(View.VISIBLE);
+                filter_users.setVisibility(View.VISIBLE);
+                filter_radius.setVisibility(View.VISIBLE);
+
+                info_window_container_groups.setVisibility(View.GONE);
             }
         });
 
@@ -920,7 +925,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
     //Toast.makeText(MapWithPlayServiceLocationActivity.this, "Lat : "+location.getLatitude()+" Lng "+location.getLongitude(), Toast.LENGTH_SHORT).show();
         if(map!=null){
 
-            Location prev = this.location;
+            this.location = location;
 
             //LatLng latLng=new LatLng(location.getLatitude(),location.getLongitude());
 
@@ -1022,6 +1027,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
         else if (v.getId() == R.id.info_window_see_details) {
 
             info_window_container.setVisibility(View.GONE);
+            info_window_container_groups.setVisibility(View.GONE);
             if (v.getTag() instanceof MapObject) {
 
                 MapObject objectTag = (MapObject) v.getTag();
@@ -1071,6 +1077,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
                     info_window_container.setVisibility(View.GONE);
+                    info_window_container_groups.setVisibility(View.GONE);
                     Toast.makeText(MainActivity.this, "Deleting object", Toast.LENGTH_SHORT).show();
                     MapObjectData.getInstance().deleteMapObject((MapObject) v.getTag());
 
@@ -1084,6 +1091,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
         } else if (v.getId() == R.id.main_addnewObject) {
 
             info_window_container.setVisibility(View.GONE);
+            info_window_container_groups.setVisibility(View.GONE);
 
             Intent intent=new Intent(getApplicationContext(), AddNewObjectActivity.class);
             Bundle bundle = new Bundle();
@@ -1096,6 +1104,9 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
 
         } else if (v.getId() == R.id.main_showArObject) {
 
+            info_window_container.setVisibility(View.GONE);
+            info_window_container_groups.setVisibility(View.GONE);
+
             Intent intent=new Intent(getApplicationContext(), ShowArObjectActivity.class);
             Bundle bundle = new Bundle();
             bundle.putInt("object_id", 3); //1 za trophy, 2 za emoji, 3 za marker
@@ -1104,6 +1115,9 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
             finish();
 
         } else if (v.getId() == R.id.filter_users) {
+
+            info_window_container.setVisibility(View.GONE);
+            info_window_container_groups.setVisibility(View.GONE);
 
             if (!hide_users) {
 
@@ -1126,6 +1140,9 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
 
         } else if (v.getId() == R.id.filter_by_distance_icon) {
 
+            info_window_container.setVisibility(View.GONE);
+            info_window_container_groups.setVisibility(View.GONE);
+
             if (filter_by_distance_opened) {
                 Toast.makeText(this, "Hide filter by distance options!", Toast.LENGTH_SHORT).show();
                 layout_filter_by_distance.setVisibility(View.GONE);
@@ -1144,6 +1161,9 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
             }
 
         } else if (v.getId() == R.id.filter_icon) {
+
+            info_window_container.setVisibility(View.GONE);
+            info_window_container_groups.setVisibility(View.GONE);
 
             if (filter_opened) {
                 Toast.makeText(this, "Hide filter options!", Toast.LENGTH_SHORT).show();
@@ -1628,6 +1648,19 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
     protected void ShowMarkerInfoWindow(Marker marker) {
         if (lastSelected == null || !lastSelected.equals(marker)) {
 
+            filter_icon.setVisibility(View.GONE);
+            layout_filter_options.setVisibility(View.GONE);
+            layout_filter_object_type.setVisibility(View.GONE);
+            layout_filter_timespan.setVisibility(View.GONE);
+            layout_filter_by_distance.setVisibility(View.GONE);
+            filter_radius.setVisibility(View.GONE);
+            filter_opened = false;
+            filter_objects_opened = false;
+            filter_timespan_opened = false;
+            filter_by_distance_opened = false;
+            filter_by_distance_seekbar.setVisibility(View.GONE);
+            filter_users.setVisibility(View.GONE);
+
             info_window_container.setVisibility(View.VISIBLE);
 
             if (marker.getTag() instanceof MapObject) {
@@ -1645,6 +1678,12 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
 
                 String lat = objectTag.position.latitude;
                 String lon = objectTag.position.longitude;
+
+                if (!MapObjectData.getInstance().isCloserThanRadius(objectTag.position, 2, loggedUsername)) {
+                    info_window_see_details.setEnabled(false);
+                } else {
+                    info_window_see_details.setEnabled(true);
+                }
 
                 int objectType = objectTag.objectType;
 
@@ -1670,6 +1709,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
             } else {
 
                 info_window_delete_object.setVisibility(View.GONE);
+                info_window_see_details.setEnabled(true);
 
                 String username = (String) marker.getTag();
                 User referringTo = UserData.getInstance().getUserByUsername(username);
@@ -1709,6 +1749,12 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
 
         } else {
             info_window_container.setVisibility(View.GONE);
+            info_window_container_groups.setVisibility(View.GONE);
+
+            filter_icon.setVisibility(View.VISIBLE);
+            filter_users.setVisibility(View.VISIBLE);
+            filter_radius.setVisibility(View.VISIBLE);
+
             lastSelected = null;
         }
     }
