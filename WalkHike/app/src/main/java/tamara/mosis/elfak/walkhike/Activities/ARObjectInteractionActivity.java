@@ -19,6 +19,7 @@ import com.bumptech.glide.Glide;
 import com.google.ar.sceneform.Camera;
 import com.google.ar.sceneform.Node;
 import com.google.ar.sceneform.Scene;
+import com.google.ar.sceneform.math.Quaternion;
 import com.google.ar.sceneform.math.Vector3;
 import com.google.ar.sceneform.rendering.ModelRenderable;
 import com.google.ar.sceneform.ux.ArFragment;
@@ -319,7 +320,8 @@ public class ARObjectInteractionActivity extends AppCompatActivity implements Vi
                             node.setRenderable(modelRenderable);
                             scene.addChild(node);
 
-                            node.setWorldPosition(new Vector3(0.0f, 0.5f, -2.0f));
+                            node.setWorldPosition(new Vector3(0.0f, -0.5f, -2.0f));
+
                         });
                 break;
             }
@@ -334,7 +336,9 @@ public class ARObjectInteractionActivity extends AppCompatActivity implements Vi
                             node.setRenderable(modelRenderable);
                             scene.addChild(node);
 
-                            node.setWorldPosition(new Vector3(0.0f, 0.5f, -2.0f));
+
+                            node.setWorldRotation(new Quaternion(new Vector3(0,1,0), 90f));
+                            node.setWorldPosition(new Vector3(0.0f, -0.5f, -3.0f));
                         });
                 break;
             }

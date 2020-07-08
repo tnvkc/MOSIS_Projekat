@@ -12,6 +12,7 @@ import androidx.fragment.app.Fragment;
 import com.google.ar.sceneform.Camera;
 import com.google.ar.sceneform.Node;
 import com.google.ar.sceneform.Scene;
+import com.google.ar.sceneform.math.Quaternion;
 import com.google.ar.sceneform.math.Vector3;
 import com.google.ar.sceneform.rendering.ModelRenderable;
 import com.google.ar.sceneform.ux.ArFragment;
@@ -68,7 +69,8 @@ public class AddObject_ShowInAR extends Fragment {
                             node.setRenderable(modelRenderable);
                             scene.addChild(node);
 
-                            node.setWorldPosition(new Vector3(0.0f, 0.2f, -3.0f));
+                            node.setWorldRotation(new Quaternion(new Vector3(0,1,0), 90f));
+                            node.setWorldPosition(new Vector3(0.0f, -0.5f, -3.0f));
                         });
                 break;
             }
