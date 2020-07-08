@@ -259,4 +259,18 @@ public class NotificationsActivity extends AppCompatActivity implements Notifica
     public void onNewObject() {
         notifications = prepareNotificationTestData();
     }
+
+   /* @Override
+    public void onBackPressed() {
+
+        if (bottom_navigation_menu.getSelectedItemId() == R.id.map)
+        {
+            super.onBackPressed();
+            finish();
+        }
+        else
+        {
+            bottom_navigation_menu.setSelectedItemId(R.id.map);
+        }
+    }*/
 }

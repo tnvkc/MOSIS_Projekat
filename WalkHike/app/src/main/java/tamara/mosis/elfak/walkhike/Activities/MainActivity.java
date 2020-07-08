@@ -246,6 +246,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
 //            }
 //        });
 
+
         MapObjectData.getInstance().setListUpdatedEventListener(new MapObjectData.ListUpdatedEventListener() {
             @Override
             public void onListUpdated() {
@@ -595,6 +596,20 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
 
 
     }
+
+
+    /*@Override
+    public void onBackPressed() {
+
+        if (bottom_navigation_menu.getSelectedItemId() == R.id.map)
+        {
+            finish();
+        }
+        else
+        {
+            bottom_navigation_menu.setSelectedItemId(R.id.map);
+        }
+    }*/
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
