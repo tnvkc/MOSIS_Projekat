@@ -504,10 +504,44 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
         Intent callerIntent = getIntent();
         obj = (MapObject) callerIntent.getSerializableExtra("objekaat");
 
-
-
     }
 
+
+    public void onBackPressed() {
+
+        if (bottom_navigation_menu.getSelectedItemId() == R.id.map) {
+
+            if (info_window_container.getVisibility() == View.VISIBLE) {
+                info_window_container.setVisibility(View.GONE);
+                info_window_container_groups.setVisibility(View.GONE);
+                filter_icon.setVisibility(View.VISIBLE);
+                filter_users.setVisibility(View.VISIBLE);
+                filter_radius.setVisibility(View.VISIBLE);
+            } else {
+
+                AlertDialog.Builder areYouSure = new AlertDialog.Builder(MainActivity.this);
+
+                areYouSure.setTitle("Exit application?");
+                areYouSure.setMessage("Are you sure you want to exit the application?");
+
+                areYouSure.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                    }
+                });
+
+                areYouSure.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        finish();
+                    }
+                });
+
+                AlertDialog dialog = areYouSure.create();
+                dialog.show();
+            }
+        }
+    }
 
     /*@Override
     public void onBackPressed() {
@@ -1022,8 +1056,6 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
 
 
         } else if (v.getId() == R.id.info_delete_object) {
-
-            //dialog box?
 
             AlertDialog.Builder areYouSure = new AlertDialog.Builder(MainActivity.this);
 

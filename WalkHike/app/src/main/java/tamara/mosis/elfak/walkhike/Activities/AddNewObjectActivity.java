@@ -155,6 +155,11 @@ public class AddNewObjectActivity extends FragmentActivity implements View.OnCli
 
     }
 
+    public void onBackPressed() {
+        setResult(RESULT_CANCELED);
+        finish();
+    }
+
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
