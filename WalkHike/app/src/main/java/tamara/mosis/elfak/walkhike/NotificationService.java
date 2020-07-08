@@ -251,13 +251,17 @@ public class NotificationService extends IntentService implements MapObjectData.
 
 
             latLng=new LatLng(location.getLatitude(),location.getLongitude());
-            latLng = new LatLng(location.getLatitude(), location.getLongitude());
             Position p = new Position();
             p.latitude = "" + latLng.latitude;
             p.longitude = "" + latLng.longitude;
             p.desc = "User is here: ";
             userData.getInstance().updateUserPosition(LoggedUser.email, p);
                 //Toast.makeText(this, "Usao u latlong", Toast.LENGTH_SHORT );
+
+
+            findNearbyUsers();
+
+            findNearbyObjects();
 
         }
         startLocationUpdates();
@@ -344,11 +348,16 @@ public class NotificationService extends IntentService implements MapObjectData.
 
                 editor.commit();
 
+                SharedPreferences sharedPref1 = getApplicationContext().getSharedPreferences("Userdata", Context.MODE_PRIVATE);
+                Boolean sound = sharedPref1.getBoolean(getString(R.string.loggedUser_sound), true);
+                Boolean notii = sharedPref1.getBoolean(getString(R.string.loggedUser_notifications), true);
 
-                sendNotif("notify_"+"newfriend" , "walkhikwe_friends",200 , "Someone wants to be your friend",
-                        "Request", "friend request", "friend request",
-                        new Intent(getApplicationContext(), FriendRequestsActivity.class));
 
+                if(notii) {
+                    sendNotif("notify_" + "newfriend", "walkhikwe_friends", 200, "Someone wants to be your friend",
+                            "Request", "friend request", "friend request",
+                            new Intent(getApplicationContext(), FriendRequestsActivity.class), sound);
+                }
 
 
                 if(myListener != null)
@@ -388,10 +397,14 @@ public class NotificationService extends IntentService implements MapObjectData.
                     Log.v("Position", users.get(i).UserPosition.toString() + " !");
 
 
-                    sendNotif("notify_" + users.get(i).username, "usersnear",numberOfFriendNotis , "User " + users.get(i).username+" near you!",
-                            "User " +users.get(i).username+ " near you!", "Near you", "User " +users.get(i).username+ " near you!",
-                            new Intent(getApplicationContext(), MainActivity.class));
-
+                    SharedPreferences sharedPref1 = getApplicationContext().getSharedPreferences("Userdata", Context.MODE_PRIVATE);
+                    Boolean sound = sharedPref1.getBoolean(getString(R.string.loggedUser_sound), true);
+                    Boolean notii = sharedPref1.getBoolean(getString(R.string.loggedUser_notifications), true);
+                    if(notii) {
+                        sendNotif("notify_" + users.get(i).username, "usersnear", numberOfFriendNotis, "User " + users.get(i).username + " near you!",
+                                "User " + users.get(i).username + " near you!", "Near you", "User " + users.get(i).username + " near you!",
+                                new Intent(getApplicationContext(), MainActivity.class), sound);
+                    }
 
                    // numberOfObjectNotis++;
                     //users.remove(i);
@@ -432,10 +445,17 @@ public class NotificationService extends IntentService implements MapObjectData.
 
                             Log.v("MapObject", objects.get(i).datetime + " !");
 
+                            Intent ii =  new Intent(getApplicationContext(), MainActivity.class);
+                            ii.putExtra("objekaat", mo);
 
-                            sendNotif("notify_" + objects.get(i), "usersnear", numberOfFriendNotis, "Object near you!",
-                                    "Object near you!", "Near you", "Object near you!",
-                                    new Intent(getApplicationContext(), MainActivity.class));
+                            SharedPreferences sharedPref1 = getApplicationContext().getSharedPreferences("Userdata", Context.MODE_PRIVATE);
+                            Boolean sound = sharedPref1.getBoolean(getString(R.string.loggedUser_sound), true);
+                            Boolean notii = sharedPref1.getBoolean(getString(R.string.loggedUser_notifications), true);
+                            if(notii) {
+                                sendNotif("notify_" + objects.get(i), "usersnear", numberOfFriendNotis, "Object near you!",
+                                        "Object near you!", "Near you", "Object near you!",
+                                        ii, sound);
+                            }
 
 
                         }
@@ -463,12 +483,15 @@ public class NotificationService extends IntentService implements MapObjectData.
                 n++;
                 Log.v("Position" ,  positions.get(i).toString() + " !");
 
+                SharedPreferences sharedPref1 = getApplicationContext().getSharedPreferences("Userdata", Context.MODE_PRIVATE);
+                Boolean sound = sharedPref1.getBoolean(getString(R.string.loggedUser_sound), true);
+                Boolean notii = sharedPref1.getBoolean(getString(R.string.loggedUser_notifications), true);
 
+                if(notii) {
+                    sendNotif("notify_", "walkhikw_usersnear", 100, "Positon near you!",
+                            "Positon near you!", "Near you", "Positon near you!", new Intent(getApplicationContext(), MainActivity.class), sound);
 
-                sendNotif("notify_" , "walkhikw_usersnear",100 , "Positon near you!",
-                        "Positon near you!", "Near you", "Positon near you!", new Intent(getApplicationContext(), MainActivity.class));
-
-
+                }
 
             }
 
@@ -482,7 +505,7 @@ public class NotificationService extends IntentService implements MapObjectData.
 
 
 
-    private void sendNotif(String chanelid, String andr8ID, int iid, String bigTextt, String bigTitle, String cTitle, String cText, Intent whereNext )
+    private void sendNotif(String chanelid, String andr8ID, int iid, String bigTextt, String bigTitle, String cTitle, String cText, Intent whereNext , boolean sound)
     {
         NotificationCompat.Builder mBuilder =
                 new NotificationCompat.Builder(getApplicationContext(), chanelid);
@@ -500,6 +523,7 @@ public class NotificationService extends IntentService implements MapObjectData.
         mBuilder.setContentText(cText);
         mBuilder.setPriority(android.app.Notification.PRIORITY_MAX);
         mBuilder.setStyle(bigText);
+        mBuilder.setAutoCancel(true);
 
         mNotificationManager =
                 (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
@@ -512,8 +536,18 @@ public class NotificationService extends IntentService implements MapObjectData.
                     channelId,
                     "walkhike_"+andr8ID,
                     NotificationManager.IMPORTANCE_HIGH);
+
+
+            if(!sound)
+                channel.setSound(null, null);
+
+
             mNotificationManager.createNotificationChannel(channel);
             mBuilder.setChannelId(channelId);
+        }
+        else {
+            if(!sound)
+                mBuilder.setSound(null);
         }
 
         mNotificationManager.notify(iid, mBuilder.build());
@@ -561,8 +595,15 @@ public class NotificationService extends IntentService implements MapObjectData.
 
                 Intent i =  new Intent(getApplicationContext(), MainActivity.class);
                 i.putExtra("objekaat", obj);
-                sendNotif("notify_" + "mapobjects", "walkhikw_mapobjects", 500, "Someone added an object near you!",
-                        "Obejct near you!", "Near you", "Object near you!", i);
+
+                SharedPreferences sharedPref1 = getApplicationContext().getSharedPreferences("Userdata", Context.MODE_PRIVATE);
+                Boolean sound = sharedPref1.getBoolean(getString(R.string.loggedUser_sound), true);
+                Boolean notii = sharedPref1.getBoolean(getString(R.string.loggedUser_notifications), true);
+
+                if(notii) {
+                    sendNotif("notify_" + "mapobjects", "walkhikw_mapobjects", 500, "Someone added an object near you!",
+                            "Obejct near you!", "Near you", "Object near you!", i, sound);
+                }
 
             }
         }
@@ -585,8 +626,15 @@ public class NotificationService extends IntentService implements MapObjectData.
                 Intent i =  new Intent(getApplicationContext(), MainActivity.class);
                 i.putExtra("objekaat", obj);
 
-                sendNotif("notify_" + "mapobjects", "walkhikw_mapobjects", 600, "Someone reacted to your object!",
-                        "Someone reacted to your object!", "Someone reacted to your object!", "Someone reacted to your object!",i);
+
+                SharedPreferences sharedPref1 = getApplicationContext().getSharedPreferences("Userdata", Context.MODE_PRIVATE);
+                Boolean sound = sharedPref1.getBoolean(getString(R.string.loggedUser_sound), true);
+                Boolean notii = sharedPref1.getBoolean(getString(R.string.loggedUser_notifications), true);
+
+                if(notii) {
+                    sendNotif("notify_" + "mapobjects", "walkhikw_mapobjects", 600, "Someone reacted to your object!",
+                            "Someone reacted to your object!", "Someone reacted to your object!", "Someone reacted to your object!", i, sound);
+                }
 
             }
         }

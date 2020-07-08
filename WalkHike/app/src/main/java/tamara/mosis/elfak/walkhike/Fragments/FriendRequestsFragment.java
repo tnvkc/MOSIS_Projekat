@@ -71,6 +71,7 @@ public class FriendRequestsFragment extends Fragment implements FriendshipData.L
         prikaz = (TextView) view.findViewById(R.id.friendrequest_textview);
 
         friendshipss=new ArrayList<>();
+        showFriendships();
         freqRecyclerAdapter=new FriendRequestsRecyclerAdapter(friendshipss,getContext());
 
         usersListView.setHasFixedSize(true);
@@ -78,7 +79,7 @@ public class FriendRequestsFragment extends Fragment implements FriendshipData.L
         usersListView.setAdapter(freqRecyclerAdapter);
 
 
-        showFriendships();
+
         return view;
     }
 
@@ -104,12 +105,12 @@ public class FriendRequestsFragment extends Fragment implements FriendshipData.L
         for (int i = 0; i < probepos.size(); i++) {
             String a = probepos.get(i).toUser.email;
             if (a.compareTo(index1) == 0 && probepos.get(i).accepted == false && !friendshipss.contains(probepos.get(i))) {
-                prikaziii += probepos.get(i).toString() + " ";
+                //prikaziii += probepos.get(i).toString() + " ";
                 friendshipss.add(probepos.get(i));
 
                 doWork();
             }
-            prikaziii += "\n";
+            //prikaziii += "\n";
         }
 
         prikaz.setText(prikaziii);

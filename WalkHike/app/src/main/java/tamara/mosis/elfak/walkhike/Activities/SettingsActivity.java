@@ -84,6 +84,7 @@ public class SettingsActivity extends AppCompatActivity {
                 {
                     editor.putString("userUnit", "km");
                     btnmi.setChecked(false);
+                    editor.commit();
                 }
             }
         });
@@ -95,6 +96,7 @@ public class SettingsActivity extends AppCompatActivity {
                 {
                     editor.putString("userUnit", "mi");
                     btnkm.setChecked(false);
+                    editor.commit();
                 }
             }
         });

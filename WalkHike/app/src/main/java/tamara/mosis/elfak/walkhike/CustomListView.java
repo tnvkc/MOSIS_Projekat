@@ -13,6 +13,7 @@ import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Build;
+import android.os.Handler;
 import android.provider.MediaStore;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -235,11 +236,15 @@ public class CustomListView extends ArrayAdapter<String> implements  ActivityCom
                     if (v.isChecked())
                     {
                         editor.putBoolean("userSound", true);
+
+                        editor.commit();
                         am.setStreamVolume(AudioManager.STREAM_MUSIC, am.getStreamMaxVolume(AudioManager.STREAM_MUSIC), 0);
                     }
                     else
                     {
                         editor.putBoolean("userSound", false);
+
+                        editor.commit();
                         am.setStreamVolume(AudioManager.STREAM_MUSIC, am.getStreamMinVolume(AudioManager.STREAM_MUSIC), 0);
                     }
                     mp=new MediaPlayer();
@@ -248,16 +253,20 @@ public class CustomListView extends ArrayAdapter<String> implements  ActivityCom
                 }
                 case (1): {
                     if (v.isChecked()) {
-                        Toast.makeText(context, "Start service", Toast.LENGTH_SHORT).show();
+                        //Toast.makeText(context, "Start service", Toast.LENGTH_SHORT).show();
                         editor.putBoolean("userNotifications", true);
+
+                        editor.commit();
 
                         Intent i = new Intent(context, NotificationService.class);
                         i.putExtra("timer", 10);
                         context.startService(i);
                     } else {
-                        Toast.makeText(context, "Stop service", Toast.LENGTH_SHORT).show();
+                        //Toast.makeText(context, "Stop service", Toast.LENGTH_SHORT).show();
                         v.setActivated(false);
                         editor.putBoolean("userNotifications", false);
+
+                        editor.commit();
 
                         Intent i = new Intent(context, NotificationService.class);
 
@@ -270,8 +279,44 @@ public class CustomListView extends ArrayAdapter<String> implements  ActivityCom
                     if (v.isChecked()) {
                         editor.putBoolean("userLocationSharing", true);
 
+                        editor.commit();
+
+
+                            Toast.makeText(context, "Start service", Toast.LENGTH_SHORT).show();
+
+                        new Handler().postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+
+                                Intent i = new Intent(context, NotificationService.class);
+                                i.putExtra("timer",10);
+                                context.startService(i);
+                            }
+
+                            //startedService = true;
+                        }, 200);
+
+
                     } else {
                         editor.putBoolean("userLocationSharing", false);
+
+                        editor.commit();
+
+
+                        //Toast.makeText(context, "Stop service", Toast.LENGTH_SHORT).show();
+
+                        new Handler().postDelayed(new Runnable() {
+                                                      @Override
+                                                      public void run() {
+
+                                                          v.setActivated(false);
+
+                                                          Intent i = new Intent(context, NotificationService.class);
+
+                                                          context.stopService(i);
+                                                      }
+                                                  }, 200);
+                       // startedService = false;
 
                     }
                     break;

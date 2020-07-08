@@ -14,6 +14,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
@@ -31,6 +32,7 @@ public class NotificationsActivity extends AppCompatActivity implements Notifica
     ListView notification_list;
     BottomNavigationView bottom_navigation_menu;
     ArrayList<Notification> notifications;
+    TextView prikaz;
 
     Toolbar toolbar;
     Button clearBtn;
@@ -50,7 +52,8 @@ public class NotificationsActivity extends AppCompatActivity implements Notifica
 
         getSupportActionBar().setDisplayShowTitleEnabled(true);
 
-
+        prikaz = findViewById(R.id.title_notifications);
+        prikaz.setText("");
         notification_list = findViewById(R.id.notification_list);
 
         NotificationService.setUpListenerObjectNoti(this);
@@ -238,7 +241,7 @@ public class NotificationsActivity extends AppCompatActivity implements Notifica
 
         if(notifications.size() == 0)
         {
-
+            prikaz.setText("You have no notifications");
         }
         /////////////
         notifications.sort(new Comparator<Notification>() {

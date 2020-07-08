@@ -22,11 +22,13 @@ import android.graphics.Bitmap;
 import android.graphics.Camera;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.UserManager;
 import android.text.Editable;
 import android.text.InputType;
 import android.text.TextWatcher;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -833,6 +835,19 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
         }
 
         map.setOnMarkerClickListener(this);
+
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+
+                Intent i = new Intent(getApplicationContext(), NotificationService.class);
+                i.putExtra("timer",10);
+                startService(i);
+                Log.v("service", "service started from main");
+            }
+
+            //startedService = true;
+        }, 200);
     }
 
     @Override
