@@ -9,11 +9,13 @@
         android:title="Search"
         app:showAsAction="always"></item>
 
-    <item
-        android:id="@+id/main_menu_probe_item"
-        android:icon="@drawable/ic_settings_black_24dp"
-        android:title="Settings"
-        app:showAsAction="always"></item>
+<!--    <item-->
+<!--        android:id="@+id/main_menu_probe_item"-->
+<!--        android:icon="@drawable/ic_settings_black_24dp"-->
+<!--        android:title="Settings"-->
+
+<!--        android:visibility="gone"-->
+<!--        app:showAsAction="always"></item>-->
     <item
         android:id="@+id/main_menu_profile_item"
         android:icon="@drawable/ic_account_24"
