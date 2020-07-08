@@ -4,10 +4,12 @@ public abstract class Leaderboard_Entry {
 
     protected String username;
     protected double points;
+    protected String image;
 
-    public Leaderboard_Entry(String username, double points) {
+    public Leaderboard_Entry(String username, double points, String image) {
         this.username = username;
         this.points = points;
+        this.image = image;
     }
 
     public String getUsername() {
@@ -22,5 +24,9 @@ public abstract class Leaderboard_Entry {
 
     public void setPoints(double points) {
         this.points = points;
+    }
+
+    public String getImage() {
+        return image;
     }
 }

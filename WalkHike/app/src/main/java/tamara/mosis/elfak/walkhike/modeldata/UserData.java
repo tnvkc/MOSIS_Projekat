@@ -45,13 +45,14 @@ public class UserData {
         return users;
     }
 
-    tamara.mosis.elfak.walkhike.modeldata.UserData.ListUpdatedEventListener updateListener;
-    public void setEventListener(tamara.mosis.elfak.walkhike.modeldata.UserData.ListUpdatedEventListener listener) {
+    tamara.mosis.elfak.walkhike.modeldata.UserData.UpdateEventListener updateListener;
+    public void setEventListener(tamara.mosis.elfak.walkhike.modeldata.UserData.UpdateEventListener listener) {
         updateListener = listener;
     }
-    public interface ListUpdatedEventListener {
+    public interface UpdateEventListener {
         void onListUpdated();
-        void onListUpdated(User user);
+        void onSingleUserUpdated(String username);
+        void onUserAdded(String username);
     }
 
 
@@ -93,7 +94,7 @@ public class UserData {
                 users.add(myUser);
                 UsersMapping.put(myUserKey, users.size() - 1);
                 if (updateListener != null)
-                    updateListener.onListUpdated();
+                    updateListener.onUserAdded(myUser.username);
             }
         }
 
@@ -109,8 +110,9 @@ public class UserData {
                 users.add(myUser);
                 UsersMapping.put(myUserKey, users.size() - 1);
             }
-            if (updateListener != null)
-                updateListener.onListUpdated(myUser);
+            if (updateListener != null) {
+                updateListener.onSingleUserUpdated(myUser.username);
+            }
         }
 
         @Override
@@ -220,22 +222,22 @@ public class UserData {
     }
 
 
-    public void updateUserProfile(String email,  String newUsername, String newBio, String newImage)
+    public void updateUserProfile(String username, String newBio, String newImage)
     {
         int indexx = -1;
-        for(int i =0; i<users.size(); i++)
+        for(int i =0; i < users.size(); i++)
         {
-            if(users.get(i).email.compareTo(email) == 0)
+            if(users.get(i).username.compareTo(username) == 0) {
                 indexx = i;
+                break;
+            }
         }
         if(indexx == -1)
             return;
 
         User uu =users.get(indexx);
-        uu.username = newUsername;
         uu.desc = newBio;
         uu.image = newImage;
-
 
         db.child(FIREBASE_CHILD).child(uu.key).setValue(uu);
 

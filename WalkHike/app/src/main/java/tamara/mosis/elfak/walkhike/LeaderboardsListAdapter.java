@@ -11,6 +11,8 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.bumptech.glide.Glide;
+
 import java.util.ArrayList;
 
 public class LeaderboardsListAdapter extends ArrayAdapter<Leaderboard_Entry> {
@@ -30,15 +32,20 @@ public class LeaderboardsListAdapter extends ArrayAdapter<Leaderboard_Entry> {
 
         String username = getItem(position).getUsername();
         String points = getItem(position).getPoints();
+        String image = getItem(position).getImage();
 
         LayoutInflater inflater = LayoutInflater.from(context);
         convertView = inflater.inflate(resource, parent, false);
 
-        ImageView user_image_tv = (ImageView) convertView.findViewById(R.id.leaderboard_user_image);
+        ImageView user_image_iv = (ImageView) convertView.findViewById(R.id.leaderboard_user_image);
         TextView user_name_tv = (TextView) convertView.findViewById(R.id.leaderboard_user_name);
         TextView points_tv = (TextView) convertView.findViewById(R.id.leaderboard_entry_points);
 
-        user_image_tv.setImageResource(R.drawable.boy); //svima ovo za sada
+        if (image != null && !(image.compareTo("") == 0))
+            Glide.with(context).load(image).into(user_image_iv);
+        else
+            user_image_iv.setImageResource(R.drawable.ic_account);
+        //user_image_tv.setImageResource(R.drawable.boy); //svima ovo za sada
         user_name_tv.setText(username);
         points_tv.setText(points);
 

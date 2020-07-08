@@ -144,11 +144,11 @@ public class ScoresData {
         return Scores.get(index);
     }
 
-    public Scores getScore(String userEmail) {
+    public Scores getScore(String username) {
         Scores uu = null;
         for(int i =0; i< this.Scores.size(); i++)
         {
-            if(this.Scores.get(i).useer.compareTo(userEmail) ==0)
+            if(this.Scores.get(i).useer.compareTo(username) ==0)
             {
                 uu = this.Scores.get(i);
             }

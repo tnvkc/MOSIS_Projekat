@@ -26,19 +26,15 @@ import tamara.mosis.elfak.walkhike.modeldata.UserData;
 
 public class EditProfileActivity extends AppCompatActivity {
 
+    String username;
+
     Toolbar toolbar;
     ImageView edit;
     CircularImageView profPic;
     Button doneBtn;
-    EditText name;
     EditText bio;
 
-    UserData userData;
     String imgUrl;
-
-    String emaill;
-    String image;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,32 +52,40 @@ public class EditProfileActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
 
-        name = (EditText) findViewById(R.id.editProfile_name);
         bio = (EditText)findViewById(R.id.editProfile_bioo);
 
-        SharedPreferences sharedPref = getApplicationContext().getSharedPreferences( "Userdata", Context.MODE_PRIVATE);
-        String username = sharedPref.getString(getString(R.string.loggedUser_username), "EMPTY");
-        emaill = sharedPref.getString(getString(R.string.loggedUser_email), "EMPTY");
-        image = sharedPref.getString(getString(R.string.loggedUser_image), "EMPTY");
+        username = getIntent().getStringExtra("username");
+        User u = UserData.getInstance().getUserByUsername(username);
 
-        User u = userData.getInstance().getUser(emaill);
-        if(u != null) {
+        if(u != null && u.desc != null) {
             bio.setText(u.desc);
         }
-        name.setText(username);
 
         doneBtn=findViewById(R.id.buttonDoneEdit);
         doneBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                String newBio = bio.getText().toString();
+                UserData.getInstance().updateUserProfile(username, newBio, imgUrl);
+
                 Intent resultIntent = new Intent();
                 resultIntent.putExtra("img", imgUrl);
+                resultIntent.putExtra("bio", newBio);
                 setResult(Activity.RESULT_OK, resultIntent);
                 finish();
             }
         });
 
         profPic=findViewById(R.id.imageViewProfPic);
+        if (u != null && u.image != null && !(u.image.compareTo("") == 0)) {
+            Glide.with(this).load(u.image).into(profPic);
+            imgUrl = u.image;
+        }
+        else {
+            profPic.setImageResource(R.drawable.ic_account);
+            imgUrl = null;
+        }
+
         edit=findViewById(R.id.imageViewEditPicture);
         edit.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -95,36 +99,22 @@ public class EditProfileActivity extends AppCompatActivity {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        switch(requestCode) {
-            case (1) : {
-                if (resultCode == Activity.RESULT_OK) {
-                    imgUrl = data.getStringExtra("img");
-                    RequestOptions placeholderOpt = new RequestOptions();
-                    placeholderOpt.placeholder(R.drawable.girl_1);
-                    Glide.with(getApplicationContext()).setDefaultRequestOptions(placeholderOpt).load(imgUrl).into(profPic);
-                }
-                break;
-            }
+        if (requestCode == 1 && resultCode == Activity.RESULT_OK) {
+            imgUrl = data.getStringExtra("img");
+            //RequestOptions placeholderOpt = new RequestOptions();
+            //placeholderOpt.placeholder(R.drawable.girl_1);
+            //Glide.with(getApplicationContext()).setDefaultRequestOptions(placeholderOpt).load(imgUrl).into(profPic);
+            if (imgUrl != null && !(imgUrl.compareTo("") == 0))
+                Glide.with(this).load(imgUrl).into(profPic);
         }
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem menuItem) {
         if (menuItem.getItemId() == android.R.id.home) {
-
+            setResult(RESULT_CANCELED);
             finish();
         }
         return super.onOptionsItemSelected(menuItem);
-    }
-
-
-    void updateProfile()
-    {
-
-        String newName = name.getText().toString();
-        String newBio = bio.getText().toString();
-
-
-        UserData.getInstance().updateUserProfile(emaill, newName, newBio, image);
     }
 }

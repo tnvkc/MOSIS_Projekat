@@ -47,6 +47,8 @@ import java.lang.Object;
 
 public class ProfileActivity extends AppCompatActivity {
 
+    String username;
+
     Integer[] imgid={R.drawable.ic_edit_black_24dp,R.drawable.ic_settings_black_24dp,R.drawable.ic_help_outline_black_24dp,
             R.drawable.ic_logout__black_24dp};
     ListView list;
@@ -66,11 +68,6 @@ public class ProfileActivity extends AppCompatActivity {
     private FirebaseAuth mfirebaseAuth;
     private FirebaseFirestore firestore;//yt
     private String userID;//yt
-
-    UserData userData;
-    ScoresData scoresData;
-
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -98,29 +95,29 @@ public class ProfileActivity extends AppCompatActivity {
         textViewEmail = findViewById(R.id.textViewMail);
         textBio = findViewById(R.id.profile_bioo);
 
-        sharedPref = getApplicationContext().getSharedPreferences( "Userdata", Context.MODE_PRIVATE);
-        String username = sharedPref.getString(getString(R.string.loggedUser_username), "EMPTY");
-        String emaill = sharedPref.getString(getString(R.string.loggedUser_email), "EMPTY");
-        String image = sharedPref.getString(getString(R.string.loggedUser_image), "EMPTY");
+        username = getIntent().getStringExtra("user");
+
+        User user = UserData.getInstance().getUserByUsername(username);
 
         textViewName.setText(username);
-        textViewEmail.setText(emaill);
+        textViewEmail.setText(user.email);
 
-        User u = userData.getInstance().getUser(emaill);
-        if(u != null) {
-            textBio.setText(u.desc);
+        if (user.desc != null) {
+            textBio.setText(user.desc);
         }
 
-        Scores s = scoresData.getInstance().getScore(emaill);
+        Scores s = ScoresData.getInstance().getScore(username);
         if(s != null)
         {
-            textTotalDistance.setText("" +s.alltimeDistance);
-            textTotalActivity.setText("" +s.alltimeActivity);
+            textTotalDistance.setText(s.alltimeDistance + "m");
+            textTotalActivity.setText(s.alltimeActivity + " points");
         }
 
-        RequestOptions placeholderOpt = new RequestOptions();
-        placeholderOpt.placeholder(R.drawable.girl_1);
-        Glide.with(getApplicationContext()).setDefaultRequestOptions(placeholderOpt).load(image).into(profilePic);
+        if (user.image != null && !(user.image.compareTo("") == 0)) {
+            Glide.with(this).load(user.image).into(profilePic);
+        } else {
+            profilePic.setImageResource(R.drawable.ic_account);
+        }
 
         mfirebaseAuth=FirebaseAuth.getInstance();
         final FirebaseUser firebaseUser = mfirebaseAuth.getCurrentUser();
@@ -136,7 +133,8 @@ public class ProfileActivity extends AppCompatActivity {
                 Intent intent;
                 switch (position) {
                     case 0:
-                        Intent editProf =new Intent(getApplicationContext(),EditProfileActivity.class);
+                        Intent editProf =new Intent(getApplicationContext(), EditProfileActivity.class);
+                        editProf.putExtra("username", username);
                         startActivityForResult(editProf,123);
                         break;
                     case 1:
@@ -197,9 +195,12 @@ public class ProfileActivity extends AppCompatActivity {
             case (123) : {
                 if (resultCode == Activity.RESULT_OK) {
                     String imgUrl = data.getStringExtra("img");
-                    RequestOptions placeholderOpt = new RequestOptions();
-                    placeholderOpt.placeholder(R.drawable.girl_1);
-                    Glide.with(getApplicationContext()).setDefaultRequestOptions(placeholderOpt).load(imgUrl).into(profilePic);
+                    if (imgUrl != null && !(imgUrl.compareTo("") == 0))
+                        Glide.with(this).load(imgUrl).into(profilePic);
+
+                    String newBio = data.getStringExtra("bio");
+                    textBio.setText(newBio);
+
                 }
                 break;
             }

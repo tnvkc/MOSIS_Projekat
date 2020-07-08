@@ -37,6 +37,7 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
@@ -71,14 +72,12 @@ public class NewProfilePictureActivity extends AppCompatActivity {
     FirebaseStorage storage;
     StorageReference storageReference;
 
-    UserData userData;
     Uri imageUri;
     String firestorageUri = null;
 
     ImageView imageView;
     Toolbar toolbar;
     Button btnSave;
-    private User LoggedUser;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -118,7 +117,6 @@ public class NewProfilePictureActivity extends AppCompatActivity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 if (position == 0) {
                     getImage();
-
                 }
                 else {
                     Intent intent = new Intent();
@@ -133,61 +131,37 @@ public class NewProfilePictureActivity extends AppCompatActivity {
         btnSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                SharedPreferences sharedPref = getApplicationContext().getSharedPreferences("Userdata", Context.MODE_PRIVATE);
-                String username = sharedPref.getString(getString(R.string.loggedUser_username), "EMPTY");
-                String email = sharedPref.getString(getString(R.string.loggedUser_email), "EMPTY");
-                String image = sharedPref.getString(getString(R.string.loggedUser_image), "EMPTY");
-
-                int indexx = sharedPref.getInt(getString(R.string.loggedUser_index), -1);
-                LoggedUser = new User();
-                LoggedUser.username = username;
-                LoggedUser.email = email;
-                LoggedUser.image = image;
-
-                uploadImage(indexx);
-
+                uploadImage();
             }
         });
-
     }
 
-    private void uploadImage(int index) {
+    private void uploadImage() {
         if (imageUri != null)
         {
-            ProgressDialog progressDialog
-                    = new ProgressDialog(this);
+            ProgressDialog progressDialog = new ProgressDialog(this);
             progressDialog.setTitle("Uploading...");
             progressDialog.show();
 
-            StorageReference ref
-                    = storageReference
-                    .child(
-                            "images/"
-                                    + UUID.randomUUID().toString());
-
+            StorageReference ref = storageReference.child("images/" + UUID.randomUUID().toString());
             ref.putFile(imageUri)
                     .addOnSuccessListener(
                             new OnSuccessListener<UploadTask.TaskSnapshot>() {
-
                                 @Override
-                                public void onSuccess(
-                                        UploadTask.TaskSnapshot taskSnapshot) {
+                                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
 
                                     ref.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                                         @Override
                                         public void onSuccess(Uri uri) {
                                             firestorageUri = String.valueOf(uri);
-                                            LoggedUser.image = firestorageUri;
-                                            userData.getInstance().updateUser(index, LoggedUser);
 
                                             Context context = getApplicationContext();
-                                            SharedPreferences sharedPref = context.getSharedPreferences(
-                                                    "Userdata", Context.MODE_PRIVATE);
+                                            SharedPreferences sharedPref = context.getSharedPreferences("Userdata", Context.MODE_PRIVATE);
                                             SharedPreferences.Editor editor = sharedPref.edit();
-                                            editor.putString(getString(R.string.loggedUser_image), LoggedUser.image);
+                                            editor.putString(getString(R.string.loggedUser_image), firestorageUri);
 
                                             Intent resultIntent = new Intent();
-                                            resultIntent.putExtra("img", LoggedUser.image);
+                                            resultIntent.putExtra("img", firestorageUri);
                                             setResult(Activity.RESULT_OK, resultIntent);
                                             finish();
 
@@ -195,11 +169,7 @@ public class NewProfilePictureActivity extends AppCompatActivity {
                                     });
 
                                     progressDialog.dismiss();
-                                    Toast
-                                            .makeText(NewProfilePictureActivity.this,
-                                                    "Image Uploaded!!",
-                                                    Toast.LENGTH_SHORT)
-                                            .show();
+                                    Toast.makeText(NewProfilePictureActivity.this, "Image Uploaded!!", Toast.LENGTH_SHORT).show();
 
                                 }
                             })
@@ -207,34 +177,22 @@ public class NewProfilePictureActivity extends AppCompatActivity {
                     .addOnFailureListener(new OnFailureListener() {
                         @Override
                         public void onFailure(@NonNull Exception e) {
-
                             // Error, Image not uploaded
                             progressDialog.dismiss();
-                            Toast
-                                    .makeText(NewProfilePictureActivity.this,
-                                            "Failed " + e.getMessage(),
-                                            Toast.LENGTH_SHORT)
-                                    .show();
+                            Toast.makeText(NewProfilePictureActivity.this, "Failed " + e.getMessage(), Toast.LENGTH_SHORT).show();
                         }
                     })
                     .addOnProgressListener(
                             new OnProgressListener<UploadTask.TaskSnapshot>() {
 
                                 @Override
-                                public void onProgress(
-                                        UploadTask.TaskSnapshot taskSnapshot) {
-                                    double progress
-                                            = (100.0
-                                            * taskSnapshot.getBytesTransferred()
-                                            / taskSnapshot.getTotalByteCount());
-                                    progressDialog.setMessage(
-                                            "Uploaded "
-                                                    + (int) progress + "%");
+                                public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
+                                    double progress = (100.0 * taskSnapshot.getBytesTransferred() / taskSnapshot.getTotalByteCount());
+                                    progressDialog.setMessage("Uploaded " + (int) progress + "%");
                                 }
                             });
 
         }
-
     }
 
 
@@ -243,21 +201,16 @@ public class NewProfilePictureActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
-
             File f = new File(currentPhotoPath);
             imageUri = Uri.fromFile(f);
-
             Toast.makeText(this, "uri "+imageUri, Toast.LENGTH_SHORT).show();
-
             setPic();
-
         }
         else if(requestCode==GALLERY_REQUEST_CODE && resultCode==RESULT_OK && data!=null && data.getData() != null)
         {
             imageUri=data.getData();
         }
         imageView.setImageURI(imageUri);
-
     }
 
     @Override
@@ -268,7 +221,6 @@ public class NewProfilePictureActivity extends AppCompatActivity {
         }
         return super.onOptionsItemSelected(menuItem);
     }
-
 
     public void getImage()
     {
@@ -304,7 +256,6 @@ public class NewProfilePictureActivity extends AppCompatActivity {
                 ActivityCompat.requestPermissions(NewProfilePictureActivity.this,
                         new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
                         MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE);
-
             }
         } else {
 
@@ -324,9 +275,7 @@ public class NewProfilePictureActivity extends AppCompatActivity {
             } catch (IOException ex) {
             }
             if (photoFile != null) {
-                Uri photoURI = FileProvider.getUriForFile(this,
-                        "tamara.mosis.elfak.walkhike",
-                        photoFile);
+                Uri photoURI = FileProvider.getUriForFile(this, "tamara.mosis.elfak.walkhike", photoFile);
                 takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
                 startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
             }
@@ -348,8 +297,7 @@ public class NewProfilePictureActivity extends AppCompatActivity {
         return image;
     }
     @Override
-    public void onRequestPermissionsResult(int requestCode,
-                                           String[] permissions, int[] grantResults) {
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
         switch (requestCode) {
             case MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE: {
                 if (grantResults.length > 0
@@ -366,7 +314,6 @@ public class NewProfilePictureActivity extends AppCompatActivity {
             // permissions this app might request.
         }
     }
-
 
     private void setPic() {
         int targetW = imageView.getWidth();

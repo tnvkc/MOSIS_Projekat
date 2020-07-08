@@ -23,6 +23,8 @@ import tamara.mosis.elfak.walkhike.modeldata.Friendship;
 import tamara.mosis.elfak.walkhike.modeldata.FriendshipData;
 import tamara.mosis.elfak.walkhike.modeldata.Scores;
 import tamara.mosis.elfak.walkhike.modeldata.ScoresData;
+import tamara.mosis.elfak.walkhike.modeldata.User;
+import tamara.mosis.elfak.walkhike.modeldata.UserData;
 
 public class Leaderboards_AllTime extends Fragment {
 
@@ -112,13 +114,14 @@ public class Leaderboards_AllTime extends Fragment {
 
         for(int i =0; i<skorovi.size(); i++)
         {
+            User referringTo = UserData.getInstance().getUserByUsername(skorovi.get(i).useer);
             if(activity_or_distance == 1)
             {
-                entries.add(new Leaderboard_Entry_Activity(skorovi.get(i).useer, skorovi.get(i).alltimeActivity));
+                entries.add(new Leaderboard_Entry_Activity(referringTo.username, skorovi.get(i).alltimeActivity, referringTo.image));
             }
             else
             {
-                entries.add(new Leaderboard_Entry_Distance(skorovi.get(i).useer, skorovi.get(i).alltimeDistance));
+                entries.add(new Leaderboard_Entry_Distance(referringTo.username, skorovi.get(i).alltimeDistance, referringTo.image));
             }
         }
         /*entries.add(entry1);

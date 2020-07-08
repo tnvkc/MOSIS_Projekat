@@ -251,14 +251,72 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
             }
         });
 
-        UserData.getInstance().setEventListener(new UserData.ListUpdatedEventListener() {
+        UserData.getInstance().setEventListener(new UserData.UpdateEventListener() {
             @Override
             public void onListUpdated() {
                 FilterUserObjects();
-                map.animateCamera(CameraUpdateFactory.newLatLng(new LatLng(location.getLatitude(), location.getLongitude())));
             }
 
             @Override
+            public void onSingleUserUpdated(String username) {
+                if (map != null) {
+
+                    if (loggedUsername.compareTo(username) == 0) {
+
+                        userMarker.remove();
+                        loggedUser = UserData.getInstance().getUserByUsername(username);
+//                    location = new Location("");
+//                    location.setLatitude(Double.parseDouble(loggedUser.UserPosition.latitude));
+//                    location.setLongitude(Double.parseDouble(loggedUser.UserPosition.longitude));
+
+                        AddUserMarker(username);
+
+                        map.animateCamera(CameraUpdateFactory.newLatLng(new LatLng(Double.parseDouble(loggedUser.UserPosition.latitude),
+                                Double.parseDouble(loggedUser.UserPosition.longitude))));
+
+                    } else {
+                        //FilterUserObjects();
+
+                        Marker thisUserMarker = null;
+                        for (int i = 0; i < usersMarkers.size(); i++) {
+                            if (((String) usersMarkers.get(i).getTag()).compareTo(username) == 0) {
+                                thisUserMarker = usersMarkers.get(i);
+                                break;
+                            }
+                        }
+
+                        if (thisUserMarker != null) {
+                            thisUserMarker.remove();
+                            usersMarkers.remove(thisUserMarker);
+
+                            User friendUser = UserData.getInstance().getUserByUsername(username);
+
+                            Position currentUserPosition = loggedUser.UserPosition;
+                            double current_lat = Double.parseDouble(currentUserPosition.latitude);
+                            double current_lon = Double.parseDouble(currentUserPosition.longitude);
+
+                            Position friendUserPosition = friendUser.UserPosition;
+                            double friend_lat = Double.parseDouble(friendUserPosition.latitude);
+                            double friend_lon = Double.parseDouble(friendUserPosition.longitude);
+
+                            float dist[] = new float[1];
+                            Location.distanceBetween(current_lat, current_lon, friend_lat, friend_lon, dist);
+
+                            if (dist[0] <= radius) {
+                                AddUserMarker(username);
+                            }
+
+                        }
+                    }
+                }
+            }
+
+            @Override
+            public void onUserAdded(String username) {
+                FilterUserObjects();
+            }
+
+            /*@Override
             public void onListUpdated(User user) {
 
                 double lat = Double.parseDouble(user.UserPosition.latitude);
@@ -289,7 +347,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
                     }
 
                 }
-            }
+            }*/
         });
 
         setContentView(R.layout.activity_main);
@@ -557,7 +615,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
 
         String profilePhotoUri = user.image;
 
-        if (!profilePhotoUri.equals("")) {
+        if (profilePhotoUri !=null && !profilePhotoUri.equals("")) {
 
             Glide.with(this).asBitmap().load(profilePhotoUri).into(new SimpleTarget<Bitmap>(128, 128) {
                 @Override
@@ -583,7 +641,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
 
             m.setTag(user.username);
 
-            if (user.desc.compareTo(loggedUsername) != 0)
+            if (user.username.compareTo(loggedUsername) != 0)
                 usersMarkers.add(m);
             else
                 userMarker = m;
@@ -686,8 +744,9 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
 
             Intent intent=new Intent(getApplicationContext(), ProfileActivity.class);
             //intent.putExtra("username",);
+            intent.putExtra("user", loggedUsername);
             startActivity(intent);
-            finish();
+            //finish();
         } else if(item.getItemId() == R.id.main_menu_search_item) {
 
             Toast.makeText(this, "Search objects here!", Toast.LENGTH_SHORT).show();
@@ -767,7 +826,6 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
 
         FilterMapObjects();
         FilterUserObjects();
-
         AddUserMarker(loggedUsername);
 
         if (obj != null) {
@@ -1616,7 +1674,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
 
                 String profilePhotoUri = referringTo.image;
 
-                if (!profilePhotoUri.equals("")) {
+                if (profilePhotoUri != null && !profilePhotoUri.equals("")) {
 
                     Glide.with(this).asBitmap().load(profilePhotoUri).into(new SimpleTarget<Bitmap>(128, 128) {
                         @Override

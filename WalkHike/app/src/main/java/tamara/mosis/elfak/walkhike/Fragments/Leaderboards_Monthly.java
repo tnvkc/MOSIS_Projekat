@@ -18,6 +18,8 @@ import tamara.mosis.elfak.walkhike.Leaderboard_Entry_Distance;
 import tamara.mosis.elfak.walkhike.LeaderboardsListAdapter;
 import tamara.mosis.elfak.walkhike.R;
 import tamara.mosis.elfak.walkhike.modeldata.Scores;
+import tamara.mosis.elfak.walkhike.modeldata.User;
+import tamara.mosis.elfak.walkhike.modeldata.UserData;
 
 public class Leaderboards_Monthly extends Fragment {
 
@@ -114,13 +116,14 @@ public class Leaderboards_Monthly extends Fragment {
 
         for(int i =0; i<skorovi.size(); i++)
         {
+            User referringTo = UserData.getInstance().getUserByUsername(skorovi.get(i).useer);
             if(activity_or_distance == 1)
             {
-                entries.add(new Leaderboard_Entry_Activity(skorovi.get(i).useer, skorovi.get(i).monthlyActivity));
+                entries.add(new Leaderboard_Entry_Activity(referringTo.username, skorovi.get(i).monthlyActivity, referringTo.image));
             }
             else
             {
-                entries.add(new Leaderboard_Entry_Distance(skorovi.get(i).useer, skorovi.get(i).monthlyDistance));
+                entries.add(new Leaderboard_Entry_Distance(referringTo.username, skorovi.get(i).monthlyDistance, referringTo.image));
             }
         }
         return entries;
