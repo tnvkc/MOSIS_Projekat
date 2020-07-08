@@ -276,7 +276,7 @@ public class ARObjectInteractionActivity extends AppCompatActivity implements Vi
                 ScoresData.getInstance().updateScoreActivity(25, currentUser);
             }
 
-            Toast.makeText(this, "Current reactions " + great + ", " + meh + ", " + boo, Toast.LENGTH_SHORT).show();
+//            Toast.makeText(this, "Current reactions " + great + ", " + meh + ", " + boo, Toast.LENGTH_SHORT).show();
             finish();
         }
     }

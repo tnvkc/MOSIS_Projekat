@@ -123,7 +123,7 @@ public class NewProfilePictureActivity extends AppCompatActivity {
                     intent.setType("image/*");
                     intent.setAction(Intent.ACTION_GET_CONTENT);
                     startActivityForResult(Intent.createChooser(intent, "Choose an image"), GALLERY_REQUEST_CODE);
-                    Toast.makeText(NewProfilePictureActivity.this, "gallery", Toast.LENGTH_LONG).show();
+//                    Toast.makeText(NewProfilePictureActivity.this, "gallery", Toast.LENGTH_LONG).show();
                 }
             }
         });
@@ -203,7 +203,7 @@ public class NewProfilePictureActivity extends AppCompatActivity {
         if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
             File f = new File(currentPhotoPath);
             imageUri = Uri.fromFile(f);
-            Toast.makeText(this, "uri "+imageUri, Toast.LENGTH_SHORT).show();
+//            Toast.makeText(this, "uri "+imageUri, Toast.LENGTH_SHORT).show();
             setPic();
         }
         else if(requestCode==GALLERY_REQUEST_CODE && resultCode==RESULT_OK && data!=null && data.getData() != null)
@@ -259,7 +259,7 @@ public class NewProfilePictureActivity extends AppCompatActivity {
             }
         } else {
 
-            Toast.makeText(this, "permission already grated", Toast.LENGTH_SHORT).show();
+//            Toast.makeText(this, "permission already grated", Toast.LENGTH_SHORT).show();
 
             openCameraTocaptureImage();
 
@@ -306,7 +306,7 @@ public class NewProfilePictureActivity extends AppCompatActivity {
                     //Permission is granted
                     openCameraTocaptureImage();
                 } else {
-                    Toast.makeText(this, "permission denied", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, "Permission denied!", Toast.LENGTH_SHORT).show();
                 }
                 return;
             }

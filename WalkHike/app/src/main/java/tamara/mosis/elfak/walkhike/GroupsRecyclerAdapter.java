@@ -91,7 +91,7 @@ public class GroupsRecyclerAdapter extends RecyclerView.Adapter<GroupsRecyclerAd
                             editor.putInt(context.getString(R.string.NumberOfSavedGroup) + imeGrupe, num);
 
                             editor.commit();
-                            Toast.makeText(context, "Object added to group " + groupslist.get(position), Toast.LENGTH_SHORT).show();
+//                            Toast.makeText(context, "Object added to group " + groupslist.get(position), Toast.LENGTH_SHORT).show();
                             holder.chooseButton.setText("*");
                             // removeItem(holder.getAdapterPosition());
                             //  groupslist.remove(position);
@@ -120,7 +120,7 @@ public class GroupsRecyclerAdapter extends RecyclerView.Adapter<GroupsRecyclerAd
                         num--;
                         editor.putInt(context.getString(R.string.NumberOfSavedGroup) + imeGrupe, num);
                         editor.commit();
-                        Toast.makeText(context, "Object removed from group " + groupslist.get(position), Toast.LENGTH_SHORT).show();
+//                        Toast.makeText(context, "Object removed from group " + groupslist.get(position), Toast.LENGTH_SHORT).show();
                         holder.chooseButton.setText("+");
                     }
                 }

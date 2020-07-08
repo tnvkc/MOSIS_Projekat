@@ -58,7 +58,7 @@ public class GroupItemsRecyclerAdapter extends RecyclerView.Adapter<tamara.mosis
                         @Override
                         public void onClick(final View view) {
 
-                            Toast.makeText(context, "ovde treba da se izbrise", Toast.LENGTH_SHORT).show();
+//                            Toast.makeText(context, "ovde treba da se izbrise", Toast.LENGTH_SHORT).show();
                             SharedPreferences sharedPref = context.getSharedPreferences(
                                     context.getString(R.string.SavedRoutesShared), Context.MODE_PRIVATE);
                             int numm = sharedPref.getInt(context.getString(R.string.NumberOfSavedGroup) + groupName, -1);
@@ -102,7 +102,7 @@ public class GroupItemsRecyclerAdapter extends RecyclerView.Adapter<tamara.mosis
                     Intent intent =new Intent(context, MainActivity.class);
                     intent.putExtra("objekaat", m);
                     context.startActivity(intent);
-                    Toast.makeText(context, "Ovo treba da vodi na objekat na mapi " + m.desc + " by " +m.createdBy, Toast.LENGTH_SHORT).show();
+//                    Toast.makeText(context, "Ovo treba da vodi na objekat na mapi " + m.desc + " by " +m.createdBy, Toast.LENGTH_SHORT).show();
 
                 }
             });

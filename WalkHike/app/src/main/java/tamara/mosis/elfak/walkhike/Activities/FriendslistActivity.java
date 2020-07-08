@@ -57,9 +57,9 @@ public class FriendslistActivity extends AppCompatActivity {
             Intent intent=new Intent(getApplicationContext(), FriendRequestsActivity.class);
             startActivity(intent);
 
-            Toast.makeText(getApplicationContext(), "klik na add friend", Toast.LENGTH_SHORT);
+//            Toast.makeText(getApplicationContext(), "klik na add friend", Toast.LENGTH_SHORT);
         }
-        Toast.makeText(getApplicationContext(), "klik na menu", Toast.LENGTH_SHORT);
+//        Toast.makeText(getApplicationContext(), "klik na menu", Toast.LENGTH_SHORT);
 
         return super.onOptionsItemSelected(item);
     }

@@ -193,7 +193,7 @@ public class CustomListView extends ArrayAdapter<String> implements  ActivityCom
             }
         } else {
 
-            Toast.makeText(context, "permission already grated", Toast.LENGTH_SHORT).show();
+//            Toast.makeText(context, "permission already grated", Toast.LENGTH_SHORT).show();
 
             permission=true;
 
@@ -254,7 +254,7 @@ public class CustomListView extends ArrayAdapter<String> implements  ActivityCom
                 case (1): {
                     if (v.isChecked()) {
                         //Toast.makeText(context, "Start service", Toast.LENGTH_SHORT).show();
-                        editor.putBoolean("userNotifications", true);
+//                        editor.putBoolean("userNotifications", true);
 
                         editor.commit();
 
@@ -282,7 +282,7 @@ public class CustomListView extends ArrayAdapter<String> implements  ActivityCom
                         editor.commit();
 
 
-                            Toast.makeText(context, "Start service", Toast.LENGTH_SHORT).show();
+//                            Toast.makeText(context, "Start service", Toast.LENGTH_SHORT).show();
 
                         new Handler().postDelayed(new Runnable() {
                             @Override

@@ -127,7 +127,7 @@ public class LoginActivity extends AppCompatActivity {
         loginB.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(getApplicationContext(), "done login", Toast.LENGTH_SHORT).show();
+                //Toast.makeText(getApplicationContext(), "done login", Toast.LENGTH_SHORT).show();
                 loginUser();
 
                // Intent intent=new Intent(getApplicationContext(), MainActivity.class);
@@ -158,13 +158,13 @@ public class LoginActivity extends AppCompatActivity {
 
         if(TextUtils.isEmpty(email))
         {
-            Toast.makeText(getApplicationContext(), "empty email", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(), "Bad email", Toast.LENGTH_SHORT).show();
             return;
         }
 
         if(TextUtils.isEmpty(pass))
         {
-            Toast.makeText(getApplicationContext(), "pass empty", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(), "Bad password", Toast.LENGTH_SHORT).show();
             return;
         }
 

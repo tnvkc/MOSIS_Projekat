@@ -270,7 +270,7 @@ public class ObjectInteractionActivity extends AppCompatActivity implements View
 
             }
 
-            Toast.makeText(this, "Current reactions " + great + ", " + meh + ", " + boo, Toast.LENGTH_SHORT).show();
+//            Toast.makeText(this, "Current reactions " + great + ", " + meh + ", " + boo, Toast.LENGTH_SHORT).show();
             finish();
         }
     }

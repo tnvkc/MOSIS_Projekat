@@ -333,7 +333,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
         filter_by_distance_opened = false;
 
         timespan = 0;
-        radius = 100;
+        radius = 100000;
         object_filter = (byte) 0x0f;
 
         filter_users = findViewById(R.id.filter_users);
@@ -376,7 +376,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
 
                 if (Math.abs(radius - (progress + 100)) > 250) {
                     radius = progress + 100;
-                    Toast.makeText(MainActivity.this, "show objects from this radius: " + radius + "m", Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(MainActivity.this, "show objects from this radius: " + radius + "m", Toast.LENGTH_SHORT).show();
 
                     FilterMapObjects();
                     FilterUserObjects();
@@ -428,7 +428,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
 
                 search_radius = progress + 100;
-                Toast.makeText(MainActivity.this, "current radius: " + search_radius, Toast.LENGTH_SHORT).show();
+                //Toast.makeText(MainActivity.this, "current radius: " + search_radius, Toast.LENGTH_SHORT).show();
 
                 afterTextChanged(search_edit_text.getText());
 
@@ -451,7 +451,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
 
                 if (keyCode == KeyEvent.KEYCODE_ENTER && event.getAction() == KeyEvent.ACTION_UP){
 
-                    Toast.makeText(MainActivity.this, "Enter pressed!", Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(MainActivity.this, "Enter pressed!", Toast.LENGTH_SHORT).show();
 
                     InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
                     inputMethodManager.hideSoftInputFromWindow(search_edit_text.getWindowToken(), 0);
@@ -710,7 +710,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
             //finish();
         } else if(item.getItemId() == R.id.main_menu_search_item) {
 
-            Toast.makeText(this, "Search objects here!", Toast.LENGTH_SHORT).show();
+            //Toast.makeText(this, "Search objects here!", Toast.LENGTH_SHORT).show();
 
             addNewFloating.setVisibility(View.GONE);
             objectInteraction.setVisibility(View.GONE);
@@ -787,6 +787,10 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
                 filter_radius.setVisibility(View.VISIBLE);
 
                 info_window_container_groups.setVisibility(View.GONE);
+
+                radius = 100000;
+                FilterMapObjects();
+                FilterUserObjects();
             }
         });
 
@@ -796,7 +800,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
         if (obj != null) {
             object_filter = 0x0f;
             timespan =0;
-            radius = 10000;
+            radius = 100000;
              FilterMapObjects();
             //FilterUserObjects();
             FindObjectOnMap(obj);
@@ -831,7 +835,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
 
     private void startServicee()
     {
-        Toast.makeText(getApplicationContext(), "Started service", Toast.LENGTH_SHORT).show();
+        //Toast.makeText(getApplicationContext(), "Started service", Toast.LENGTH_SHORT).show();
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
@@ -879,7 +883,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
         location=LocationServices.FusedLocationApi.getLastLocation(googleApiClient);
         if(location!=null){
 
-            Toast.makeText(MainActivity.this, "Lat : "+location.getLatitude()+" Lng "+location.getLongitude(), Toast.LENGTH_SHORT).show();
+            //Toast.makeText(MainActivity.this, "Lat : "+location.getLatitude()+" Lng "+location.getLongitude(), Toast.LENGTH_SHORT).show();
             if(map!=null){
                 LatLng latLng=new LatLng(location.getLatitude(),location.getLongitude());
                 //map.addMarker(new MarkerOptions().position(latLng).title("Current Location"));
@@ -1000,9 +1004,14 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
     @Override
     public void onClick(View v) {
 
+        if (v.getId() != R.id.filter_by_distance_icon) {
+            radius = 100000;
+            FilterMapObjects();
+            FilterUserObjects();
+        }
+
         if(v.getId() == R.id.main_startService)
         {
-
 
             if(!startedService) {
                 startServicee();
@@ -1010,7 +1019,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
 
             }
             else {
-                Toast.makeText(getApplicationContext(), "Stop service", Toast.LENGTH_SHORT).show();
+                //Toast.makeText(getApplicationContext(), "Stop service", Toast.LENGTH_SHORT).show();
                 v.setActivated(false);
 
                 Intent i = new Intent(getApplicationContext(), NotificationService.class);
@@ -1076,8 +1085,9 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
                 public void onClick(DialogInterface dialog, int which) {
                     info_window_container.setVisibility(View.GONE);
                     info_window_container_groups.setVisibility(View.GONE);
-                    Toast.makeText(MainActivity.this, "Deleting object", Toast.LENGTH_SHORT).show();
+//                    Toast.makeText(MainActivity.this, "Deleting object", Toast.LENGTH_SHORT).show();
                     MapObjectData.getInstance().deleteMapObject((MapObject) v.getTag());
+                    Toast.makeText(MainActivity.this, "Object deleted!", Toast.LENGTH_SHORT).show();
 
 
                 }
@@ -1117,10 +1127,23 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
 
             info_window_container.setVisibility(View.GONE);
             info_window_container_groups.setVisibility(View.GONE);
+            layout_filter_by_distance.setVisibility(View.GONE);
+            layout_filter_timespan.setVisibility(View.GONE);
+            layout_filter_object_type.setVisibility(View.GONE);
+            layout_filter_options.setVisibility(View.GONE);
+
+            filter_opened = false;
+            filter_timespan_opened = false;
+            filter_by_distance_opened = false;
+            filter_objects_opened = false;
+
+            radius = 100000;
+            FilterMapObjects();
+            FilterUserObjects();
 
             if (!hide_users) {
 
-                Toast.makeText(this, "Hide friends", Toast.LENGTH_SHORT).show();
+//                Toast.makeText(this, "Hide friends", Toast.LENGTH_SHORT).show();
 
                 HideUsers();
 
@@ -1129,7 +1152,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
 
             } else {
 
-                Toast.makeText(this, "Show friends", Toast.LENGTH_SHORT).show();
+//                Toast.makeText(this, "Show friends", Toast.LENGTH_SHORT).show();
 
                 FilterUserObjects();
 
@@ -1143,11 +1166,14 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
             info_window_container_groups.setVisibility(View.GONE);
 
             if (filter_by_distance_opened) {
-                Toast.makeText(this, "Hide filter by distance options!", Toast.LENGTH_SHORT).show();
+//                Toast.makeText(this, "Hide filter by distance options!", Toast.LENGTH_SHORT).show();
                 layout_filter_by_distance.setVisibility(View.GONE);
                 filter_by_distance_opened = false;
+
+                radius = 100000;
+
             } else {
-                Toast.makeText(this, "Show filter by distance options!", Toast.LENGTH_SHORT).show();
+//                Toast.makeText(this, "Show filter by distance options!", Toast.LENGTH_SHORT).show();
                 layout_filter_by_distance.setVisibility(View.VISIBLE);
                 layout_filter_options.setVisibility(View.GONE);
                 layout_filter_timespan.setVisibility(View.GONE);
@@ -1157,7 +1183,13 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
                 filter_objects_opened = false;
                 filter_opened = false;
                 //open filter, set seekbar progress to current radius
+
+                radius = 100;
+                filter_by_distance_seekbar.setProgress(0);
             }
+
+            FilterMapObjects();
+            FilterUserObjects();
 
         } else if (v.getId() == R.id.filter_icon) {
 
@@ -1165,7 +1197,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
             info_window_container_groups.setVisibility(View.GONE);
 
             if (filter_opened) {
-                Toast.makeText(this, "Hide filter options!", Toast.LENGTH_SHORT).show();
+//                Toast.makeText(this, "Hide filter options!", Toast.LENGTH_SHORT).show();
                 layout_filter_options.setVisibility(View.GONE);
                 layout_filter_object_type.setVisibility(View.GONE);
                 layout_filter_timespan.setVisibility(View.GONE);
@@ -1173,7 +1205,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
                 filter_objects_opened = false;
                 filter_timespan_opened = false;
             } else {
-                Toast.makeText(this, "Show filter options!", Toast.LENGTH_SHORT).show();
+//                Toast.makeText(this, "Show filter options!", Toast.LENGTH_SHORT).show();
                 layout_filter_options.setVisibility(View.VISIBLE);
                 layout_filter_by_distance.setVisibility(View.GONE);
                 filter_opened = true;
@@ -1184,11 +1216,11 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
 
             if (filter_objects_opened)
             {
-                Toast.makeText(this, "Hide object filters!", Toast.LENGTH_SHORT).show();
+//                Toast.makeText(this, "Hide object filters!", Toast.LENGTH_SHORT).show();
                 layout_filter_object_type.setVisibility(View.GONE);
                 filter_objects_opened = false;
             } else {
-                Toast.makeText(this, "Show object filters!", Toast.LENGTH_SHORT).show();
+//                Toast.makeText(this, "Show object filters!", Toast.LENGTH_SHORT).show();
                 layout_filter_object_type.setVisibility(View.VISIBLE);
                 layout_filter_timespan.setVisibility(View.GONE);
                 filter_timespan_opened = false;
@@ -1199,11 +1231,11 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
 
             if (filter_timespan_opened)
             {
-                Toast.makeText(this, "Hide timespan filters!", Toast.LENGTH_SHORT).show();
+//                Toast.makeText(this, "Hide timespan filters!", Toast.LENGTH_SHORT).show();
                 layout_filter_timespan.setVisibility(View.GONE);
                 filter_timespan_opened = false;
             } else {
-                Toast.makeText(this, "Show timespan filters!", Toast.LENGTH_SHORT).show();
+//                Toast.makeText(this, "Show timespan filters!", Toast.LENGTH_SHORT).show();
                 layout_filter_timespan.setVisibility(View.VISIBLE);
                 layout_filter_object_type.setVisibility(View.GONE);
                 filter_timespan_opened = true;
@@ -1212,7 +1244,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
 
         } else if (v.getId() == R.id.filter_remove_timespan) {
 
-            Toast.makeText(this, "Remove timespan filters!", Toast.LENGTH_SHORT).show();
+//            Toast.makeText(this, "Remove timespan filters!", Toast.LENGTH_SHORT).show();
             layout_filter_timespan.setVisibility(View.GONE);
             filter_timespan_opened = false;
 
@@ -1222,7 +1254,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
 
         } else if (v.getId() == R.id.filter_today) {
 
-            Toast.makeText(this, "Show today's markers!", Toast.LENGTH_SHORT).show();
+//            Toast.makeText(this, "Show today's markers!", Toast.LENGTH_SHORT).show();
             layout_filter_timespan.setVisibility(View.GONE);
             filter_timespan_opened = false;
 
@@ -1232,7 +1264,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
 
         } else if (v.getId() == R.id.filter_one_week) {
 
-            Toast.makeText(this, "Show this week's markers!", Toast.LENGTH_SHORT).show();
+//          Toast.make  Text(this, "Show this week's markers!", Toast.LENGTH_SHORT).show();
             layout_filter_timespan.setVisibility(View.GONE);
             filter_timespan_opened = false;
 
@@ -1241,7 +1273,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
 
         } else if (v.getId() == R.id.filter_one_month) {
 
-            Toast.makeText(this, "Show this month's markers!", Toast.LENGTH_SHORT).show();
+            //Toast.makeText(this, "Show this month's markers!", Toast.LENGTH_SHORT).show();
             layout_filter_timespan.setVisibility(View.GONE);
             filter_timespan_opened = false;
 
@@ -1253,10 +1285,10 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
             if ((object_filter & 0x02) == 0x02) {
                 //filter je ukljucen, treba ga iskljuciti
                 object_filter &= 0x0d;
-                Toast.makeText(this, "Hide checkpoints!", Toast.LENGTH_SHORT).show();
+//                Toast.makeText(this, "Hide checkpoints!", Toast.LENGTH_SHORT).show();
             } else {
                 object_filter |= 0x02;
-                Toast.makeText(this, "Show checkpoints!", Toast.LENGTH_SHORT).show();
+//                Toast.makeText(this, "Show checkpoints!", Toast.LENGTH_SHORT).show();
             }
 
             FilterMapObjects();
@@ -1265,10 +1297,10 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
 
             if ((object_filter & 0x08) == 0x08) {
                 object_filter &= 0x07;
-                Toast.makeText(this, "Hide hearts!", Toast.LENGTH_SHORT).show();
+//                Toast.makeText(this, "Hide hearts!", Toast.LENGTH_SHORT).show();
             } else {
                 object_filter |= 0x08;
-                Toast.makeText(this, "Show hearts!", Toast.LENGTH_SHORT).show();
+//                Toast.makeText(this, "Show hearts!", Toast.LENGTH_SHORT).show();
             }
 
             FilterMapObjects();
@@ -1277,10 +1309,10 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
 
             if ((object_filter & 0x04) == 0x04) {
                 object_filter &= 0x0b;
-                Toast.makeText(this, "Hide photo!", Toast.LENGTH_SHORT).show();
+//                Toast.makeText(this, "Hide photo!", Toast.LENGTH_SHORT).show();
             } else {
                 object_filter |= 0x04;
-                Toast.makeText(this, "Show photo!", Toast.LENGTH_SHORT).show();
+//                Toast.makeText(this, "Show photo!", Toast.LENGTH_SHORT).show();
             }
 
             FilterMapObjects();
@@ -1290,16 +1322,16 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
             if ((object_filter & 0x01) == 0x01) {
                 //filter je ukljucen, treba ga iskljuciti
                 object_filter &= 0x0e;
-                Toast.makeText(this, "Hide messages!", Toast.LENGTH_SHORT).show();
+//                Toast.makeText(this, "Hide messages!", Toast.LENGTH_SHORT).show();
             } else {
                 object_filter |= 0x01;
-                Toast.makeText(this, "Show messages!", Toast.LENGTH_SHORT).show();
+//                Toast.makeText(this, "Show messages!", Toast.LENGTH_SHORT).show();
             }
 
             FilterMapObjects();
         } else if (v.getId() == R.id.close_search) {
 
-            Toast.makeText(MainActivity.this, "Close search", Toast.LENGTH_SHORT).show();
+//            Toast.makeText(MainActivity.this, "Close search", Toast.LENGTH_SHORT).show();
             search_fragment.setVisibility(View.GONE);
             addNewFloating.setVisibility(View.VISIBLE);
             objectInteraction.setVisibility(View.VISIBLE);
@@ -1315,7 +1347,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
                 search_filter_activated = 0;
                 search_users_only.setSelected(false);
 
-                Toast.makeText(MainActivity.this, "Remove users filter", Toast.LENGTH_SHORT).show();
+//                Toast.makeText(MainActivity.this, "Remove users filter", Toast.LENGTH_SHORT).show();
 
             } else {
                 search_filter_activated = 5; //search users
@@ -1326,7 +1358,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
                 search_checkpoints_only.setSelected(false);
                 search_emojis_only.setSelected(false);
 
-                Toast.makeText(MainActivity.this, "Add users filter", Toast.LENGTH_SHORT).show();
+//                Toast.makeText(MainActivity.this, "Add users filter", Toast.LENGTH_SHORT).show();
 
             }
 
@@ -1338,7 +1370,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
                 search_filter_activated = 0;
                 search_messages_only.setSelected(false);
 
-                Toast.makeText(MainActivity.this, "Remove messages filter", Toast.LENGTH_SHORT).show();
+//                Toast.makeText(MainActivity.this, "Remove messages filter", Toast.LENGTH_SHORT).show();
 
             } else {
                 search_filter_activated = 1; //search messages
@@ -1349,7 +1381,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
                 search_checkpoints_only.setSelected(false);
                 search_emojis_only.setSelected(false);
 
-                Toast.makeText(MainActivity.this, "Add messages filter", Toast.LENGTH_SHORT).show();
+//                Toast.makeText(MainActivity.this, "Add messages filter", Toast.LENGTH_SHORT).show();
             }
 
             this.afterTextChanged(search_edit_text.getText());
@@ -1360,7 +1392,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
                 search_filter_activated = 0;
                 search_photos_only.setSelected(false);
 
-                Toast.makeText(MainActivity.this, "Remove photos filter", Toast.LENGTH_SHORT).show();
+//                Toast.makeText(MainActivity.this, "Remove photos filter", Toast.LENGTH_SHORT).show();
 
             } else {
                 search_filter_activated = 2; //search photos
@@ -1371,7 +1403,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
                 search_checkpoints_only.setSelected(false);
                 search_emojis_only.setSelected(false);
 
-                Toast.makeText(MainActivity.this, "Add photos filter", Toast.LENGTH_SHORT).show();
+//                Toast.makeText(MainActivity.this, "Add photos filter", Toast.LENGTH_SHORT).show();
             }
 
             this.afterTextChanged(search_edit_text.getText());
@@ -1382,7 +1414,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
                 search_filter_activated = 0;
                 search_checkpoints_only.setSelected(false);
 
-                Toast.makeText(MainActivity.this, "Remove checkpoints filter", Toast.LENGTH_SHORT).show();
+//                Toast.makeText(MainActivity.this, "Remove checkpoints filter", Toast.LENGTH_SHORT).show();
 
             } else {
                 search_filter_activated = 3; //search checkpoints
@@ -1393,7 +1425,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
                 search_checkpoints_only.setSelected(true);
                 search_emojis_only.setSelected(false);
 
-                Toast.makeText(MainActivity.this, "Add checkpoints filter", Toast.LENGTH_SHORT).show();
+//                Toast.makeText(MainActivity.this, "Add checkpoints filter", Toast.LENGTH_SHORT).show();
 
             }
 
@@ -1405,7 +1437,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
                 search_filter_activated = 0;
                 search_emojis_only.setSelected(false);
 
-                Toast.makeText(MainActivity.this, "Remove emojis filter", Toast.LENGTH_SHORT).show();
+//                Toast.makeText(MainActivity.this, "Remove emojis filter", Toast.LENGTH_SHORT).show();
 
             } else {
                 search_filter_activated = 4; //search emojis
@@ -1416,14 +1448,14 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
                 search_checkpoints_only.setSelected(false);
                 search_emojis_only.setSelected(true);
 
-                Toast.makeText(MainActivity.this, "Add emojis filter", Toast.LENGTH_SHORT).show();
+//                Toast.makeText(MainActivity.this, "Add emojis filter", Toast.LENGTH_SHORT).show();
             }
 
             this.afterTextChanged(search_edit_text.getText());
 
         } else if (v.getId() == R.id.search_remove_filters) {
 
-            Toast.makeText(MainActivity.this, "Remove all search filters", Toast.LENGTH_SHORT).show();
+//            Toast.makeText(MainActivity.this, "Remove all search filters", Toast.LENGTH_SHORT).show();
 
             search_filter_activated = 0;
 
@@ -1493,7 +1525,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
                             }
                             else
                             {
-                                Toast.makeText(getApplicationContext(), "Group created " + groupname, Toast.LENGTH_SHORT).show();
+//                                Toast.makeText(getApplicationContext(), "Group created " + groupname, Toast.LENGTH_SHORT).show();
                                 SharedPreferences sharedPref = getApplicationContext().getSharedPreferences(
                                         getString(R.string.SavedRoutesShared), Context.MODE_PRIVATE);
 
@@ -1802,7 +1834,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
     public void onSingleUserUpdated(String username) {
         if (map != null) {
 
-            if (loggedUsername.compareTo(username) == 0) {
+            if (loggedUsername.compareTo(username) == 0 && userMarker != null) {
 
                 userMarker.remove();
                 loggedUser = UserData.getInstance().getUserByUsername(username);
@@ -1817,7 +1849,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
                             Double.parseDouble(loggedUser.UserPosition.longitude)), 20f));
                 }
 
-            } else {
+            } else if (usersMarkers != null){
                 //FilterUserObjects();
 
                 Marker thisUserMarker = null;

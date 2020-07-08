@@ -231,7 +231,7 @@ public class Probe extends AppCompatActivity {
                // ClearNotiSharedPRef();
 
 
-                Toast.makeText(getApplicationContext(), "Start service! ", Toast.LENGTH_SHORT).show();
+//                Toast.makeText(getApplicationContext(), "Start service! ", Toast.LENGTH_SHORT).show();
                 Intent i = new Intent(getApplicationContext(), NotificationService.class);
                 i.putExtra("timer", 10);
                 startService(i);

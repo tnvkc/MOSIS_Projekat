@@ -235,7 +235,7 @@ public class AddNewObjectActivity extends FragmentActivity implements View.OnCli
                     sharedWithUsername = null;
 
                     state = 1;
-                    Toast.makeText(this, "Object type is " + objectType, Toast.LENGTH_LONG).show();
+//                    Toast.makeText(this, "Object type is " + objectType, Toast.LENGTH_LONG).show();
 
                     secondFragment = new AddObject_EditDesc();
                     getSupportFragmentManager().beginTransaction()
@@ -344,7 +344,7 @@ public class AddNewObjectActivity extends FragmentActivity implements View.OnCli
                         } else {
                             MapObjectData.getInstance().AddMapObject(newMapObject);
                             ScoresData.getInstance().updateScoreActivity(100, loggedUser);
-                            Toast.makeText(this, "Object added", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(this, "Object added!", Toast.LENGTH_SHORT).show();
 
                             Intent callerIntent = getIntent();
                             callerIntent.putExtra("map_object", newMapObject);
@@ -378,7 +378,7 @@ public class AddNewObjectActivity extends FragmentActivity implements View.OnCli
                                         newMapObject.photo = firestorageUri;
                                         MapObjectData.getInstance().AddMapObject(newMapObject);
                                         ScoresData.getInstance().updateScoreActivity(100, loggedUser);
-                                        Toast.makeText(getApplicationContext(), "Object added", Toast.LENGTH_SHORT).show();
+                                        Toast.makeText(getApplicationContext(), "Object added!", Toast.LENGTH_SHORT).show();
 
                                         Intent callerIntent = getIntent();
                                         callerIntent.putExtra("map_object", newMapObject);
@@ -388,7 +388,7 @@ public class AddNewObjectActivity extends FragmentActivity implements View.OnCli
                                     }
                                 });
                                 progressDialog.dismiss();
-                                Toast.makeText(getApplicationContext(), "Image Uploaded!!", Toast.LENGTH_SHORT).show();
+//                                Toast.makeText(getApplicationContext(), "Image Uploaded!!", Toast.LENGTH_SHORT).show();
                             })
 
                     .addOnFailureListener(new OnFailureListener() {

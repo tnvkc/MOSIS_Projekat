@@ -120,7 +120,7 @@ public class AddObject_InsertPhoto extends Fragment implements View.OnClickListe
             }
         } else {
 
-            Toast.makeText(getContext(), "permission already grated", Toast.LENGTH_SHORT).show();
+//            Toast.makeText(getContext(), "permission already grated", Toast.LENGTH_SHORT).show();
 
             openCameraTocaptureImage();
 
@@ -169,7 +169,7 @@ public class AddObject_InsertPhoto extends Fragment implements View.OnClickListe
             File f = new File(currentPhotoPath);
             imageUri = Uri.fromFile(f);
 
-            Toast.makeText(getContext(), "uri "+imageUri, Toast.LENGTH_SHORT).show();
+//            Toast.makeText(getContext(), "uri "+imageUri, Toast.LENGTH_SHORT).show();
 
             //po uzoru na setPic() iz NewProfilePicture
 

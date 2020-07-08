@@ -179,7 +179,7 @@ public class ProfileActivity extends AppCompatActivity {
                         }
                         else
                         {
-                            Toast.makeText(getApplicationContext(), "could not log out", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getApplicationContext(), "Could not log out!", Toast.LENGTH_SHORT).show();
                         }
 
                         break;
