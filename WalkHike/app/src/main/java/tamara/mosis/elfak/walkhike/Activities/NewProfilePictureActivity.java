@@ -267,6 +267,7 @@ public class NewProfilePictureActivity extends AppCompatActivity {
     }
 
     private void openCameraTocaptureImage() {
+
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
             File photoFile = null;

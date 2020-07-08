@@ -111,7 +111,7 @@ import tamara.mosis.elfak.walkhike.modeldata.Position;
 public class MainActivity extends AppCompatActivity implements GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener, LocationListener, OnMapReadyCallback, View.OnClickListener,
         BottomNavigationView.OnNavigationItemSelectedListener, GoogleMap.OnMarkerClickListener, TextWatcher,
-        UserData.UpdateEventListener{
+        UserData.UpdateEventListener, MapObjectData.ListUpdatedEventListener{
 
     private FirebaseAuth mfirebaseAuth;
     private static final int PERMISSION_CODE = 1;
@@ -236,6 +236,8 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
     public void onDestroy() {
 
         UserData.getInstance().setEventListener(null);
+
+        MapObjectData.getInstance().setListUpdatedEventListener(null);
         super.onDestroy();
     }
 
@@ -255,12 +257,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
 //        });
 
 
-        MapObjectData.getInstance().setListUpdatedEventListener(new MapObjectData.ListUpdatedEventListener() {
-            @Override
-            public void onListUpdated() {
-                FilterMapObjects();
-            }
-        });
+        MapObjectData.getInstance().setListUpdatedEventListener(this);
 
        UserData.getInstance().setEventListener(this);
 
@@ -1824,5 +1821,6 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
     public void onUserAdded(String username) {
         FilterUserObjects();
     }
+
 
 }
