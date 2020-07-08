@@ -73,7 +73,9 @@ public class GroupSavedRecyclerAdapter extends RecyclerView.Adapter<GroupSavedRe
             @Override
             public  void onClick(View view)
             {
+
 //                Toast.makeText(context, "treba da vodi na drugi fragment za objekte rute", Toast.LENGTH_SHORT).show();
+
                 doWork(groupslist.get(position));
 
             }

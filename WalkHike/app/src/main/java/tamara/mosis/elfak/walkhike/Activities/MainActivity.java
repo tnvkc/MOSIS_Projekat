@@ -695,13 +695,13 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
 
-        if(item.getItemId() == R.id.main_menu_probe_item)
-        {
-            Intent intent=new Intent(getApplicationContext(), Probe.class);
-            startActivity(intent);
-            finish();
-        }
-        else if(item.getItemId() == R.id.main_menu_profile_item) {
+//        if(item.getItemId() == R.id.main_menu_probe_item)
+//        {
+//            Intent intent=new Intent(getApplicationContext(), Probe.class);
+//            startActivity(intent);
+//            finish();
+//        }else
+         if(item.getItemId() == R.id.main_menu_profile_item) {
 
             Intent intent=new Intent(getApplicationContext(), ProfileActivity.class);
             //intent.putExtra("username",);
@@ -1844,7 +1844,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
 
                 AddUserMarker(username);
 
-                if(obj != null) {
+                if(obj == null) {
                     map.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(Double.parseDouble(loggedUser.UserPosition.latitude),
                             Double.parseDouble(loggedUser.UserPosition.longitude)), 20f));
                 }

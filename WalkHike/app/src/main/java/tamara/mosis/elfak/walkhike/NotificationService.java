@@ -372,6 +372,14 @@ public class NotificationService extends IntentService implements MapObjectData.
             }
 
         }
+        else if(LoggedUser.email.compareTo(newF.fromUser.email) == 0 && newF.accepted == false)
+        {
+            users.add(userData.getInstance().getUser(newF.toUser.email));
+        }
+        else if(LoggedUser.email.compareTo(newF.toUser.email) == 0  && newF.accepted == false)
+        {
+            users.add(userData.getInstance().getUser(newF.fromUser.email));
+        }
     }
 
     private void findNearbyUsers() {
