@@ -181,7 +181,7 @@ public class LauncherActivity extends AppCompatActivity implements
 
                 objectDateMonth = format.parse(p.datetimeMonth);
 
-                int currentMonth = Calendar.getInstance().get(Calendar.MONTH);
+                int currentMonth = Calendar.getInstance().get(Calendar.MONTH) + 1;
                 int currentYear = Calendar.getInstance().get(Calendar.YEAR);
 
                 int lastUpdateMonth = Integer.parseInt(p.datetimeMonth.substring(2, 3));

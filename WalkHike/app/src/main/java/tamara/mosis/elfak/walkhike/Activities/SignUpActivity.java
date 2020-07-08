@@ -148,7 +148,7 @@
         u.username =name;
         u.email = email;
         u.UserPosition = new Position("-5000", "-5000");
-        u.desc = "Add a description";
+        u.desc = "";
         u.image = "";
 
         userData.getInstance().AddUser(u);

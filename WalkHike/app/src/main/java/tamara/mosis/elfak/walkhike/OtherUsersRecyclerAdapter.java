@@ -68,7 +68,7 @@ public class OtherUsersRecyclerAdapter extends RecyclerView.Adapter<OtherUsersRe
     {
         final String username=usersList.get(position).username;
         final String email=usersList.get(position).email;
-        holder.username_view.setText(username + ", "+email);
+        holder.username_view.setText(username );
         //final String user_id=usersList.get(position).userId;
 
         String imgUrl = usersList.get(position).image;

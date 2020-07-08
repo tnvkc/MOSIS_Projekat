@@ -273,7 +273,7 @@ public class ARObjectInteractionActivity extends AppCompatActivity implements Vi
                 editor.apply();
 
                 //update user activity scores
-                ScoresData.getInstance().updateScoreActivity(100, currentUser);
+                ScoresData.getInstance().updateScoreActivity(25, currentUser);
             }
 
             Toast.makeText(this, "Current reactions " + great + ", " + meh + ", " + boo, Toast.LENGTH_SHORT).show();

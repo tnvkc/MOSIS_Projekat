@@ -53,7 +53,7 @@ public class Leaderboards_Distance extends Fragment {
         scoresData.getInstance().getScores();
 
         Scores ss = null;
-        ss = scoresData.getInstance().getScore(emaill);
+        ss = scoresData.getInstance().getScore(username);
         if(ss!=null)
             skorovi.add(ss);
         prijatelji=friendshipData.getInstance().GetUserFriends(emaill);

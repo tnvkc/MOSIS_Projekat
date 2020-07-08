@@ -55,7 +55,7 @@ public class Leaderboards_Activity extends Fragment {
         skorovi = new ArrayList<>();
         scoresData.getInstance().getScores();
         Scores ss = null;
-        ss = scoresData.getInstance().getScore(emaill);
+        ss = scoresData.getInstance().getScore(username);
         if(ss!=null)
             skorovi.add(ss);
 
@@ -90,5 +90,6 @@ public class Leaderboards_Activity extends Fragment {
                 skorovi.add(s);
             }
         }
+
     }
 }

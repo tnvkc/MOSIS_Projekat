@@ -266,7 +266,7 @@ public class ObjectInteractionActivity extends AppCompatActivity implements View
                 editor.apply();
 
                 //update user activity scores
-                ScoresData.getInstance().updateScoreActivity(100, currentUser);
+                ScoresData.getInstance().updateScoreActivity(25, currentUser);
 
             }
 
