@@ -113,10 +113,12 @@ public class OtherUsersFragment extends Fragment {
                 if (listaa.get(i).email.compareTo( usersList1.get(j).email) == 0)
                     nema = true;
 
-                if(u.email.compareTo(listaa.get(i).email) == 0)
-                {
-                    nema = true;
-                }
+
+            }
+
+            if(u.email.compareTo(listaa.get(i).email) == 0)
+            {
+                nema = true;
             }
             if(!nema)
                 usersList.add(listaa.get(i));
