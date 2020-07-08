@@ -1093,9 +1093,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
 
             Intent intent=new Intent(getApplicationContext(), AddNewObjectActivity.class);
             Bundle bundle = new Bundle();
-            bundle.putDouble("lat", location.getLatitude());
-            bundle.putDouble("lon", location.getLongitude());
-            bundle.putSerializable("user", loggedUser);
+            bundle.putString("user", loggedUsername);
             intent.putExtras(bundle);
 
             startActivityForResult(intent, 1);

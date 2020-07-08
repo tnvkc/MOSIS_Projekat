@@ -119,12 +119,11 @@ public class AddNewObjectActivity extends FragmentActivity implements View.OnCli
 
         Intent callerIntent = getIntent();
         Bundle args = callerIntent.getExtras();
-        double lat = args.getDouble("lat");
-        double lon = args.getDouble("lon");
-        position = new Position();
-        position.latitude = String.valueOf(lat);
-        position.longitude = String.valueOf(lon);
-        loggedUser = (User) args.getSerializable("user");
+
+        String username = args.getString("user");
+        loggedUser = UserData.getInstance().getUserByUsername(username);
+
+        position = loggedUser.UserPosition;
         sharedWith = null;
 
         storage = FirebaseStorage.getInstance();
