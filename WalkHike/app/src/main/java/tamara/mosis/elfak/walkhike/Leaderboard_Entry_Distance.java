@@ -10,4 +10,5 @@ public class Leaderboard_Entry_Distance extends Leaderboard_Entry {
     {
         return String.format("walked: %fm", points);
     }
+    public double getP() { return  points;}
 }

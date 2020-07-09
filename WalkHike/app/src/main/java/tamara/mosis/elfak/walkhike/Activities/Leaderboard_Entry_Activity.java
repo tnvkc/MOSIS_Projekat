@@ -12,4 +12,5 @@ public class Leaderboard_Entry_Activity extends Leaderboard_Entry {
     {
         return String.format("points: %f", points);
     }
+    public double getP() { return  points;}
 }

@@ -268,7 +268,7 @@ public class NotificationService extends IntentService implements MapObjectData.
 
             findNearbyUsers();
 
-            findNearbyObjects();
+           // findNearbyObjects();
 
         }
         startLocationUpdates();
@@ -416,7 +416,7 @@ public class NotificationService extends IntentService implements MapObjectData.
                     Boolean sound = sharedPref1.getBoolean(getString(R.string.loggedUser_sound), true);
                     Boolean notii = sharedPref1.getBoolean(getString(R.string.loggedUser_notifications), true);
                     if(notii) {
-                        sendNotif("notify_" + users.get(i).username, "usersnear", numberOfFriendNotis, "User " + users.get(i).username + " near you!",
+                        sendNotif("notify_" + users.get(i).username, "usersnear", 750, "User " + users.get(i).username + " near you!",
                                 "User " + users.get(i).username + " near you!", "Near you", "User " + users.get(i).username + " near you!",
                                 new Intent(getApplicationContext(), MainActivity.class), sound);
                     }
@@ -467,7 +467,7 @@ public class NotificationService extends IntentService implements MapObjectData.
                             Boolean sound = sharedPref1.getBoolean(getString(R.string.loggedUser_sound), true);
                             Boolean notii = sharedPref1.getBoolean(getString(R.string.loggedUser_notifications), true);
                             if(notii) {
-                                sendNotif("notify_" + objects.get(i), "usersnear", numberOfFriendNotis, "Object near you!",
+                                sendNotif("notify_" + objects.get(i), "objectsnear", 700, "Object near you!",
                                         "Object near you!", "Near you", "Object near you!",
                                         ii, sound);
                             }

@@ -21,6 +21,7 @@ public abstract class Leaderboard_Entry {
     }
 
     public abstract String getPoints();
+    public abstract  double getP();
 
     public void setPoints(double points) {
         this.points = points;
