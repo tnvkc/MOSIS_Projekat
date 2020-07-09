@@ -219,7 +219,7 @@ public class ARObjectInteractionActivity extends AppCompatActivity implements Vi
     public void onClick(View v) {
 
 
-        if (v.getId() == R.id.object_interaction_great) {
+        if (v.getId() == R.id.ar_object_interaction_great) {
 
             if (currentUser.compareTo(obj.createdBy) == 0)
                 return;
@@ -227,7 +227,7 @@ public class ARObjectInteractionActivity extends AppCompatActivity implements Vi
             ReactGreat();
             SetReactionStrings();
 
-        } else if (v.getId() == R.id.object_interaction_meh) {
+        } else if (v.getId() == R.id.ar_object_interaction_meh) {
 
             if (currentUser.compareTo(obj.createdBy) == 0)
                 return;
@@ -235,7 +235,7 @@ public class ARObjectInteractionActivity extends AppCompatActivity implements Vi
             ReactMeh();
             SetReactionStrings();
 
-        } else if (v.getId() == R.id.object_interaction_boo) {
+        } else if (v.getId() == R.id.ar_object_interaction_boo) {
 
             if (currentUser.compareTo(obj.createdBy) == 0)
                 return;
