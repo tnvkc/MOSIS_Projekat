@@ -13,6 +13,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 
 import tamara.mosis.elfak.walkhike.Leaderboard_Entry;
 import tamara.mosis.elfak.walkhike.Activities.Leaderboard_Entry_Activity;
@@ -86,6 +87,37 @@ public class Leaderboards_AllTime extends Fragment {
                 entries.add(new Leaderboard_Entry_Distance(referringTo.username, skorovi.get(i).alltimeDistance, referringTo.image));
             }
         }
+
+
+//        for(int i = 0; i<entries.size(); i++)
+//            for(int j = 0; j<entries.size(); j++)
+//            {
+//                Leaderboard_Entry pom = entries.get(i);
+//                if (Integer.parseInt( entries.get(i).getPoints()) < Integer.parseInt(entries.get(j).getPoints()))
+//                {
+//                    entries.get(i) = entries.get(j);
+//                    entries.get(j) = pom;
+//                    entries.
+//
+//                }
+//
+//            }
+
+        entries.sort(new Comparator<Leaderboard_Entry>() {
+            @Override
+            public int compare(Leaderboard_Entry o1, Leaderboard_Entry o2) {
+                if ( o1.getP()>  o2.getP() ){
+                    return 1;
+                }
+                else if ( o1.getP()<o2.getP()) {
+                    return -1;
+                }
+                else {
+                    return 0;
+                }
+
+            }
+        });
         /*entries.add(entry1);
         entries.add(entry2);
         entries.add(entry3);

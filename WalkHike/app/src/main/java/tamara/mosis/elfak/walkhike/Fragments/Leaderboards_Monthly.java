@@ -11,6 +11,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 
 import tamara.mosis.elfak.walkhike.Leaderboard_Entry;
 import tamara.mosis.elfak.walkhike.Activities.Leaderboard_Entry_Activity;
@@ -76,6 +77,22 @@ public class Leaderboards_Monthly extends Fragment {
                 entries.add(new Leaderboard_Entry_Distance(referringTo.username, skorovi.get(i).monthlyDistance, referringTo.image));
             }
         }
+
+        entries.sort(new Comparator<Leaderboard_Entry>() {
+            @Override
+            public int compare(Leaderboard_Entry o1, Leaderboard_Entry o2) {
+                if ( o1.getP()>  o2.getP() ){
+                    return 1;
+                }
+                else if ( o1.getP()<o2.getP()) {
+                    return -1;
+                }
+                else {
+                    return 0;
+                }
+
+            }
+        });
         return entries;
     }
 
