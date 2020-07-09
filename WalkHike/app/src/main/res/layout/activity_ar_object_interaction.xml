@@ -21,7 +21,7 @@
         android:id="@+id/ar_object_interaction_lat"
         android:layout_alignParentStart="true"
         android:layout_below="@+id/ar_object_interaction_toolbar"
-        android:layout_marginTop="25dp"
+        android:layout_marginTop="10dp"
         android:layout_marginStart="10dp"
         android:text="latitude: "
         />
@@ -42,19 +42,18 @@
         android:id="@+id/ar_object_interaction_text"
         android:layout_centerHorizontal="true"
         android:layout_below="@+id/ar_object_interaction_lon"
-        android:layout_marginTop="15dp"
-        android:text="user .... was here on .... \nand left this object:"
+        android:layout_marginTop="10dp"
+        android:text="user .... was here on ....and left this object:"
         android:gravity="center"
-        android:textSize="18sp"
         />
 
     <fragment
         android:layout_width="match_parent"
-        android:layout_height="200dp"
+        android:layout_height="320dp"
         android:id="@+id/ar_object_interaction_ar_fragment"
         android:layout_below="@+id/ar_object_interaction_text"
         android:name="com.google.ar.sceneform.ux.ArFragment"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="10dp"
         />
 
     <TextView
@@ -75,14 +74,13 @@
         android:id="@+id/ar_object_interaction_reaction_text"
         android:layout_centerHorizontal="true"
         android:layout_below="@+id/ar_object_interaction_desc"
-        android:layout_marginTop="15dp"
+        android:layout_marginTop="5dp"
         android:layout_marginStart="20dp"
-        android:text="What did you think of this object?"
-        android:textSize="18dp"/>
+        android:text="What did you think of this object?" />
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="60dp"
+        android:layout_height="40dp"
         android:id="@+id/ar_object_interaction_reactions_layout"
         android:orientation="horizontal"
         android:layout_below="@+id/ar_object_interaction_reaction_text"
@@ -130,89 +128,128 @@
             android:orientation="horizontal"
             android:id="@+id/ar_object_interaction_reactions_text_layout"
             android:layout_below="@+id/ar_object_interaction_reactions_layout"
-            android:layout_marginTop="5dp"
             android:weightSum="90"
             android:layout_marginStart="10dp"
             android:layout_marginEnd="10dp">
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="30"
+            android:orientation="horizontal"
+            android:gravity="center"
+            >
             <TextView
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="30"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_marginStart="10dp"
-                android:layout_marginEnd="10dp"
-                android:text="Great!"
-                android:gravity="center"
-                android:textSize="16sp"
+                android:text="Great! "
                 />
 
             <TextView
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="30"
-                android:text="Meh!"
-                android:gravity="center"
-                android:textSize="16sp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/ar_reactions_great"
+                android:text="(0)"
                 />
 
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="30"
-                android:layout_marginStart="10dp"
-                android:layout_marginEnd="10dp"
-                android:text="Boo!"
-                android:gravity="center"
-                android:textSize="16sp"
-                />
+        </LinearLayout>
 
-    </LinearLayout>
 
     <LinearLayout
-            android:layout_width="match_parent"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="30"
+        android:orientation="horizontal"
+        android:gravity="center">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Meh! "
+                />
+
+        <TextView
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:id="@+id/ar_object_interaction_reactions_num_layout"
-            android:layout_below="@+id/ar_object_interaction_reactions_text_layout"
-            android:weightSum="90"
-            android:layout_marginStart="10dp"
-            android:layout_marginEnd="10dp">
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:id="@+id/ar_reactions_great"
-                android:layout_weight="30"
-                android:layout_marginStart="10dp"
-                android:layout_marginEnd="10dp"
-                android:text="(0)"
-                android:gravity="center"
-                android:textSize="16sp"
-                />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:id="@+id/ar_reactions_meh"
-                android:layout_weight="30"
-                android:text="(0)"
-                android:gravity="center"
-                android:textSize="16sp"
-                />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:id="@+id/ar_reactions_boo"
-                android:layout_weight="30"
-                android:layout_marginStart="10dp"
-                android:layout_marginEnd="10dp"
-                android:text="(0)"
-                android:gravity="center"
-                android:textSize="16sp"
-                />
+            android:id="@+id/ar_reactions_meh"
+            android:text="(0)"
+            />
 
     </LinearLayout>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="30"
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:id="@+id/boo_layout">
+
+        <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Boo! "
+                />
+
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/ar_reactions_boo"
+            android:text="(0)"
+            />
+
+    </LinearLayout>
+
+    </LinearLayout>
+
+<!--    <LinearLayout-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:orientation="horizontal"-->
+<!--            android:id="@+id/ar_object_interaction_reactions_num_layout"-->
+<!--            android:layout_below="@+id/ar_object_interaction_reactions_text_layout"-->
+<!--            android:weightSum="90"-->
+<!--            android:layout_marginStart="10dp"-->
+<!--            android:layout_marginEnd="10dp">-->
+
+<!--            <TextView-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="match_parent"-->
+<!--                android:id="@+id/ar_reactions_great"-->
+<!--                android:layout_weight="30"-->
+<!--                android:layout_marginStart="10dp"-->
+<!--                android:layout_marginEnd="10dp"-->
+<!--                android:text="(0)"-->
+<!--                android:gravity="center"-->
+<!--                android:textSize="16sp"-->
+<!--                />-->
+
+<!--            <TextView-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="match_parent"-->
+<!--                android:id="@+id/ar_reactions_meh"-->
+<!--                android:layout_weight="30"-->
+<!--                android:text="(0)"-->
+<!--                android:gravity="center"-->
+<!--                android:textSize="16sp"-->
+<!--                />-->
+
+<!--            <TextView-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="match_parent"-->
+<!--                android:id="@+id/ar_reactions_boo"-->
+<!--                android:layout_weight="30"-->
+<!--                android:layout_marginStart="10dp"-->
+<!--                android:layout_marginEnd="10dp"-->
+<!--                android:text="(0)"-->
+<!--                android:gravity="center"-->
+<!--                android:textSize="16sp"-->
+<!--                />-->
+
+<!--    </LinearLayout>-->
 
     <Button
         android:layout_width="wrap_content"
@@ -220,7 +257,7 @@
         android:id="@+id/ar_object_interaction_close"
         android:layout_centerHorizontal="true"
         android:text="submit"
-        android:layout_below="@+id/ar_object_interaction_reactions_num_layout"
-        android:layout_marginTop="15dp"/>
+        android:layout_below="@+id/ar_object_interaction_reactions_text_layout"
+        android:layout_marginTop="10dp"/>
 
 </RelativeLayout>

@@ -314,10 +314,12 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
         addNewFloating.setOnClickListener(this);
 
         objectInteraction = (FloatingActionButton) findViewById(R.id.main_showArObject);
-        objectInteraction.setOnClickListener(this);
+//        objectInteraction.setOnClickListener(this);
+        objectInteraction.setVisibility(View.GONE);
 
         startServiceButton = findViewById(R.id.main_startService);
-        startServiceButton.setOnClickListener(this);
+        //startServiceButton.setOnClickListener(this);
+        startServiceButton.setVisibility(View.GONE);
 
 
         //bottom_navigation_menu
@@ -713,8 +715,8 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
             //Toast.makeText(this, "Search objects here!", Toast.LENGTH_SHORT).show();
 
             addNewFloating.setVisibility(View.GONE);
-            objectInteraction.setVisibility(View.GONE);
-            startServiceButton.setVisibility(View.GONE);
+//            objectInteraction.setVisibility(View.GONE);
+//            startServiceButton.setVisibility(View.GONE);
             bottom_navigation_menu.setVisibility(View.GONE);
 
             search_fragment.setVisibility(View.VISIBLE);
@@ -1010,7 +1012,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
             FilterUserObjects();
         }
 
-        if(v.getId() == R.id.main_startService)
+        /*if(v.getId() == R.id.main_startService)
         {
 
             if(!startedService) {
@@ -1029,7 +1031,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
             }
 
         }
-        else if (v.getId() == R.id.info_window_see_details) {
+        else */if (v.getId() == R.id.info_window_see_details) {
 
             info_window_container.setVisibility(View.GONE);
             info_window_container_groups.setVisibility(View.GONE);
@@ -1111,7 +1113,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
 
             startActivityForResult(intent, 1);
 
-        } else if (v.getId() == R.id.main_showArObject) {
+        } /*else if (v.getId() == R.id.main_showArObject) {
 
             info_window_container.setVisibility(View.GONE);
             info_window_container_groups.setVisibility(View.GONE);
@@ -1123,7 +1125,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
             startActivity(intent);
             finish();
 
-        } else if (v.getId() == R.id.filter_users) {
+        }*/ else if (v.getId() == R.id.filter_users) {
 
             info_window_container.setVisibility(View.GONE);
             info_window_container_groups.setVisibility(View.GONE);
@@ -1334,8 +1336,8 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
 //            Toast.makeText(MainActivity.this, "Close search", Toast.LENGTH_SHORT).show();
             search_fragment.setVisibility(View.GONE);
             addNewFloating.setVisibility(View.VISIBLE);
-            objectInteraction.setVisibility(View.VISIBLE);
-            startServiceButton.setVisibility(View.VISIBLE);
+//            objectInteraction.setVisibility(View.VISIBLE);
+//            startServiceButton.setVisibility(View.VISIBLE);
             bottom_navigation_menu.setVisibility(View.VISIBLE);
 
             InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
@@ -1654,8 +1656,8 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
 
         search_fragment.setVisibility(View.GONE);
         addNewFloating.setVisibility(View.VISIBLE);
-        objectInteraction.setVisibility(View.VISIBLE);
-        startServiceButton.setVisibility(View.VISIBLE);
+//        objectInteraction.setVisibility(View.VISIBLE);
+//        startServiceButton.setVisibility(View.VISIBLE);
         bottom_navigation_menu.setVisibility(View.VISIBLE);
 
         InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
