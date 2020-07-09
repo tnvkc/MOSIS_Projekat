@@ -93,6 +93,7 @@ import tamara.mosis.elfak.walkhike.NotificationService;
 import tamara.mosis.elfak.walkhike.Probe;
 import tamara.mosis.elfak.walkhike.R;
 import tamara.mosis.elfak.walkhike.SearchResultsListAdapter;
+import tamara.mosis.elfak.walkhike.SearchUsersListAdapter;
 import tamara.mosis.elfak.walkhike.ShowArObjectActivity;
 
 import tamara.mosis.elfak.walkhike.UsersRecyclerAdapter;
@@ -117,7 +118,18 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
     private static final int PERMISSION_CODE = 1;
 
     public Location getLocation() {
-        return location;
+        if (loggedUsername != null) {
+
+            Position pos = UserData.getInstance().getUserByUsername(loggedUsername).UserPosition;
+
+            Location newLoc = new Location("");
+            newLoc.setLatitude(Double.parseDouble(pos.latitude));
+            newLoc.setLongitude(Double.parseDouble(pos.longitude));
+
+            return newLoc;
+        }
+        else
+            return null;
     }
 
     Location location;
@@ -313,9 +325,10 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
         addNewFloating = (FloatingActionButton) findViewById(R.id.main_addnewObject);
         addNewFloating.setOnClickListener(this);
 
-        objectInteraction = (FloatingActionButton) findViewById(R.id.main_showArObject);
-//        objectInteraction.setOnClickListener(this);
-        objectInteraction.setVisibility(View.GONE);
+//        objectInteraction = (FloatingActionButton) findViewById(R.id.main_showArObject);
+        objectInteraction = (FloatingActionButton) findViewById(R.id.main_centerUser);
+        objectInteraction.setOnClickListener(this);
+//        objectInteraction.setVisibility(View.GONE);
 
         startServiceButton = findViewById(R.id.main_startService);
         //startServiceButton.setOnClickListener(this);
@@ -715,7 +728,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
             //Toast.makeText(this, "Search objects here!", Toast.LENGTH_SHORT).show();
 
             addNewFloating.setVisibility(View.GONE);
-//            objectInteraction.setVisibility(View.GONE);
+            objectInteraction.setVisibility(View.GONE);
 //            startServiceButton.setVisibility(View.GONE);
             bottom_navigation_menu.setVisibility(View.GONE);
 
@@ -1125,7 +1138,21 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
             startActivity(intent);
             finish();
 
-        }*/ else if (v.getId() == R.id.filter_users) {
+        }*/else if (v.getId() == R.id.main_centerUser) {
+
+            if (loggedUser != null && map != null) {
+
+                double lat = Double.parseDouble(loggedUser.UserPosition.latitude);
+                double lon = Double.parseDouble(loggedUser.UserPosition.longitude);
+
+                //map.moveCamera(CameraUpdateFactory.newLatLng(new LatLng(lat, lon)));
+                map.animateCamera(CameraUpdateFactory.newLatLng(new LatLng(lat, lon)));
+            }
+
+
+
+
+        } else if (v.getId() == R.id.filter_users) {
 
             info_window_container.setVisibility(View.GONE);
             info_window_container_groups.setVisibility(View.GONE);
@@ -1336,7 +1363,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
 //            Toast.makeText(MainActivity.this, "Close search", Toast.LENGTH_SHORT).show();
             search_fragment.setVisibility(View.GONE);
             addNewFloating.setVisibility(View.VISIBLE);
-//            objectInteraction.setVisibility(View.VISIBLE);
+            objectInteraction.setVisibility(View.VISIBLE);
 //            startServiceButton.setVisibility(View.VISIBLE);
             bottom_navigation_menu.setVisibility(View.VISIBLE);
 
@@ -1656,7 +1683,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
 
         search_fragment.setVisibility(View.GONE);
         addNewFloating.setVisibility(View.VISIBLE);
-//        objectInteraction.setVisibility(View.VISIBLE);
+        objectInteraction.setVisibility(View.VISIBLE);
 //        startServiceButton.setVisibility(View.VISIBLE);
         bottom_navigation_menu.setVisibility(View.VISIBLE);
 
@@ -1814,15 +1841,32 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
     @Override
     public void afterTextChanged(Editable s) {
 
-        String insertedText = s.toString();
+        if (search_filter_activated != 5) {
 
-        ArrayList<MapObject> objs =
-                MapObjectData.getInstance().getSearchedMapObjects(insertedText, search_filter_activated, search_radius, loggedUsername);
+            String insertedText = s.toString();
 
-        SearchResultsListAdapter listAdapter =
-                new SearchResultsListAdapter(getApplicationContext(), R.layout.list_member_search_result, objs, MainActivity.this);
+            ArrayList<MapObject> objs =
+                    MapObjectData.getInstance().getSearchedMapObjects(insertedText, search_filter_activated, search_radius, loggedUsername);
 
-        searchResultsListView.setAdapter(listAdapter);
+            SearchResultsListAdapter listAdapter =
+                    new SearchResultsListAdapter(getApplicationContext(), R.layout.list_member_search_result, objs, MainActivity.this);
+
+            searchResultsListView.setAdapter(listAdapter);
+
+        } else {
+            //search users only
+
+            String insertedText = s.toString();
+
+            ArrayList<User> objs = UserData.getInstance().getSearchedUsers(insertedText, search_radius, loggedUsername);
+
+            SearchUsersListAdapter listAdapter =
+                    new SearchUsersListAdapter(getApplicationContext(), R.layout.list_member_search_result, objs, MainActivity.this);
+
+            searchResultsListView.setAdapter(listAdapter);
+
+        }
+
 
 
     }

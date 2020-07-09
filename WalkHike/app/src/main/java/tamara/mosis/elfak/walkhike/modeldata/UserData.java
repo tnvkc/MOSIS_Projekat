@@ -1,5 +1,6 @@
 package tamara.mosis.elfak.walkhike.modeldata;
 
+import android.location.Location;
 import android.os.UserManager;
 
 import androidx.annotation.NonNull;
@@ -193,6 +194,45 @@ public class UserData {
 
         return u;
     }
+
+    public ArrayList<User> getSearchedUsers(String usernameToSearch, int search_radius, String loggedUsername) {
+
+        ArrayList<User> retList = new ArrayList<>();
+        User loggedUser = getUserByUsername(loggedUsername);
+
+        ArrayList<User> friendsUsers = FriendshipData.getInstance().GetUserFriends(loggedUser.email);
+        ArrayList<User> closeUsers = new ArrayList<>();
+
+
+        for (int i = 0; i < friendsUsers.size(); i++) {
+
+            User friendUser = getUserByUsername(friendsUsers.get(i).username);
+
+            Position currentUserPosition = loggedUser.UserPosition;
+            double current_lat = Double.parseDouble(currentUserPosition.latitude);
+            double current_lon = Double.parseDouble(currentUserPosition.longitude);
+
+            Position friendUserPosition = friendUser.UserPosition;
+            double friend_lat = Double.parseDouble(friendUserPosition.latitude);
+            double friend_lon = Double.parseDouble(friendUserPosition.longitude);
+
+            float dist[] = new float[1];
+            Location.distanceBetween(current_lat, current_lon, friend_lat, friend_lon, dist);
+
+            if (dist[0] <= search_radius) {
+                closeUsers.add(friendUser);
+            }
+        }
+
+        for (int i = 0; i < closeUsers.size(); i++) {
+            if (closeUsers.get(i).username.toLowerCase().contains(usernameToSearch.toLowerCase().subSequence(0, usernameToSearch.length())))
+                retList.add(closeUsers.get(i));
+        }
+
+        return retList;
+    }
+
+
 
     public void deleteUser(int index) {
 
